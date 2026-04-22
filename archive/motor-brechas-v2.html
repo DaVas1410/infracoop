@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -168,7 +168,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
 .mapa-mini-fill{height:100%;background:var(--accent);border-radius:2px;}
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:var(--paper);font-size:13px;padding:10px 16px;border-radius:var(--r);font-family:var(--mono);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none;z-index:400;}
 .toast.show{opacity:1;transform:translateY(0);}
- 
+
 /* BACKEND */
 .backend-panel{padding:2rem 0 4rem;}
 .backend-alert{background:#EEEDFE;border:1px solid #AFA9EC;border-radius:var(--r);padding:.75rem 1rem;font-size:13px;color:#3C3489;margin-bottom:1.5rem;line-height:1.5;}
@@ -186,7 +186,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
 .agenda-check:has(input:checked){border-color:var(--ink);background:white;color:var(--ink);}
 .agenda-check input{width:13px;height:13px;accent-color:var(--ink);}
 .form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--ink-faint);}
- 
+
 /* ANÁLISIS AUTO */
 .analisis-panel{background:white;border:1px solid var(--ink-faint);border-radius:var(--r-lg);padding:1.25rem;margin-top:1rem;display:none;}
 .analisis-panel.visible{display:block;animation:fadeIn .3s ease;}
@@ -209,7 +209,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
 .fundamento-area{width:100%;font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--paper);border:1px solid var(--ink-faint);border-radius:var(--r);padding:8px 10px;outline:none;transition:border-color .15s;resize:vertical;min-height:80px;line-height:1.5;}
 .fundamento-area:focus{border-color:var(--ink);}
 .revisor-actions{display:flex;gap:8px;margin-top:.75rem;flex-wrap:wrap;}
- 
+
 /* MONITOR COLECTIVO */
 .monitor-grid-agendas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
 .agenda-monitor-card{background:white;border:1px solid var(--ink-faint);border-radius:var(--r-lg);padding:1rem 1.1rem;}
@@ -222,7 +222,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
 .agenda-topic-bar-wrap{width:60px;height:3px;background:var(--ink-faint);border-radius:2px;overflow:hidden;flex-shrink:0;}
 .agenda-topic-bar-fill{height:100%;border-radius:2px;}
 .agenda-topic-count{font-family:var(--mono);font-size:11px;color:var(--ink-light);min-width:20px;text-align:right;}
- 
+
 /* CAPA 3 — ¿Qué datos queremos? */
 .evolucion-hero{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--ink-faint);}
 .semana-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.5rem;}
@@ -254,7 +254,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
 .audit-note{background:var(--paper);border:1px solid var(--ink-faint);border-radius:var(--r);padding:.85rem 1rem;margin-top:1.5rem;font-size:12px;color:var(--ink-mid);line-height:1.6;}
 .audit-note strong{color:var(--ink);}
 @media(max-width:600px){.monitor-grid-agendas,.evolucion-grid{grid-template-columns:1fr;}#comparativo-grid{grid-template-columns:1fr;}}
- 
+
 /* TABLA */
 .records-table{width:100%;border-collapse:collapse;font-size:12px;}
 .records-table th{text-align:left;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-light);font-family:var(--mono);padding:6px 8px;border-bottom:1px solid var(--ink-faint);}
@@ -269,7 +269,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
 .estado-badge.revisando{background:#fdf0d8;color:var(--warn);}
 .estado-badge.nodo-colectivo{background:#E6F1FB;color:#0C447C;}
 .estado-badge.publicado{background:var(--ok-bg);color:var(--ok);}
- 
+
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,25,22,.55);z-index:200;align-items:center;justify-content:center;padding:1rem;}
 .modal-overlay.visible{display:flex;}
@@ -280,7 +280,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
 .modal-analisis .mlabel{font-size:10px;font-family:var(--mono);color:var(--ink-light);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
 .modal-analisis .mvalor{font-weight:600;color:var(--ink);}
 .modal-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
- 
+
 /* NODO COLECTIVO */
 .colectivo-panel{background:white;border:1px solid var(--ink-faint);border-radius:var(--r-lg);padding:1.25rem;margin-top:1rem;display:none;}
 .colectivo-panel.visible{display:block;animation:fadeIn .3s ease;}
@@ -297,12 +297,12 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
 .revisor-block-estado.aprobado{background:var(--ok-bg);color:var(--ok);}
 .confirmacion-final{background:var(--paper);border-radius:var(--r);padding:.75rem 1rem;margin-top:.75rem;display:none;}
 .confirmacion-final.visible{display:block;}
- 
+
 @media(max-width:600px){.container{padding:2rem 1rem 5rem;}.hero h1{font-size:1.8rem;}header{padding:0 1rem;}.header-tag{display:none;}.form-row,.form-row.three,.senales-grid{grid-template-columns:1fr;}.modal-box{padding:1.25rem;}}
 </style>
 </head>
 <body>
- 
+
 <header>
   <div class="logo">
     <span class="logo-text">Infra</span><span class="logo-dot"></span><span class="logo-text">Coop</span>
@@ -316,56 +316,56 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
   </nav>
   <span class="header-tag" style="display:none;">v0.3</span>
 </header>
- 
+
 <div class="container">
- 
+
 <!-- SOBRE INFRA.COOP -->
 <div id="panel-about">
   <div class="hero">
     <p class="hero-eyebrow">Infra.Coop</p>
     <h1>¿Qué es <em>Infra.Coop</em>?</h1>
   </div>
- 
+
   <div style="font-size:15px;line-height:1.85;color:var(--ink-mid);max-width:680px;">
- 
+
     <p style="margin-bottom:1.25rem;color:var(--ink);font-size:16px;">Infra.Coop es la dimensión tecnosocial de Data Cooperativas Latinas. Es una infraestructura digital inclusiva basada en los conceptos y modelo de gobernanza de datos cooperativos que encontrarás en el sitio.</p>
- 
+
     <p style="margin-bottom:.5rem;font-weight:600;color:var(--ink);font-size:15px;">Monitor de Brechas</p>
     <p style="margin-bottom:1.25rem;">El propósito es evidenciar el rol que juegan las preguntas —la fase de problema— al momento de iniciar un proceso de recolección de datos. Qué nos preguntemos, cómo y para quién incide en qué datos se definen recolectar. Esto mismo sucede cuando una Oficina Nacional de Estadísticas o un área de gobierno se propone diseñar un proyecto de datos.</p>
     <p style="margin-bottom:1.25rem;">Con la PREGUNTA nos interesa enfatizar en la urgencia, pertinencia y oportunidad de los datos cooperativos —datos ciudadanos— para contar con los DATOS QUE QUEREMOS.</p>
- 
+
     <p style="margin-bottom:.5rem;font-weight:600;color:var(--ink);font-size:15px;">Monitor Colectivo</p>
     <p style="margin-bottom:.75rem;">Tu pregunta contribuye para crear la evidencia común del estado de los datos de género. En principio contrastando tu pregunta con dos bases de datos seleccionadas para Infra.Coop:</p>
     <p style="margin-bottom:.4rem;padding-left:1rem;">a) Datasets de género regionales</p>
     <p style="margin-bottom:1.25rem;padding-left:1rem;">b) Marcos de normativas vigentes a nivel global, regional y nacional. Criterios: normativas de datos, de tecnologías y de género.</p>
     <p style="margin-bottom:1.25rem;">A medida que se sumen más preguntas, se irá visualizando la diferencia entre la brecha de datos existente (con los datos que tenemos y las normativas actuales) vs la brecha real.</p>
- 
+
     <p style="margin-bottom:.5rem;font-weight:600;color:var(--ink);font-size:15px;">Los datos que queremos</p>
     <p style="margin-bottom:1.25rem;">En este apartado es donde el algoritmo cooperativo llega a su meta (al menos por ahora). La lupa está ahora puesta en la evolución entre los datos que tenemos y los datos que queremos.</p>
- 
+
     <p style="margin-bottom:.75rem;font-weight:600;color:var(--ink);font-size:15px;">¿Qué tenemos en proceso?</p>
     <p style="margin-bottom:.75rem;">La Capa de Monitor es la primera prototipada. Hemos ideado para implementar a futuro las siguientes:</p>
- 
+
     <p style="margin-bottom:.4rem;color:var(--accent);font-weight:600;font-size:13px;font-family:var(--mono);letter-spacing:.04em;">* Capa federada de nodos</p>
     <p style="margin-bottom:.4rem;padding-left:1rem;">Un foro y comunidad de aprendizaje cooperativo.</p>
     <p style="margin-bottom:.4rem;padding-left:1rem;">Exploración de las intervenciones del modelo de gobernanza para la incidencia en distintos espacios territoriales y temáticos.</p>
     <p style="margin-bottom:1.25rem;padding-left:1rem;">Aplicación de metodologías del Ciclo de Datos que queremos por temática y nodos.</p>
- 
+
     <p style="margin-bottom:.4rem;color:var(--accent);font-weight:600;font-size:13px;font-family:var(--mono);letter-spacing:.04em;">* Capa de datos cooperativos</p>
     <p style="margin-bottom:.4rem;padding-left:1rem;">Espacio seguro y cuidado para archivar tus datos ciudadanos.</p>
     <p style="margin-bottom:1.25rem;padding-left:1rem;">Este elemento contará con distintos niveles de acceso por roles y/o criterios de gobernanza del Protocolo.</p>
- 
+
     <p style="margin-bottom:1.25rem;color:var(--accent);font-weight:600;font-size:13px;font-family:var(--mono);letter-spacing:.04em;">* Protocolo de gobernanza de la Infra.Coop</p>
- 
+
     <p style="margin-bottom:.75rem;font-weight:600;color:var(--ink);font-size:14px;">Otras ideas que queremos trabajar a futuro con tu ayuda</p>
     <p style="margin-bottom:.4rem;padding-left:1rem;">— Simulador de intervenciones en el ciclo de datos de tu elección (OSC)</p>
     <p style="margin-bottom:.4rem;padding-left:1rem;">— Explorador de diagnósticos de incidencia para OSC, funcionarios públicos, organismos y activistas</p>
     <p style="margin-bottom:.4rem;padding-left:1rem;">— Sistematizador de evidencia: útil para áreas de litigio estratégico</p>
     <p style="margin-bottom:0;padding-left:1rem;">— Creación de cuenta en la plataforma</p>
- 
+
   </div>
 </div>
- 
+
 <!-- MOTOR -->
 <div id="panel-motor" style="display:none;">
   <div class="hero" style="text-align:center;">
@@ -424,7 +424,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
     <div class="dataset-grid" id="datasets-grid"></div>
     <div class="result-section-title">Marcos normativos relevantes</div>
     <div class="framework-list" id="frameworks-list"></div>
- 
+
     <!-- TERMÓMETRO DE INCIDENCIA -->
     <div class="termometro-block">
       <div class="termometro-header">
@@ -444,7 +444,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M4 7h6M4 4.5h6M4 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         Generar infografía de incidencia
       </button>
- 
+
       <!-- Panel de infografía generada -->
       <div class="infografia-panel" id="infografia-panel">
         <div class="infografia-canvas" id="infografia-canvas">
@@ -462,7 +462,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
         </div>
       </div>
     </div>
- 
+
     <!-- BAJA LA BRECHA -->
     <div class="baja-brecha-block">
       <div class="baja-brecha-header">
@@ -481,10 +481,10 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
         </button>
       </div>
     </div>
- 
+
   </div>
 </div>
- 
+
 <!-- MONITOR COLECTIVO -->
 <div id="panel-mapa" style="display:none;">
   <div class="hero">
@@ -497,7 +497,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
   <div class="result-section-title">Brechas por Tópico</div>
   <div class="mapa-grid" id="mapa-grid"></div>
 </div>
- 
+
 <!-- CAPA 3: ¿QUÉ DATOS QUEREMOS? -->
 <div id="panel-capa3" style="display:none;">
   <div class="evolucion-hero">
@@ -505,7 +505,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
     <h1>Evolución de <em>brechas</em></h1>
     <p class="hero-sub">Estado inicial anclado versus evolución semanal según preguntas ingresadas. Seguimiento por Agenda.</p>
   </div>
- 
+
   <!-- Contador de preguntas en tiempo real -->
   <div style="display:flex;align-items:center;gap:12px;background:white;border:1px solid var(--ink-faint);border-radius:var(--r-lg);padding:.85rem 1.25rem;margin-bottom:1.5rem;flex-wrap:wrap;">
     <div>
@@ -517,7 +517,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
       El contador se actualiza con cada pregunta ingresada al Motor de Brechas. En producción refleja el total histórico de la tabla <code style="font-family:var(--mono);font-size:11px;">questions</code>.
     </div>
   </div>
- 
+
   <!-- Tabs semanas - Estado inicial siempre anclado -->
   <div style="display:flex;gap:8px;margin-bottom:1rem;align-items:center;flex-wrap:wrap;">
     <div style="display:flex;align-items:center;gap:6px;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--r);padding:5px 12px;font-size:11px;font-family:var(--mono);color:var(--ink);font-weight:600;">
@@ -532,7 +532,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
       <button class="semana-tab" onclick="cambiarSemana(4,this)">Semana 4</button>
     </div>
   </div>
- 
+
   <!-- Layout comparativo: estado inicial fijo izq | semana seleccionada der -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem;" id="comparativo-grid">
     <!-- columna izquierda: estado inicial fijo -->
@@ -546,7 +546,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
       <div id="metricas-semana"></div>
     </div>
   </div>
- 
+
   <div class="chart-wrap">
     <div class="chart-title">Evolución semanal de brechas por agenda</div>
     <div class="chart-inner"><div class="chart-bars" id="evolucion-chart"></div></div>
@@ -556,15 +556,15 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
       <span><span class="chart-legend-dot" style="background:#72243E"></span>Ag. de Género</span>
     </div>
   </div>
- 
+
   <div class="result-section-title">Estado de brechas por agenda</div>
   <div class="agenda-evolucion-section" id="agenda-evolucion-section"></div>
- 
+
   <div class="audit-note" style="display:none;">
     <strong>Nota de implementación — Auditoría diaria:</strong> En la fase de producción, cada ingreso de pregunta al monitor dispara un INSERT en la tabla <code>audit_eventos</code> con timestamp, topic_id, agenda y score de brecha. Un cron job a las 00:05 UTC ejecuta <code>fn_generar_snapshot_diario()</code>, que agrega los datos por agenda y tópico y los guarda en <code>metricas_snapshot</code>. Esta tabla alimenta las vistas de evolución semanal y sirve de backup incremental de todas las interacciones. Ver <code>infracoop_metricas_backup.sql</code> para el esquema completo.
   </div>
 </div>
- 
+
 <!-- BACKEND -->
 <div id="panel-backend" style="display:none;">
   <div class="backend-panel">
@@ -574,13 +574,13 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
       <p class="hero-sub">Clasificación automática de calidad con flujo cooperativo de revisión. Solo accesible por el equipo de curación.</p>
     </div>
     <div class="backend-alert">Panel de uso interno. La clasificación automática es una <strong>sugerencia</strong> — siempre requiere confirmación del Revisor Principal. El desacuerdo escala a 3 Revisores Colectivos que deben alcanzar consenso unánime.</div>
- 
+
     <div style="display:flex;gap:4px;margin-bottom:1.5rem;flex-wrap:wrap;">
       <button class="btn-ghost" id="tab-dataset-btn" onclick="switchTab('dataset')" style="font-size:12px;padding:6px 14px;">Dataset</button>
       <button class="btn-ghost" id="tab-normativa-btn" onclick="switchTab('normativa')" style="font-size:12px;padding:6px 14px;">Normativa</button>
       <button class="btn-ghost" id="tab-registros-btn" onclick="switchTab('registros')" style="font-size:12px;padding:6px 14px;">Registros cargados</button>
     </div>
- 
+
     <!-- FORM DATASET -->
     <div id="tab-dataset">
       <div class="form-card">
@@ -661,7 +661,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
           </button>
         </div>
       </div>
- 
+
       <!-- Panel de análisis -->
       <div class="analisis-panel" id="analisis-panel">
         <div class="analisis-header">
@@ -688,7 +688,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
           </div>
         </div>
       </div>
- 
+
       <!-- Panel colectivo -->
       <div class="colectivo-panel" id="colectivo-panel">
         <div class="colectivo-header">
@@ -711,7 +711,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
         </div>
       </div>
     </div>
- 
+
     <!-- FORM NORMATIVA -->
     <div id="tab-normativa" style="display:none;">
       <div class="form-card">
@@ -765,7 +765,7 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
         </div>
       </div>
     </div>
- 
+
     <!-- REGISTROS -->
     <div id="tab-registros" style="display:none;">
       <div style="display:flex;gap:8px;margin-bottom:1rem;align-items:center;flex-wrap:wrap;">
@@ -776,14 +776,14 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
     </div>
   </div>
 </div>
- 
+
 </div><!-- /container -->
- 
+
 <footer style="border-top:1px solid var(--ink-faint);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--paper);">
   <span style="font-size:11px;font-family:var(--mono);color:var(--ink-light);letter-spacing:.04em;">Prototipo v0.3 desarrollado por</span>
   <span style="font-size:11px;font-family:var(--mono);color:var(--accent);font-weight:600;letter-spacing:.04em;">Data Cooperativas Latinas</span>
 </footer>
- 
+
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-box">
@@ -793,9 +793,9 @@ select.filter-select:hover,select.filter-select:focus{border-color:var(--ink);}
     <div class="modal-actions" id="modal-actions"></div>
   </div>
 </div>
- 
+
 <div class="toast" id="toast"></div>
- 
+
 <script>
 /* ══ MOCK DATA ══ */
 const DATOS_MOCK={
@@ -806,21 +806,21 @@ const DATOS_MOCK={
   "feminicidio estados":{score:0.55,categoria:"parcial",titulo:"Datos de feminicidio comparables entre estados: brecha metodológica",sintesis:"Existen múltiples fuentes sobre feminicidio pero su comparabilidad es limitada por diferencias en tipificación del delito entre estados.",datasets:[{titulo:"Información sobre Violencia contra Mujeres SESNSP",fuente:"SESNSP",pais:"MEX",anio:2024,calidad:"completa",sim:0.85},{titulo:"ENVIPE — Percepción de seguridad",fuente:"INEGI",pais:"MEX",anio:2023,calidad:"completa",sim:0.62},{titulo:"Estadísticas de mortalidad INEGI",fuente:"INEGI",pais:"MEX",anio:2022,calidad:"completa",sim:0.58}],frameworks:[{nombre:"Ley General de Acceso — Art. 21",organismo:"Congreso de la Unión",tipo:"ley",articulo:"Artículo 21 Bis",obligacion:"El SNIEG debe producir y publicar estadísticas de feminicidio con criterios homologados entre entidades federativas.",sim:0.81},{nombre:"Declaratoria Alerta de Violencia de Género",organismo:"SEGOB México",tipo:"recomendacion",articulo:"Decreto 2015",obligacion:"Los estados con alerta deben publicar datos desglosados de feminicidio con periodicidad mensual.",sim:0.73}]}
 };
 const MAPA_MOCK=[{topic:"Salud reproductiva",total:48,score:0.79,criticas:31,parciales:12,cubiertas:5},{topic:"Violencia de género",total:35,score:0.65,criticas:19,parciales:14,cubiertas:2},{topic:"Justicia y litigios",total:22,score:0.71,criticas:14,parciales:7,cubiertas:1},{topic:"Interseccionalidad",total:18,score:0.83,criticas:15,parciales:3,cubiertas:0},{topic:"Tecnologías y datos",total:11,score:0.58,criticas:5,parciales:6,cubiertas:0}];
- 
+
 const CALIDAD_DISPLAY={completa:'Completa',parcial:'Parcial',nula:'Nula',completo:'Completa',desactualizado:'Parcial',desconocida:'Nula'};
 const AGENDA_LABELS={'agenda-tecnologica':'Ag. Tecnológica','agenda-datos':'Ag. de Datos','agenda-genero':'Ag. de Género'};
- 
+
 let registrosDB={datasets:[],normativas:[]};
 let analisisActual=null;
 let registroPendiente=null;
 let loadingInterval=null;
 let revisoresColectivos=[{id:1,estado:'pendiente',calidad:null,razon:''},{id:2,estado:'pendiente',calidad:null,razon:''},{id:3,estado:'pendiente',calidad:null,razon:''}];
- 
+
 /* ══ MOTOR ══ */
 function updateCharCount(){const n=document.getElementById('pregunta').value.length;document.getElementById('char-count').textContent=`${n} / 400 caracteres`;document.getElementById('btn-buscar').disabled=n<5;}
 function handleKeydown(e){if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))buscarBrecha();}
 function clearAll(){document.getElementById('pregunta').value='';updateCharCount();document.getElementById('results-section').classList.remove('visible');document.getElementById('loading-state').classList.remove('visible');}
- 
+
 function showPanel(p){
   ['about','motor','mapa','capa3','backend'].forEach(id=>{
     const el=document.getElementById('panel-'+id);if(el)el.style.display=id===p?'':'none';
@@ -832,40 +832,40 @@ function showPanel(p){
   if(p==='capa3')renderCapa3(1);
   if(p==='backend')switchTab('dataset');
 }
- 
+
 /* ══ EDITOR ABOUT ══ */
 let aboutTexto=`Infra.Coop es la dimensión tecnosocial de Data Cooperativas Latinas. Es una infraestructura digital inclusiva basada en los conceptos y modelo de gobernanza de datos cooperativos que encontrarás en el sitio.
- 
+
 Monitor de Brechas
 El propósito es evidenciar el rol que juegan las preguntas —la fase de problema— al momento de iniciar un proceso de recolección de datos. Qué nos preguntemos, cómo y para quién incide en qué datos se definen recolectar. Esto mismo sucede cuando una Oficina Nacional de Estadísticas o un área de gobierno se propone diseñar un proyecto de datos.
- 
+
 Con la PREGUNTA nos interesa enfatizar en la urgencia, pertinencia y oportunidad de los datos cooperativos —datos ciudadanos— para contar con los DATOS QUE QUEREMOS.
- 
+
 Monitor Colectivo
 Tu pregunta contribuye para crear la evidencia común del estado de los datos de género. En principio contrastando tu pregunta con dos bases de datos seleccionadas para Infra.Coop:
 a) Datasets de género regionales
 b) Marcos de normativas vigentes a nivel global, regional y nacional. Criterios: normativas de datos, de tecnologías y de género.
- 
+
 A medida que se sumen más preguntas, se irá visualizando la diferencia entre la brecha de datos existente (con los datos que tenemos y las normativas actuales) vs la brecha real.
- 
+
 Los datos que queremos
 En este apartado es donde el algoritmo cooperativo llega a su meta (al menos por ahora). La lupa está ahora puesta en la evolución entre los datos que tenemos y los datos que queremos.
- 
+
 ¿Qué tenemos en proceso?
 La Capa de Monitor es la primera prototipada. Hemos ideado para implementar a futuro las siguientes:
- 
+
 * Capa federada de nodos: un foro y comunidad de aprendizaje cooperativo. Exploración de las intervenciones del modelo de gobernanza para la incidencia en distintos espacios territoriales y temáticos. Aplicación de metodologías del Ciclo de Datos que queremos por temática y nodos.
- 
+
 * Capa de datos cooperativos: espacio seguro y cuidado para archivar tus datos ciudadanos. Este elemento contará con distintos niveles de acceso por roles y/o criterios de gobernanza del Protocolo.
- 
+
 * Protocolo de gobernanza de la Infra.Coop
- 
+
 Otras ideas que queremos trabajar a futuro con tu ayuda
 — Simulador de intervenciones en el ciclo de datos de tu elección (OSC)
 — Explorador de diagnósticos de incidencia para OSC, funcionarios públicos, organismos y activistas
 — Sistematizador de evidencia: útil para áreas de litigio estratégico
 — Creación de cuenta en la plataforma`;
- 
+
 function toggleEdicion(){
   const ta=document.getElementById('about-textarea');
   ta.value=aboutTexto||document.getElementById('about-lectura').innerText.trim();
@@ -873,12 +873,12 @@ function toggleEdicion(){
   document.getElementById('about-edicion').style.display='block';
   ta.focus();
 }
- 
+
 function cancelarEdicion(){
   document.getElementById('about-lectura').style.display='block';
   document.getElementById('about-edicion').style.display='none';
 }
- 
+
 function guardarTexto(){
   const val=document.getElementById('about-textarea').value.trim();
   if(!val){showToast('Escribí algo antes de guardar');return;}
@@ -889,13 +889,13 @@ function guardarTexto(){
   cancelarEdicion();
   showToast('Texto guardado');
 }
- 
+
 function copiarTexto(){
   const txt=aboutTexto||document.getElementById('about-lectura').innerText;
   if(!txt.trim()){showToast('No hay texto para copiar');return;}
   navigator.clipboard.writeText(txt).then(()=>showToast('Texto copiado al portapapeles')).catch(()=>showToast('No se pudo copiar automáticamente'));
 }
- 
+
 function matchQuery(q){
   q=q.toLowerCase();
   if(q.includes('abort')||q.includes('rural'))return DATOS_MOCK["aborto seguro municipios rurales"];
@@ -905,7 +905,7 @@ function matchQuery(q){
   if(q.includes('feminicidio')||q.includes('estado'))return DATOS_MOCK["feminicidio estados"];
   const keys=Object.keys(DATOS_MOCK);return DATOS_MOCK[keys[Math.floor(Math.random()*keys.length)]];
 }
- 
+
 async function buscarBrecha(){
   const pregunta=document.getElementById('pregunta').value.trim();
   if(pregunta.length<5)return;
@@ -919,7 +919,7 @@ async function buscarBrecha(){
   incrementarContador();
   renderResults(matchQuery(pregunta));
 }
- 
+
 function renderResults(data){
   resultadoActual=data;
   incidenciaSeleccionada=null;
@@ -927,22 +927,22 @@ function renderResults(data){
   document.getElementById('btn-generar-infografia').disabled=true;
   document.getElementById('infografia-panel').classList.remove('visible');
   const pct=Math.round(data.score*100);
- 
+
   // Scores por agenda (mock derivado del score total con variación por tipo)
   const agendaScores={
     tecnologica: Math.min(100, Math.round(pct * (0.75 + Math.random()*0.35))),
     datos:        Math.min(100, Math.round(pct * (0.80 + Math.random()*0.30))),
     genero:       Math.min(100, Math.round(pct * (0.90 + Math.random()*0.20)))
   };
- 
+
   // Color del score total según categoría
   const scoreColor={critica:'var(--gap-crit)',parcial:'var(--gap-part)',cubierta:'var(--gap-cov)'}[data.categoria];
- 
+
   // SVG iconos por agenda
   const iconTec=`<svg viewBox="0 0 11 11" fill="none" stroke="#0C447C" stroke-width="1.4" stroke-linecap="round"><rect x="1" y="2" width="9" height="6" rx="1"/><path d="M4 8v1.5M7 8v1.5M3 9.5h5"/></svg>`;
   const iconDat=`<svg viewBox="0 0 11 11" fill="none" stroke="#3C3489" stroke-width="1.4" stroke-linecap="round"><ellipse cx="5.5" cy="3" rx="3.5" ry="1.5"/><path d="M2 3v2.5c0 .83 1.57 1.5 3.5 1.5s3.5-.67 3.5-1.5V3"/><path d="M2 5.5V8c0 .83 1.57 1.5 3.5 1.5S9 8.83 9 8V5.5"/></svg>`;
   const iconGen=`<svg viewBox="0 0 11 11" fill="none" stroke="#72243E" stroke-width="1.4" stroke-linecap="round"><circle cx="5.5" cy="4.5" r="3"/><path d="M5.5 7.5V10M4 9h3"/></svg>`;
- 
+
   document.getElementById('score-card').innerHTML=`
     <div class="score-total-block">
       <div class="score-total-num" style="color:${scoreColor}">${pct}</div>
@@ -978,23 +978,23 @@ function renderResults(data){
         <span>gpt-4o-mini</span>
       </div>
     </div>`;
- 
+
   setTimeout(()=>{const f=document.getElementById('score-fill');if(f)f.style.width=pct+'%';},100);
- 
+
   document.getElementById('datasets-grid').innerHTML=data.datasets.map(d=>`
     <div class="dataset-card"><div class="dataset-card-header"><span class="dataset-card-title">${d.titulo}</span><span class="quality-badge ${d.calidad}">${CALIDAD_DISPLAY[d.calidad]||d.calidad}</span></div>
     <div class="dataset-card-meta"><span>${d.fuente}</span><span>${d.pais||'Global'}</span>${d.anio?`<span>${d.anio}</span>`:''}</div>
     <div class="dataset-sim"><span>similitud</span><div class="sim-bar"><div class="sim-bar-fill" style="width:${Math.round(d.sim*100)}%"></div></div><span>${Math.round(d.sim*100)}%</span></div></div>`).join('');
- 
+
   document.getElementById('frameworks-list').innerHTML=data.frameworks.map(f=>`
     <div class="framework-card"><div class="framework-card-header"><span class="framework-nombre">${f.nombre}</span><span class="framework-tipo">${f.tipo.replace('_',' ')}</span></div>
     <p class="framework-obligacion">${f.obligacion}</p>
     <div class="framework-meta"><span>${f.organismo}</span>${f.articulo?`<span>${f.articulo}</span>`:''}<span>sim ${Math.round(f.sim*100)}%</span></div></div>`).join('');
- 
+
   document.getElementById('results-section').classList.add('visible');
   document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
 }
- 
+
 /* ══ DATOS MOCK MONITOR COLECTIVO ══ */
 const AGENDA_MONITOR_MOCK=[
   {
@@ -1022,7 +1022,7 @@ const AGENDA_MONITOR_MOCK=[
     ]
   }
 ];
- 
+
 function renderMapa(){
   // Cards por agenda
   const agGrid=document.getElementById('monitor-agendas-grid');
@@ -1044,7 +1044,7 @@ function renderMapa(){
       </div>`;
     }).join('');
   }
- 
+
   // Grid de tópicos (mapa original)
   const maxTotal=Math.max(...MAPA_MOCK.map(m=>m.total));
   document.getElementById('mapa-grid').innerHTML=MAPA_MOCK.map(m=>{
@@ -1060,9 +1060,9 @@ function renderMapa(){
       <span style="color:var(--gap-cov)">${m.cubiertas} cubiertas</span>
     </div></div>`;}).join('');
 }
- 
+
 /* ══ CAPA 3: ¿QUÉ DATOS QUEREMOS? ══ */
- 
+
 // Datos de evolución semanal mock
 // Semana 0 = estado inicial (sin preguntas). Semanas 1-4 acumulan.
 const EVOLUCION_MOCK=[
@@ -1078,17 +1078,17 @@ const EVOLUCION_MOCK=[
   {semana:4,label:'Semana 4',total_preguntas:90,brechas_criticas:71,brechas_parciales:44,brechas_cubiertas:11,
    agendas:{tecnologica:{score:71,criticas:21,nuevas:34},datos:{score:76,criticas:28,nuevas:51},genero:{score:87,criticas:22,nuevas:81}}}
 ];
- 
+
 let semanaActual=0;
- 
+
 let contadorPreguntas=0;
- 
+
 function incrementarContador(){
   contadorPreguntas++;
   const el=document.getElementById('contador-total');
   if(el)el.textContent=contadorPreguntas;
 }
- 
+
 function cambiarSemana(idx,btn){
   semanaActual=idx;
   document.querySelectorAll('.semana-tab').forEach(t=>t.classList.remove('active'));
@@ -1097,7 +1097,7 @@ function cambiarSemana(idx,btn){
   if(lbl)lbl.textContent='Semana '+idx;
   renderCapa3(idx);
 }
- 
+
 function tarjetaMetrica(eyebrow,num,numColor,delta,deltaClass){
   return`<div class="evolucion-card" style="margin-bottom:8px;">
     <div class="evolucion-card-eyebrow">${eyebrow}</div>
@@ -1105,11 +1105,11 @@ function tarjetaMetrica(eyebrow,num,numColor,delta,deltaClass){
     <div class="evolucion-card-delta ${deltaClass}">${delta}</div>
   </div>`;
 }
- 
+
 function renderCapa3(idx){
   const d=EVOLUCION_MOCK[idx];
   const d0=EVOLUCION_MOCK[0];
- 
+
   // Columna izquierda: estado inicial siempre anclado
   const inicialHTML=
     tarjetaMetrica('Preguntas ingresadas','0','var(--ink)','Base — sin preguntas','delta-neu')+
@@ -1117,7 +1117,7 @@ function renderCapa3(idx){
     tarjetaMetrica('Brechas parciales',d0.brechas_parciales,'var(--gap-part)',d0.brechas_cubiertas+' cubiertas','delta-neu');
   const mInicial=document.getElementById('metricas-inicial');
   if(mInicial)mInicial.innerHTML=inicialHTML;
- 
+
   // Columna derecha: semana seleccionada
   const deltaC=d.brechas_criticas-d0.brechas_criticas;
   const semanaHTML=
@@ -1126,7 +1126,7 @@ function renderCapa3(idx){
     tarjetaMetrica('Brechas parciales',d.brechas_parciales,'var(--gap-part)',d.brechas_cubiertas+' cubiertas','delta-neu');
   const mSemana=document.getElementById('metricas-semana');
   if(mSemana)mSemana.innerHTML=semanaHTML;
- 
+
   // Gráfico barras — estado inicial siempre opaco, semanas anteriores semitransparentes
   const agendaColors={tecnologica:'#378ADD',datos:'#7F77DD',genero:'#D4537E'};
   document.getElementById('evolucion-chart').innerHTML=EVOLUCION_MOCK.map((sem,i)=>{
@@ -1141,7 +1141,7 @@ function renderCapa3(idx){
       <div class="chart-bar-label" style="font-weight:${esInicial||esActual?'600':'400'}">${esInicial?'Inicial':sem.label.replace('Semana ','S')}</div>
     </div>`;
   }).join('');
- 
+
   // Cards por agenda
   const agNames={tecnologica:'Agenda Tecnológica',datos:'Agenda de Datos',genero:'Agenda de Género'};
   const agColors={tecnologica:{color:'#0C447C',bg:'#E6F1FB',bar:'#378ADD'},datos:{color:'#3C3489',bg:'#EEEDFE',bar:'#7F77DD'},genero:{color:'#72243E',bg:'#FBEAF0',bar:'#D4537E'}};
@@ -1189,13 +1189,13 @@ function renderCapa3(idx){
     </div>`;
   }).join('');
 }
- 
+
 function exportarBrecha(){showToast('Brecha exportada como JSON para incidencia OGP');}
- 
+
 /* ══ TERMÓMETRO DE INCIDENCIA ══ */
 let incidenciaSeleccionada=null;
 let resultadoActual=null;
- 
+
 const INCIDENCIA_CONFIG={
   ogp:{
     label:'Incidencia para Gobierno Abierto',
@@ -1238,7 +1238,7 @@ const INCIDENCIA_CONFIG={
     accion:'Activar en nodo cooperativo'
   }
 };
- 
+
 function seleccionarIncidencia(tipo,btn){
   incidenciaSeleccionada=tipo;
   document.querySelectorAll('.termometro-chip').forEach(c=>c.classList.remove('selected'));
@@ -1246,18 +1246,18 @@ function seleccionarIncidencia(tipo,btn){
   document.getElementById('btn-generar-infografia').disabled=false;
   document.getElementById('infografia-panel').classList.remove('visible');
 }
- 
+
 function generarInfografia(){
   if(!incidenciaSeleccionada||!resultadoActual){return;}
   const data=resultadoActual;
   const pct=Math.round(data.score*100);
   const cat=data.categoria;
   const scoreColor={critica:'var(--gap-crit)',parcial:'var(--gap-part)',cubierta:'var(--gap-cov)'}[cat];
- 
+
   const tipos=incidenciaSeleccionada==='todas'
     ?Object.keys(INCIDENCIA_CONFIG)
     :[incidenciaSeleccionada];
- 
+
   let marcosHTML='';
   tipos.forEach(tipo=>{
     const cfg=INCIDENCIA_CONFIG[tipo];
@@ -1270,14 +1270,14 @@ function generarInfografia(){
         </div>`;
     });
   });
- 
+
   const accionesHTML=tipos.map(t=>`
     <span style="font-size:11px;padding:3px 10px;border-radius:12px;background:${INCIDENCIA_CONFIG[t].colorBg};color:${INCIDENCIA_CONFIG[t].color};font-family:var(--mono);font-weight:500;">
       ${INCIDENCIA_CONFIG[t].accion}
     </span>`).join('');
- 
+
   const fecha=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
- 
+
   document.getElementById('infografia-canvas').innerHTML=`
     <div class="infografia-top">
       <div>
@@ -1291,7 +1291,7 @@ function generarInfografia(){
         <div style="margin-top:4px;"><span class="gap-category-badge ${cat}">${cat}</span></div>
       </div>
     </div>
- 
+
     <div class="infografia-brecha-barra">
       <div class="infografia-brecha-label">
         <span>Nivel de brecha</span>
@@ -1301,25 +1301,25 @@ function generarInfografia(){
         <div class="infografia-fill" id="infog-fill" style="width:0%;background:${scoreColor}"></div>
       </div>
     </div>
- 
+
     <div style="margin:1rem 0 .5rem;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-light);font-family:var(--mono);">
       Marcos de referencia para incidencia
     </div>
     ${marcosHTML}
- 
+
     <div style="margin:.75rem 0 .5rem;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-light);font-family:var(--mono);">
       Síntesis de la brecha
     </div>
     <div style="font-size:13px;color:var(--ink-mid);line-height:1.65;background:white;padding:.75rem 1rem;border-radius:var(--r);">
       ${data.sintesis}
     </div>
- 
+
     <div class="infografia-footer">
       <span>Datos: ${data.datasets.length} datasets · ${data.frameworks.length} normas</span>
       <span>Motor: Infra.Coop v0.3 · Data Cooperativas Latinas</span>
       <span>${fecha}</span>
     </div>`;
- 
+
   const panel=document.getElementById('infografia-panel');
   panel.classList.add('visible');
   setTimeout(()=>{
@@ -1329,7 +1329,7 @@ function generarInfografia(){
   },100);
   showToast('Infografía de incidencia generada');
 }
- 
+
 /* ══ DESCARGAS ══ */
 function descargarInfografia(formato){
   const canvas=document.getElementById('infografia-canvas');
@@ -1340,7 +1340,7 @@ function descargarInfografia(formato){
     descargarComoPDF(canvas,'infracoop_incidencia_'+new Date().toISOString().slice(0,10));
   }
 }
- 
+
 function descargarDiagnostico(formato){
   const sec=document.getElementById('results-section');
   if(!resultadoActual){showToast('Primero realizá una búsqueda');return;}
@@ -1350,7 +1350,7 @@ function descargarDiagnostico(formato){
     descargarComoPDF(sec,'infracoop_diagnostico_'+new Date().toISOString().slice(0,10));
   }
 }
- 
+
 function capturarYDescargar(elemento,nombre,tipo){
   // Usa la API nativa de impresión del browser como fallback
   // En producción se integraría html2canvas
@@ -1368,11 +1368,11 @@ function capturarYDescargar(elemento,nombre,tipo){
   setTimeout(()=>{w.print();},600);
   showToast('Abriendo vista de impresión — guardá como PDF o imagen');
 }
- 
+
 function descargarComoPDF(elemento,nombre){
   capturarYDescargar(elemento,nombre+'.pdf','application/pdf');
 }
- 
+
 /* ══ CLASIFICACIÓN AUTOMÁTICA REVISADA ══
    Señales y pesos (revisados):
    S1 Metadatos     20% — fuente + metodología. SOLA no determina calidad completa.
@@ -1390,7 +1390,7 @@ function calcularCalidadAuto(datos){
   const desagregacion=datos.desagregacion||'sin-dato';
   const tieneUrl=!!(datos.url&&datos.url.trim().length>4);
   const formatoLegible=['csv','json','xlsx','api'].includes(formato);
- 
+
   // S1: Metadatos (20%) — fuente + metodología. No determina calidad sola.
   const tieneFuente=!!(datos.fuente&&datos.fuente.trim());
   let s1=0,razonS1='';
@@ -1398,20 +1398,20 @@ function calcularCalidadAuto(datos){
   else if(tieneFuente&&metodologia==='parcial'){s1=0.6;razonS1='Fuente presente, metodología parcial';}
   else if(tieneFuente){s1=0.3;razonS1='Fuente presente, sin metodología';}
   else{s1=0;razonS1='Sin fuente identificada';}
- 
+
   // S2: Frecuencia (30%) — >3 años bloquea a Nula; >2 años impide Completa
   let s2=0,razonS2='';
   if(anio===0){s2=0.1;razonS2='Año desconocido';}
   else if(antiguedad>3){s2=0;razonS2=`${antiguedad} años sin actualizar → Nula por frecuencia (umbral: 3 años)`;}
   else if(antiguedad>2){s2=0.4;razonS2=`${antiguedad} años sin actualizar → contribuye a Parcial (umbral: 2 años)`;}
   else{s2=1.0;razonS2=`Publicado hace ${antiguedad} año${antiguedad!==1?'s':''} — frecuencia vigente`;}
- 
+
   // S3: Desagregación geográfica (30%)
   let s3=0,razonS3='';
   if(desagregacion==='geografica'){s3=1.0;razonS3='Distribución geográfica presente (municipio, región o territorio)';}
   else if(desagregacion==='nacional'){s3=0.3;razonS3='Solo totales nacionales — sin distribución geográfica';}
   else{s3=0;razonS3='Desagregación geográfica desconocida o no especificada';}
- 
+
   // S4: Accesibilidad (20%) — URL + formato legible por máquina
   let s4=0,razonS4='';
   if(tieneUrl&&formatoLegible){s4=1.0;razonS4=`URL accesible + formato ${formato.toUpperCase()} legible por máquina`;}
@@ -1419,9 +1419,9 @@ function calcularCalidadAuto(datos){
   else if(tieneUrl&&formato==='sin-descarga'){s4=0.1;razonS4='URL presente pero sin descarga disponible';}
   else if(tieneUrl&&!formato){s4=0.4;razonS4='URL presente, formato no especificado';}
   else{s4=0;razonS4='Sin URL de descarga registrada';}
- 
+
   const score=s1*0.20+s2*0.30+s3*0.30+s4*0.20;
- 
+
   // Lógica de clasificación revisada
   let calidad;
   if(antiguedad>3){
@@ -1433,9 +1433,9 @@ function calcularCalidadAuto(datos){
   } else {
     calidad='nula';
   }
- 
+
   const confianza=score>=0.65?'alta':score>=0.40?'media':'baja';
- 
+
   return{calidad,score:Math.round(score*100),confianza,senales:[
     {label:'Metadatos',valor:razonS1,score:Math.round(s1*100),peso:'20%'},
     {label:'Frecuencia',valor:razonS2,score:Math.round(s2*100),peso:'30%'},
@@ -1443,7 +1443,7 @@ function calcularCalidadAuto(datos){
     {label:'Accesibilidad y formato',valor:razonS4,score:Math.round(s4*100),peso:'20%'}
   ]};
 }
- 
+
 function analizarDataset(){
   const titulo=document.getElementById('ds-titulo').value.trim();
   if(!titulo){showToast('Completá al menos el título antes de analizar');return;}
@@ -1459,7 +1459,7 @@ function analizarDataset(){
   registroPendiente={...datos,agendas:getAgendas('ds'),licencia:document.getElementById('ds-licencia').value,descripcion:document.getElementById('ds-descripcion').value.trim(),subtema:document.getElementById('ds-subtema').value.trim(),pais:document.getElementById('ds-pais').value,revisor:document.getElementById('ds-revisor').value.trim()};
   renderAnalisisPanel();
 }
- 
+
 function renderAnalisisPanel(){
   const a=analisisActual;
   document.getElementById('confianza-badge').textContent=`Confianza ${a.confianza}`;
@@ -1479,7 +1479,7 @@ function renderAnalisisPanel(){
   p.classList.add('visible');
   p.scrollIntoView({behavior:'smooth',block:'start'});
 }
- 
+
 /* ══ FLUJO POST-FUNDAMENTO ══ */
 function analizarPostFundamento(){
   const fundamento=document.getElementById('fundamento-revisor').value.trim();
@@ -1488,7 +1488,7 @@ function analizarPostFundamento(){
   const a=analisisActual;
   const f=fundamento.toLowerCase();
   let calidad_post=a.calidad,razon_cambio='';
- 
+
   // Análisis semántico del fundamento
   if((f.includes('actualiz')||f.includes('reciente')||f.includes('vigente'))&&a.calidad==='nula'){
     calidad_post='parcial';razon_cambio='El fundamento menciona actualización o vigencia — se sugiere reconsiderar a Parcial.';
@@ -1501,11 +1501,11 @@ function analizarPostFundamento(){
   } else {
     razon_cambio='El análisis del fundamento no altera la clasificación automática.';
   }
- 
+
   const cambia=calidad_post!==a.calidad;
   abrirModal(revisor,a.calidad,calidad_post,cambia,razon_cambio,fundamento);
 }
- 
+
 function abrirModal(revisor,calidadOrig,calidadPost,cambia,razon,fundamento){
   const N={completa:'Completa',parcial:'Parcial',nula:'Nula'};
   document.getElementById('modal-title').textContent=cambia?'El análisis sugiere un cambio de categoría':'Confirmá la clasificación';
@@ -1523,9 +1523,9 @@ function abrirModal(revisor,calidadOrig,calidadPost,cambia,razon,fundamento){
     <button class="btn-warn" onclick="escalarAlNodo()">Escalar al nodo colectivo</button>`;
   document.getElementById('modal-overlay').classList.add('visible');
 }
- 
+
 function cerrarModal(){document.getElementById('modal-overlay').classList.remove('visible');}
- 
+
 function confirmarClasificacion(calidad){
   cerrarModal();
   const revisor=document.getElementById('ds-revisor').value.trim()||'Revisor Principal';
@@ -1535,7 +1535,7 @@ function confirmarClasificacion(calidad){
   actualizarContador();limpiarFormDataset();
   showToast(`Dataset publicado · Calidad: ${CALIDAD_DISPLAY[calidad]}`);
 }
- 
+
 function clasificarManualmente(){
   cerrarModal();
   const calidad=prompt('Clasificá manualmente:\n\n1 → Completa\n2 → Parcial\n3 → Nula','2');
@@ -1544,7 +1544,7 @@ function clasificarManualmente(){
   if(c)confirmarClasificacion(c);
   else showToast('Clasificación manual cancelada');
 }
- 
+
 function escalarAlNodo(){
   cerrarModal();
   revisoresColectivos=[{id:1,estado:'pendiente',calidad:null,razon:''},{id:2,estado:'pendiente',calidad:null,razon:''},{id:3,estado:'pendiente',calidad:null,razon:''}];
@@ -1555,7 +1555,7 @@ function escalarAlNodo(){
   p.scrollIntoView({behavior:'smooth',block:'start'});
   showToast('Escalado al nodo colectivo — se requiere consenso unánime de 3 revisores');
 }
- 
+
 function renderRevisoresBlocks(){
   document.getElementById('revisores-blocks').innerHTML=revisoresColectivos.map(r=>`
     <div class="revisor-block" id="bloque-rc-${r.id}">
@@ -1581,7 +1581,7 @@ function renderRevisoresBlocks(){
       :`<div style="font-size:13px;color:var(--ink-mid);margin-top:4px;">Propuso: <strong>${CALIDAD_DISPLAY[r.calidad]||'—'}</strong> — ${r.razon}</div>`}
     </div>`).join('');
 }
- 
+
 function votarRC(id){
   const nombre=document.getElementById(`rc-nombre-${id}`)?.value?.trim()||`Revisor Colectivo ${id}`;
   const calidad=document.getElementById(`rc-calidad-${id}`)?.value||'parcial';
@@ -1591,14 +1591,14 @@ function votarRC(id){
   if(r){r.estado='aprobado';r.calidad=calidad;r.razon=razon;r.nombre=nombre;}
   actualizarDots();renderRevisoresBlocks();verificarConsenso();
 }
- 
+
 function actualizarDots(){
   revisoresColectivos.forEach((r,i)=>{
     const d=document.getElementById(`dot-${i+1}`);
     if(d)d.className=`consenso-dot ${r.estado==='aprobado'?'aprobado':r.estado==='rechazado'?'rechazado':''}`;
   });
 }
- 
+
 function verificarConsenso(){
   const todos=revisoresColectivos.every(r=>r.estado!=='pendiente');
   if(!todos)return;
@@ -1621,24 +1621,24 @@ function verificarConsenso(){
     document.getElementById('modal-overlay').classList.add('visible');
   }
 }
- 
+
 function reiniciarRC(){
   revisoresColectivos=[{id:1,estado:'pendiente',calidad:null,razon:''},{id:2,estado:'pendiente',calidad:null,razon:''},{id:3,estado:'pendiente',calidad:null,razon:''}];
   actualizarDots();renderRevisoresBlocks();document.getElementById('confirmacion-final').classList.remove('visible');
 }
- 
+
 function publicarRegistro(){
   confirmarClasificacion(revisoresColectivos[0].calidad);
   document.getElementById('colectivo-panel').classList.remove('visible');
   document.getElementById('confirmacion-final').classList.remove('visible');
 }
- 
+
 function rechazarPublicacion(){
   document.getElementById('colectivo-panel').classList.remove('visible');
   document.getElementById('analisis-panel').classList.remove('visible');
   showToast('Registro archivado sin publicar');limpiarFormDataset();
 }
- 
+
 /* ══ NORMATIVA ══ */
 function guardarNormativa(){
   const nombre=document.getElementById('nm-nombre').value.trim();
@@ -1646,10 +1646,10 @@ function guardarNormativa(){
   registrosDB.normativas.push({tipo:'normativa',id:'nm-'+Date.now(),nombre,organismo:document.getElementById('nm-organismo').value.trim(),tipo_norma:document.getElementById('nm-tipo').value,pais:document.getElementById('nm-pais').value,articulo:document.getElementById('nm-articulo').value.trim(),obligacion:document.getElementById('nm-obligacion').value.trim(),descripcion:document.getElementById('nm-descripcion').value.trim(),agendas:getAgendas('nm'),url:document.getElementById('nm-url').value.trim(),revisor_principal:document.getElementById('nm-revisor').value.trim(),estado:'publicado',cargado_en:new Date().toISOString()});
   limpiarFormNormativa();showToast(`Normativa "${nombre}" guardada`);actualizarContador();
 }
- 
+
 /* ══ HELPERS ══ */
 function getAgendas(prefix){return[...document.querySelectorAll(`input[name="${prefix}-agenda"]:checked`)].map(el=>el.value);}
- 
+
 function limpiarFormDataset(){
   ['ds-titulo','ds-fuente','ds-anio','ds-subtema','ds-url','ds-descripcion','ds-revisor'].forEach(id=>document.getElementById(id).value='');
   ['ds-pais','ds-formato','ds-licencia'].forEach(id=>document.getElementById(id).value='');
@@ -1660,13 +1660,13 @@ function limpiarFormDataset(){
   document.getElementById('confirmacion-final').classList.remove('visible');
   analisisActual=null;registroPendiente=null;
 }
- 
+
 function limpiarFormNormativa(){
   ['nm-nombre','nm-organismo','nm-articulo','nm-obligacion','nm-descripcion','nm-url','nm-revisor'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('nm-tipo').value='norma_oficial';document.getElementById('nm-pais').value='';
   document.querySelectorAll('input[name="nm-agenda"]').forEach(el=>el.checked=false);
 }
- 
+
 function switchTab(tab){
   ['dataset','normativa','registros'].forEach(t=>{
     document.getElementById('tab-'+t).style.display=t===tab?'':'none';
@@ -1675,13 +1675,13 @@ function switchTab(tab){
   });
   if(tab==='registros')renderRegistros();
 }
- 
+
 function actualizarContador(){
   const total=registrosDB.datasets.length+registrosDB.normativas.length;
   const el=document.getElementById('registros-count');
   if(el)el.textContent=`${total} registro${total!==1?'s':''} en esta sesión`;
 }
- 
+
 function renderRegistros(){
   actualizarContador();
   const container=document.getElementById('registros-container');
@@ -1701,19 +1701,19 @@ function renderRegistros(){
     </tr>`).join('')
   }</tbody></table>`;
 }
- 
+
 function exportarRegistros(){
   const blob=new Blob([JSON.stringify(registrosDB,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
   a.href=url;a.download=`infracoop_ingesta_${new Date().toISOString().slice(0,10)}.json`;a.click();
   URL.revokeObjectURL(url);showToast('JSON exportado');
 }
- 
+
 function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
- 
+
 document.getElementById('btn-buscar').disabled=true;
 document.getElementById('modal-overlay').addEventListener('click',function(e){if(e.target===this)cerrarModal();});
 </script>
