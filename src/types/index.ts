@@ -58,6 +58,20 @@ export interface FormularioData {
   ingresado_por: string
 }
 
+export interface NormativaFormData {
+  nombre: string
+  organismo_emisor: string
+  tipo: string
+  pais_alcance: string
+  anio_adopcion: number | null
+  articulo_numeral: string
+  obligacion_datos: string
+  agendas: string[]
+  url_texto_oficial: string
+  descripcion_notas: string
+  ingresado_por: string
+}
+
 export interface DatasetFilters {
   agenda?: string
   pais?: string
