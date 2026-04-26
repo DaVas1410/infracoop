@@ -1,0 +1,39 @@
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem;
+}
+
+.hero {
+  margin-bottom: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--ink-faint);
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--ink-light);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 12px;
+  max-width: 600px;
+}
+
+.hero h1 em { font-style: italic; color: var(--accent); }
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--ink-mid);
+  max-width: 520px;
+  line-height: 1.65;
+}
