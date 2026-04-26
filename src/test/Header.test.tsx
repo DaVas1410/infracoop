@@ -10,7 +10,7 @@ function renderWithRouter(ui: React.ReactElement) {
 describe('Header', () => {
   it('renders the Infra.Coop logo', () => {
     renderWithRouter(<Header />)
-    expect(screen.getByText('Infra.Coop')).toBeInTheDocument()
+    expect(screen.getByLabelText('Infra.Coop inicio')).toBeInTheDocument()
   })
 
   it('renders all 4 navigation links', () => {
