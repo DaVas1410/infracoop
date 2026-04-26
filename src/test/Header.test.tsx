@@ -13,11 +13,12 @@ describe('Header', () => {
     expect(screen.getByLabelText('Infra.Coop inicio')).toBeInTheDocument()
   })
 
-  it('renders all 4 navigation links', () => {
+  it('renders all 5 navigation links', () => {
     renderWithRouter(<Header />)
     expect(screen.getByRole('link', { name: /¿Qué es/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Monitor de Brechas/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Monitor Colectivo/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /¿Qué datos/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Ingresar datos/i })).toBeInTheDocument()
   })
 })
