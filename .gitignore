@@ -16,6 +16,14 @@ desktop.ini
 *.tmp
 *.bak
 
-# Node (if a build step is added later)
+# Node
 node_modules/
 dist/
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+scripts/import/import_log.json
+scripts/seed/output/
