@@ -70,3 +70,30 @@ export interface NormativaFilters {
   pais_alcance?: string
   sintetico?: boolean
 }
+
+export interface SearchHit {
+  id: string
+  titulo: string
+  fuente: string | null
+  pais: string | null
+  anio: number | null
+  calidad: string | null
+  similitud: number
+  tipo: 'dataset' | 'normativa'
+  agendas: string[]
+}
+
+export interface AgendaScores {
+  tecnologica: number
+  datos: number
+  genero: number
+}
+
+export interface GapResult {
+  score: number
+  categoria: 'critica' | 'parcial' | 'cubierta'
+  titulo: string
+  datasets: SearchHit[]
+  normativas: SearchHit[]
+  agendas: AgendaScores
+}
