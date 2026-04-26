@@ -105,3 +105,50 @@ describe('submitFormulario', () => {
     expect(mockFrom).toHaveBeenCalledWith('formularios_en_revision')
   })
 })
+
+describe('submitNormativa', () => {
+  it('inserts into normativas when mode is directo', async () => {
+    mockFrom.mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    })
+    const { submitNormativa } = await import('../services/dataService')
+    const data = {
+      nombre: 'Ley 1234', organismo_emisor: 'Congreso', tipo: 'Ley',
+      pais_alcance: 'MEX', anio_adopcion: 2020, articulo_numeral: 'Art. 5',
+      obligacion_datos: 'Publicar datos desagregados', agendas: ['Ag. Género'],
+      url_texto_oficial: 'https://example.com', descripcion_notas: '',
+      ingresado_por: 'test',
+    }
+    await submitNormativa(data, 'directo')
+    expect(mockFrom).toHaveBeenCalledWith('normativas')
+  })
+
+  it('inserts into normativas_en_revision when mode is revision', async () => {
+    mockFrom.mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    })
+    const { submitNormativa } = await import('../services/dataService')
+    const data = {
+      nombre: 'Ley 1234', organismo_emisor: 'Congreso', tipo: 'Ley',
+      pais_alcance: 'MEX', anio_adopcion: 2020, articulo_numeral: 'Art. 5',
+      obligacion_datos: 'Publicar datos desagregados', agendas: ['Ag. Género'],
+      url_texto_oficial: 'https://example.com', descripcion_notas: '',
+      ingresado_por: 'test',
+    }
+    await submitNormativa(data, 'revision')
+    expect(mockFrom).toHaveBeenCalledWith('normativas_en_revision')
+  })
+
+  it('throws on Supabase error', async () => {
+    mockFrom.mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: { message: 'DB error' } }),
+    })
+    const { submitNormativa } = await import('../services/dataService')
+    const data = {
+      nombre: 'Ley 1234', organismo_emisor: '', tipo: '', pais_alcance: '',
+      anio_adopcion: null, articulo_numeral: '', obligacion_datos: '',
+      agendas: [], url_texto_oficial: '', descripcion_notas: '', ingresado_por: '',
+    }
+    await expect(submitNormativa(data, 'directo')).rejects.toThrow('DB error')
+  })
+})

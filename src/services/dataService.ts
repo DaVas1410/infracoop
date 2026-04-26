@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import type { Dataset, Normativa, Pregunta, FormularioData, DatasetFilters, NormativaFilters } from '../types'
+import type { Dataset, Normativa, Pregunta, FormularioData, NormativaFormData, DatasetFilters, NormativaFilters } from '../types'
 
 const useSynthetic = import.meta.env.VITE_USE_SYNTHETIC_DATA === 'true'
 
@@ -81,6 +81,19 @@ export async function submitFormulario(
   const payload = modo === 'revision'
     ? { ...formulario, status: 'pendiente' }
     : formulario
+
+  const { error } = await supabase.from(tabla).insert(payload)
+  if (error) throw new Error(error.message)
+}
+
+export async function submitNormativa(
+  normativa: NormativaFormData,
+  modo: 'directo' | 'revision'
+): Promise<void> {
+  const tabla = modo === 'directo' ? 'normativas' : 'normativas_en_revision'
+  const payload = modo === 'revision'
+    ? { ...normativa, status: 'pendiente' }
+    : normativa
 
   const { error } = await supabase.from(tabla).insert(payload)
   if (error) throw new Error(error.message)
