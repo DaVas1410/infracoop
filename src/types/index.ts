@@ -97,3 +97,66 @@ export interface GapResult {
   normativas: SearchHit[]
   agendas: AgendaScores
 }
+
+// ── Monitor stats (¿Qué tenemos?) ───────────────────────────────────────────
+
+export interface AgendaStat {
+  id: 'tecnologica' | 'datos' | 'genero'
+  label: string
+  color: string
+  colorBg: string
+  barColor: string
+  total: number
+  criticas: number
+  parciales: number
+  cubiertas: number
+  top_subtemas: { subtema: string; count: number }[]
+  datasets_en_agenda: number
+  calidad_dist: { Completa: number; Parcial: number; Nula: number }
+}
+
+export interface TopicStat {
+  id: string
+  label: string
+  gap_score: number
+  categoria: 'critica' | 'parcial' | 'cubierta'
+  datasets_cubriendo: number
+  normativas_cubriendo: number
+  preguntas_relacionadas: number
+}
+
+export interface MonitorStats {
+  agendas: AgendaStat[]
+  topics: TopicStat[]
+  totalPreguntas: number
+  totalDatasets: number
+  totalNormativas: number
+  isReady: boolean
+  error: string | null
+}
+
+// ── Evolucion stats (¿Qué queremos?) ────────────────────────────────────────
+
+export interface SemanaStats {
+  isoWeek: string
+  label: string
+  nuevas: number
+  acumuladas: number
+  score_promedio: number
+  criticas: number
+  parciales: number
+  cubiertas: number
+  por_agenda: {
+    tecnologica: { nuevas: number; score_avg: number }
+    datos: { nuevas: number; score_avg: number }
+    genero: { nuevas: number; score_avg: number }
+  }
+}
+
+export interface EvolucionStats {
+  semanas: SemanaStats[]
+  topTemas: { subtema: string; count: number }[]
+  baseline: { score: number; criticas: number; parciales: number; cubiertas: number }
+  isReady: boolean
+  error: string | null
+}
