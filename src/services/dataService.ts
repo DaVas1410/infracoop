@@ -54,10 +54,18 @@ export async function getPreguntas(desde?: string): Promise<Pregunta[]> {
   return (data as Pregunta[]) ?? []
 }
 
-export async function insertPregunta(texto: string): Promise<Pregunta> {
+export async function insertPregunta(
+  texto: string,
+  score?: number,
+  datasetsEncontrados?: string[]
+): Promise<Pregunta> {
   const { data, error } = await supabase
     .from('preguntas')
-    .insert({ texto })
+    .insert({
+      texto,
+      ...(score != null && { resultado_score: score }),
+      ...(datasetsEncontrados?.length && { datasets_encontrados: datasetsEncontrados }),
+    })
     .select()
     .single()
 
