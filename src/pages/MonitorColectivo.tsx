@@ -1,83 +1,82 @@
 import { Layout } from '../components/Layout'
-import { useMonitorData } from '../hooks/useMonitorData'
-import type { AgendaMonitor, MapaTopic } from '../data/monitorData'
+import { useMonitorStats } from '../hooks/useMonitorStats'
+import type { AgendaStat, TopicStat } from '../types'
 
-function AgendaCard({ agenda }: { agenda: AgendaMonitor }) {
-  const maxCount = Math.max(...agenda.topicos.map(t => t.count))
+function AgendaCard({ a }: { a: AgendaStat }) {
+  const totalCalidad = a.calidad_dist.Completa + a.calidad_dist.Parcial + a.calidad_dist.Nula || 1
+  const pct = (n: number) => `${Math.round((n / totalCalidad) * 100)}%`
+
   return (
-    <div className="agenda-monitor-card" style={{ borderTopColor: agenda.barColor }}>
-      <div className="agenda-monitor-eyebrow" style={{ color: agenda.color }}>
-        {agenda.label}
+    <div className="agenda-monitor-card" style={{ borderTopColor: a.barColor }}>
+      <div className="agenda-monitor-eyebrow" style={{ color: a.color }}>{a.label}</div>
+
+      <div className="agenda-monitor-total" style={{ color: a.color }}>{a.datasets_en_agenda}</div>
+      <div className="agenda-monitor-label">datasets disponibles en esta agenda</div>
+
+      <div className="calidad-bar">
+        <div className="calidad-segment" style={{ width: pct(a.calidad_dist.Completa), background: 'var(--gap-cov)' }} />
+        <div className="calidad-segment" style={{ width: pct(a.calidad_dist.Parcial),  background: 'var(--gap-part)' }} />
+        <div className="calidad-segment" style={{ width: pct(a.calidad_dist.Nula),     background: 'var(--ink-faint)' }} />
       </div>
-      <div className="agenda-monitor-total" style={{ color: agenda.color }}>
-        {agenda.total}
+      <div className="calidad-legend">
+        <span><span className="calidad-dot" style={{ background: 'var(--gap-cov)' }} />{a.calidad_dist.Completa} completos</span>
+        <span><span className="calidad-dot" style={{ background: 'var(--gap-part)' }} />{a.calidad_dist.Parcial} parciales</span>
+        <span><span className="calidad-dot" style={{ background: 'var(--ink-light)' }} />{a.calidad_dist.Nula} nulos</span>
       </div>
-      <div className="agenda-monitor-label">
-        preguntas · +{agenda.preguntas_semana} esta semana
-      </div>
-      <div className="agenda-topic-list">
-        {agenda.topicos.map(t => (
-          <div key={t.nombre} className="agenda-topic-row">
-            <span className="agenda-topic-name">{t.nombre}</span>
-            <div className="agenda-topic-bar-wrap">
-              <div
-                className="agenda-topic-bar-fill"
-                style={{
-                  width: `${Math.round((t.count / maxCount) * 100)}%`,
-                  background: agenda.barColor,
-                }}
-              />
+
+      {a.top_subtemas.length > 0 && (
+        <div className="agenda-topic-list" style={{ marginTop: 12 }}>
+          {a.top_subtemas.map(t => (
+            <div key={t.subtema} className="agenda-topic-row">
+              <span className="agenda-topic-name">{t.subtema}</span>
+              <span className="agenda-topic-count">{t.count}</span>
             </div>
-            <span className="agenda-topic-count">{t.count}</span>
-          </div>
-        ))}
+          ))}
+        </div>
+      )}
+
+      <div style={{ marginTop: 10, fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--ink-light)' }}>
+        {a.total} preguntas han explorado esta agenda
       </div>
     </div>
   )
 }
 
-function MapaCard({ topic, maxTotal }: { topic: MapaTopic; maxTotal: number }) {
-  const cat = topic.score >= 0.75 ? 'critica' : topic.score >= 0.5 ? 'parcial' : 'cubierta'
-  const colors = {
-    critica: 'var(--gap-crit)',
-    parcial: 'var(--gap-part)',
-    cubierta: 'var(--gap-cov)',
-  }
-  const color = colors[cat]
+function TopicCard({ t }: { t: TopicStat }) {
+  const colors = { critica: 'var(--gap-crit)', parcial: 'var(--gap-part)', cubierta: 'var(--gap-cov)' }
+  const labels = { critica: 'brecha crítica', parcial: 'brecha parcial', cubierta: 'bien cubierto' }
+  const color = colors[t.categoria]
+
   return (
-    <div className="mapa-card">
-      <div className="mapa-card-topic">{topic.topic}</div>
-      <div className="mapa-card-count" style={{ color }}>{topic.total}</div>
-      <div className="mapa-card-label">preguntas sin respuesta completa</div>
-      <div className="mapa-mini-bar">
-        <div
-          className="mapa-mini-fill"
-          style={{ width: `${Math.round((topic.total / maxTotal) * 100)}%`, background: color }}
-        />
-      </div>
-      <div className="mapa-card-breakdown">
-        <span style={{ color: 'var(--gap-crit)' }}>{topic.criticas} críticas</span>
-        <span style={{ color: 'var(--gap-part)' }}>{topic.parciales} parciales</span>
-        <span style={{ color: 'var(--gap-cov)' }}>{topic.cubiertas} cubiertas</span>
+    <div className="topic-card">
+      <div className="topic-card-label">{t.label}</div>
+      <div className="topic-score-big" style={{ color }}>{Math.round(t.gap_score * 100)}%</div>
+      <div className="topic-score-sublabel" style={{ color }}>{labels[t.categoria]}</div>
+      <div className="topic-meta">
+        <span>{t.datasets_cubriendo} datasets</span>
+        <span>·</span>
+        <span>{t.normativas_cubriendo} normativas</span>
+        {t.preguntas_relacionadas > 0 && (
+          <><span>·</span><span>{t.preguntas_relacionadas} preguntas</span></>
+        )}
       </div>
     </div>
   )
 }
 
 export function MonitorColectivo() {
-  const { agendas, topics, totalPreguntas, isReady, error } = useMonitorData()
-  const maxTotal = Math.max(...topics.map(t => t.total))
+  const { agendas, topics, totalPreguntas, totalDatasets, totalNormativas, isReady, error } = useMonitorStats()
 
   return (
     <Layout>
       <main className="monitor-page">
         <div className="hero">
-          <p className="hero-eyebrow">Monitor Colectivo</p>
-          <h1>El mapa <em>colectivo</em> de brechas</h1>
+          <p className="hero-eyebrow">¿Qué tenemos?</p>
+          <h1>El corpus de datos <em>disponible</em></h1>
           <p className="hero-sub">
             {isReady
-              ? `${totalPreguntas} preguntas ingresadas · distribución por agenda y tópico`
-              : 'Cargando datos…'}
+              ? `${totalDatasets} datasets · ${totalNormativas} normativas · ${totalPreguntas} preguntas ingresadas`
+              : 'Cargando corpus…'}
           </p>
         </div>
 
@@ -88,12 +87,15 @@ export function MonitorColectivo() {
         )}
 
         <div className="monitor-grid">
-          {agendas.map(a => <AgendaCard key={a.id} agenda={a} />)}
+          {agendas.map(a => <AgendaCard key={a.id} a={a} />)}
         </div>
 
-        <p className="mapa-section-title">Mapa de tópicos</p>
+        <p className="mapa-section-title">Cobertura por tópico</p>
+        <p style={{ fontSize: 12, fontFamily: 'var(--mono)', color: 'var(--ink-light)', marginBottom: '1rem' }}>
+          Score de brecha calculado sobre el corpus real — mayor % = menos cubierto.
+        </p>
         <div className="mapa-grid">
-          {topics.map(t => <MapaCard key={t.topic} topic={t} maxTotal={maxTotal} />)}
+          {topics.map(t => <TopicCard key={t.id} t={t} />)}
         </div>
       </main>
     </Layout>

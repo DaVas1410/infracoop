@@ -711,3 +711,161 @@
   color: var(--ink-light);
   margin-top: 2px;
 }
+
+/* ═══ Quality distribution bar ═══ */
+
+.calidad-bar {
+  display: flex;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  gap: 1px;
+  margin: 8px 0 10px;
+}
+
+.calidad-segment { height: 100%; transition: width 0.5s ease; }
+
+.calidad-legend {
+  display: flex;
+  gap: 10px;
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--ink-light);
+  flex-wrap: wrap;
+}
+
+.calidad-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+
+/* ═══ Top temas list ═══ */
+
+.top-temas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+
+.top-tema-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.top-tema-rank {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-light);
+  min-width: 18px;
+  text-align: right;
+}
+
+.top-tema-name {
+  flex: 1;
+  color: var(--ink-mid);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-tema-bar-wrap {
+  width: 80px;
+  height: 4px;
+  background: var(--ink-faint);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.top-tema-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: width 0.6s ease;
+}
+
+.top-tema-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-light);
+  min-width: 24px;
+  text-align: right;
+}
+
+/* ═══ Stacked week chart ═══ */
+
+.stack-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex: 1;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.stack-bar {
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  border-radius: 3px 3px 0 0;
+  overflow: hidden;
+  transition: opacity 0.3s;
+}
+
+.stack-segment {
+  width: 100%;
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 0;
+}
+
+/* ═══ Topic coverage card ═══ */
+
+.topic-card {
+  background: var(--surface);
+  border: 1px solid var(--ink-faint);
+  border-radius: var(--r);
+  padding: 1rem;
+  transition: border-color .15s, transform .15s;
+}
+
+.topic-card:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+.topic-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-mid);
+  margin-bottom: 8px;
+}
+
+.topic-score-big {
+  font-family: var(--serif);
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+}
+
+.topic-score-sublabel {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 10px;
+}
+
+.topic-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--ink-light);
+  flex-wrap: wrap;
+}
