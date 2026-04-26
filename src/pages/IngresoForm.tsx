@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Layout } from '../components/Layout'
-import { submitFormulario } from '../services/dataService'
-import { submitNormativa } from '../services/dataService'
+import { submitFormulario, submitNormativa } from '../services/dataService'
 import type { FormularioData, NormativaFormData } from '../types'
 
 type TipoIngreso = 'dataset' | 'normativa'

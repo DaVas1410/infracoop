@@ -19,6 +19,16 @@ export default function App() {
           <Route path="/datos" element={<DatosQueremos />} />
           <Route path="/ingresar" element={<IngresoForm />} />
         </Routes>
+        <footer style={{
+          textAlign: 'center',
+          padding: '2rem 0 1.5rem',
+          fontFamily: 'var(--mono)',
+          fontSize: '10px',
+          color: 'var(--ink-light)',
+          letterSpacing: '0.08em',
+        }}>
+          Desarrollado por Diversa
+        </footer>
       </BrowserRouter>
     </SearchIndexProvider>
   )
