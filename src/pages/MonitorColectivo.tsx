@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { Layout } from '../components/Layout'
 import { useMonitorStats } from '../hooks/useMonitorStats'
-import type { AgendaStat, TopicStat } from '../types'
+import type { AgendaStat, TopicStat, ColectivoFiltros } from '../types'
 
 // ── Helpers (exported for tests) ─────────────────────────────────────────────
 
@@ -139,7 +140,10 @@ function TopicCard({ t }: { t: TopicStat }) {
 // ── MonitorColectivo ──────────────────────────────────────────────────────────
 
 export function MonitorColectivo() {
-  const { agendas, topics, totalPreguntas, totalDatasets, totalNormativas, isReady, error } = useMonitorStats()
+  const [filtros, setFiltros] = useState<ColectivoFiltros>({
+    agenda: 'todas', pais: 'todos', calidad: 'todas',
+  })
+  const { agendas, topics, totalPreguntas, totalDatasets, totalNormativas, paises, isReady, error } = useMonitorStats(filtros)
 
   return (
     <Layout>
@@ -159,6 +163,34 @@ export function MonitorColectivo() {
             {error}
           </p>
         )}
+
+        <div className="colectivo-filtros">
+          <select value={filtros.agenda} onChange={e => setFiltros(f => ({ ...f, agenda: e.target.value as ColectivoFiltros['agenda'] }))}>
+            <option value="todas">Todas las agendas</option>
+            <option value="tecnologica">Ag. Tecnológica</option>
+            <option value="datos">Ag. de Datos</option>
+            <option value="genero">Ag. de Género</option>
+          </select>
+
+          <select value={filtros.pais} onChange={e => setFiltros(f => ({ ...f, pais: e.target.value }))}>
+            <option value="todos">Todos los países</option>
+            {paises.map(p => <option key={p} value={p}>{p}</option>)}
+          </select>
+
+          <select value={filtros.calidad} onChange={e => setFiltros(f => ({ ...f, calidad: e.target.value as ColectivoFiltros['calidad'] }))}>
+            <option value="todas">Toda calidad</option>
+            <option value="Completa">Completa</option>
+            <option value="Parcial">Parcial</option>
+            <option value="Nula">Nula</option>
+          </select>
+
+          {(filtros.agenda !== 'todas' || filtros.pais !== 'todos' || filtros.calidad !== 'todas') && (
+            <button className="btn-ghost" style={{ fontSize: 11 }}
+              onClick={() => setFiltros({ agenda: 'todas', pais: 'todos', calidad: 'todas' })}>
+              Limpiar filtros
+            </button>
+          )}
+        </div>
 
         {isReady && (
           <MetricsBand

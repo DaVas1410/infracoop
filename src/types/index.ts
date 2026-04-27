@@ -141,12 +141,19 @@ export interface TopicStat {
   preguntas_relacionadas: number
 }
 
+export interface ColectivoFiltros {
+  agenda: 'todas' | 'tecnologica' | 'datos' | 'genero'
+  pais: string
+  calidad: 'todas' | 'Completa' | 'Parcial' | 'Nula'
+}
+
 export interface MonitorStats {
   agendas: AgendaStat[]
   topics: TopicStat[]
   totalPreguntas: number
   totalDatasets: number
   totalNormativas: number
+  paises: string[]
   isReady: boolean
   error: string | null
 }

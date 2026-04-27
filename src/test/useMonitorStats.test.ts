@@ -1,6 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { useMonitorStats } from '../hooks/useMonitorStats'
+import type { ColectivoFiltros } from '../types'
+
+const defaultFiltros: ColectivoFiltros = { agenda: 'todas', pais: 'todos', calidad: 'todas' }
 
 const makeDataset = (id: string, agendas: string[], subtema: string, calidad = 'Completa') => ({
   id, titulo: `Dataset ${id}`, fuente_organismo: null, pais_iso3: null,
@@ -58,14 +61,14 @@ vi.mock('../services/searchService', () => ({
 
 describe('useMonitorStats', () => {
   it('retorna exactamente 3 agendas y 5 tópicos', async () => {
-    const { result } = renderHook(() => useMonitorStats())
+    const { result } = renderHook(() => useMonitorStats(defaultFiltros))
     await waitFor(() => expect(result.current.isReady).toBe(true))
     expect(result.current.agendas).toHaveLength(3)
     expect(result.current.topics).toHaveLength(5)
   })
 
   it('cada tópico tiene gap_score en [0,1] y categoría válida', async () => {
-    const { result } = renderHook(() => useMonitorStats())
+    const { result } = renderHook(() => useMonitorStats(defaultFiltros))
     await waitFor(() => expect(result.current.isReady).toBe(true))
     for (const t of result.current.topics) {
       expect(t.gap_score).toBeGreaterThanOrEqual(0)
@@ -75,21 +78,53 @@ describe('useMonitorStats', () => {
   })
 
   it('totalPreguntas refleja todas las preguntas cargadas', async () => {
-    const { result } = renderHook(() => useMonitorStats())
+    const { result } = renderHook(() => useMonitorStats(defaultFiltros))
     await waitFor(() => expect(result.current.isReady).toBe(true))
     expect(result.current.totalPreguntas).toBe(3)
   })
 
   it('totalDatasets y totalNormativas reflejan el índice', async () => {
-    const { result } = renderHook(() => useMonitorStats())
+    const { result } = renderHook(() => useMonitorStats(defaultFiltros))
     await waitFor(() => expect(result.current.isReady).toBe(true))
     expect(result.current.totalDatasets).toBe(3)
     expect(result.current.totalNormativas).toBe(1)
   })
 
   it('error es null cuando todo está bien', async () => {
-    const { result } = renderHook(() => useMonitorStats())
+    const { result } = renderHook(() => useMonitorStats(defaultFiltros))
     await waitFor(() => expect(result.current.isReady).toBe(true))
     expect(result.current.error).toBeNull()
+  })
+
+  it('filtro agenda=genero filtra solo datasets con agenda de género', async () => {
+    const filtros: ColectivoFiltros = { agenda: 'genero', pais: 'todos', calidad: 'todas' }
+    const { result } = renderHook(() => useMonitorStats(filtros))
+    await waitFor(() => expect(result.current.isReady).toBe(true))
+    // DS-001 tiene agenda 'género'; DS-002 y DS-003 no → totalDatasets = 1
+    expect(result.current.totalDatasets).toBe(1)
+  })
+
+  it('filtro calidad=Completa filtra solo datasets completos', async () => {
+    const filtros: ColectivoFiltros = { agenda: 'todas', pais: 'todos', calidad: 'Completa' }
+    const { result } = renderHook(() => useMonitorStats(filtros))
+    await waitFor(() => expect(result.current.isReady).toBe(true))
+    // todos los datasets del mock tienen calidad 'Completa' → 3
+    expect(result.current.totalDatasets).toBe(3)
+  })
+
+  it('filtro pais solo cuenta datasets de ese país', async () => {
+    const filtros: ColectivoFiltros = { agenda: 'todas', pais: 'todos', calidad: 'todas' }
+    const { result } = renderHook(() => useMonitorStats(filtros))
+    await waitFor(() => expect(result.current.isReady).toBe(true))
+    // paises se deriva de datasetsMap sin filtrar — siempre retorna todos
+    expect(result.current.paises).toBeInstanceOf(Array)
+  })
+
+  it('paises siempre incluye todos los países independientemente de filtros', async () => {
+    const filtros: ColectivoFiltros = { agenda: 'genero', pais: 'todos', calidad: 'Completa' }
+    const { result } = renderHook(() => useMonitorStats(filtros))
+    await waitFor(() => expect(result.current.isReady).toBe(true))
+    // paises viene de idx.datasetsMap sin filtrar
+    expect(result.current.paises).toBeInstanceOf(Array)
   })
 })

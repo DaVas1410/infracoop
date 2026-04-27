@@ -10,7 +10,7 @@ const NAV_ITEMS = [
 ]
 
 export function Header() {
-  const { user, signOut } = useAuth()
+  const { user, perfil, signOut } = useAuth()
   return (
     <header className="site-header">
       <div className="site-header-inner">
@@ -24,7 +24,7 @@ export function Header() {
         </NavLink>
 
         <nav className="site-nav" aria-label="Navegación principal">
-          {NAV_ITEMS.map(({ to, label, num }) => (
+          {[...NAV_ITEMS, ...(perfil?.rol === 'admin' ? [{ to: '/revisar', label: 'Revisar', num: '06' }] : [])].map(({ to, label, num }) => (
             <NavLink
               key={to}
               to={to}

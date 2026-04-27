@@ -124,3 +124,39 @@ export async function updateEmbedding(
     .eq('id', id)
   if (error) throw new Error(error.message)
 }
+
+export async function aprobarFormulario(id: string): Promise<void> {
+  const { data, error: readErr } = await supabase
+    .from('formularios_en_revision').select('*').eq('id', id).single()
+  if (readErr || !data) throw new Error(readErr?.message ?? 'No encontrado')
+
+  const { status: _s, ...payload } = data as Record<string, unknown>
+  const { error: insErr } = await supabase.from('formularios_publicados').insert(payload)
+  if (insErr) throw new Error(insErr.message)
+
+  await supabase.from('formularios_en_revision').delete().eq('id', id)
+}
+
+export async function rechazarFormulario(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('formularios_en_revision').update({ status: 'rechazado' }).eq('id', id)
+  if (error) throw new Error(error.message)
+}
+
+export async function aprobarNormativa(id: string): Promise<void> {
+  const { data, error: readErr } = await supabase
+    .from('normativas_en_revision').select('*').eq('id', id).single()
+  if (readErr || !data) throw new Error(readErr?.message ?? 'No encontrado')
+
+  const { status: _s, ...payload } = data as Record<string, unknown>
+  const { error: insErr } = await supabase.from('normativas').insert(payload)
+  if (insErr) throw new Error(insErr.message)
+
+  await supabase.from('normativas_en_revision').delete().eq('id', id)
+}
+
+export async function rechazarNormativa(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('normativas_en_revision').update({ status: 'rechazado' }).eq('id', id)
+  if (error) throw new Error(error.message)
+}

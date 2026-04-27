@@ -1239,3 +1239,29 @@
   z-index: 200;
   pointer-events: none;
 }
+
+/* ═══ Filtros Monitor Colectivo ═══ */
+
+.colectivo-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+.colectivo-filtros select {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 5px 10px;
+  border: 1px solid var(--ink-faint);
+  border-radius: 9999px;
+  background: white;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.colectivo-filtros select:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}

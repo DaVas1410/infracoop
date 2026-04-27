@@ -9,6 +9,7 @@ import { SearchIndexProvider } from './context/SearchIndexContext'
 import { EmbedderProvider } from './context/EmbedderContext'
 import { AuthProvider } from './context/AuthContext'
 import { Login } from './pages/Login'
+import { Revisar } from './pages/Revisar'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/datos" element={<DatosQueremos />} />
           <Route path="/login" element={<Login />} />
           <Route path="/ingresar" element={<ProtectedRoute><IngresoForm /></ProtectedRoute>} />
+          <Route path="/revisar" element={<ProtectedRoute><Revisar /></ProtectedRoute>} />
         </Routes>
         <footer style={{
           textAlign: 'center',
