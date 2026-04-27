@@ -16,9 +16,10 @@ if (!supabaseUrl || !serviceKey) {
 const supabase = createClient(supabaseUrl, serviceKey)
 
 async function fetchRows(tabla: string) {
-  let q = supabase
-    .from(tabla)
-    .select('id, titulo, subtema, nombre, obligacion_datos, descripcion_notas')
+  const fields = tabla === 'datasets'
+    ? 'id, titulo, subtema, descripcion_notas'
+    : 'id, nombre, obligacion_datos, descripcion_notas'
+  let q = supabase.from(tabla).select(fields)
   if (!FORCE) q = (q as typeof q).is('embedding', null)
   const { data, error } = await q
   if (error) throw new Error(`${tabla}: ${error.message}`)
