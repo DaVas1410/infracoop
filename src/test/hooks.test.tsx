@@ -8,7 +8,7 @@ const mockDatasets: Dataset[] = [
     agendas: ['Ag. Género'], calidad: 'Completa', frecuencia: null,
     desagregacion_geo: null, accesibilidad_formato: null, url_descarga: null,
     url_valida: true, descripcion_notas: null, es_sintetico: false,
-    created_at: '2024-01-01T00:00:00Z' },
+    created_at: '2024-01-01T00:00:00Z', embedding: null },
 ]
 
 vi.mock('../services/dataService', () => ({

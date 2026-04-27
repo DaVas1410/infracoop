@@ -6,7 +6,7 @@ const makeDataset = (id: string, agendas: string[], subtema: string, calidad = '
   id, titulo: `Dataset ${id}`, fuente_organismo: null, pais_iso3: null,
   anio_publicacion: null, subtema, agendas, calidad, frecuencia: null,
   desagregacion_geo: null, accesibilidad_formato: null, url_descarga: null,
-  url_valida: true, descripcion_notas: null, es_sintetico: false, created_at: '2026-01-01',
+  url_valida: true, descripcion_notas: null, es_sintetico: false, created_at: '2026-01-01', embedding: null,
 })
 
 const mockIndex = {
@@ -20,11 +20,12 @@ const mockIndex = {
       id: 'NM-001', nombre: 'Test', organismo_emisor: null, tipo: null,
       pais_alcance: null, anio_adopcion: null, articulo_numeral: null,
       obligacion_datos: null, agendas: ['género'], url_texto_oficial: null,
-      descripcion_notas: null, es_sintetico: false, created_at: '2026-01-01',
+      descripcion_notas: null, es_sintetico: false, created_at: '2026-01-01', embedding: null,
     }],
   ]),
   miniDatasets: {} as any, miniNormativas: {} as any,
-  fuseDatasets: {} as any, fuseNormativas: {} as any,
+  fuseDatasets: { search: vi.fn().mockReturnValue([{ item: makeDataset('DS-001', ['género'], 'Salud reproductiva'), score: 0.2 }]) } as any,
+  fuseNormativas: { search: vi.fn().mockReturnValue([]) } as any,
 }
 
 vi.mock('../context/SearchIndexContext', () => ({

@@ -7,7 +7,7 @@ const makeDataset = (id: string, subtema: string) => ({
   anio_publicacion: null, subtema, agendas: ['género'], calidad: 'Completa',
   frecuencia: null, desagregacion_geo: null, accesibilidad_formato: null,
   url_descarga: null, url_valida: true, descripcion_notas: null,
-  es_sintetico: false, created_at: '2026-01-01',
+  es_sintetico: false, created_at: '2026-01-01', embedding: null,
 })
 
 vi.mock('../context/SearchIndexContext', () => ({

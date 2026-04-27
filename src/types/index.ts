@@ -15,6 +15,7 @@ export interface Dataset {
   descripcion_notas: string | null
   es_sintetico: boolean
   created_at: string
+  embedding: number[] | null
 }
 
 export interface Normativa {
@@ -31,6 +32,7 @@ export interface Normativa {
   descripcion_notas: string | null
   es_sintetico: boolean
   created_at: string
+  embedding: number[] | null
 }
 
 export interface Pregunta {

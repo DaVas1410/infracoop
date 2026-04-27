@@ -10,7 +10,7 @@ const mockDatasets: Dataset[] = [
     calidad: 'Completa', frecuencia: 'Mensual', desagregacion_geo: 'Estatal',
     accesibilidad_formato: 'CSV', url_descarga: 'https://example.com',
     url_valida: true, descripcion_notas: 'Registro mensual de feminicidios por entidad federativa',
-    es_sintetico: false, created_at: '2024-01-01T00:00:00Z',
+    es_sintetico: false, created_at: '2024-01-01T00:00:00Z', embedding: null,
   },
   {
     id: 'DS-002', titulo: 'Encuesta Nacional de Salud Reproductiva',
@@ -19,7 +19,7 @@ const mockDatasets: Dataset[] = [
     calidad: 'Completa', frecuencia: 'Quinquenal', desagregacion_geo: 'Municipal',
     accesibilidad_formato: 'CSV', url_descarga: 'https://example.com',
     url_valida: true, descripcion_notas: 'Estadísticas de salud reproductiva a nivel municipal',
-    es_sintetico: false, created_at: '2024-01-01T00:00:00Z',
+    es_sintetico: false, created_at: '2024-01-01T00:00:00Z', embedding: null,
   },
 ]
 
@@ -31,7 +31,7 @@ const mockNormativas: Normativa[] = [
     articulo_numeral: 'Numeral 6.4',
     obligacion_datos: 'Registro y reporte de casos de violencia sexual con desagregación territorial',
     agendas: ['Ag. de Género'], url_texto_oficial: null,
-    descripcion_notas: null, es_sintetico: false, created_at: '2024-01-01T00:00:00Z',
+    descripcion_notas: null, es_sintetico: false, created_at: '2024-01-01T00:00:00Z', embedding: null,
   },
 ]
 

@@ -9,7 +9,7 @@ const mockDatasets: Dataset[] = [
     frecuencia: 'Quinquenal', desagregacion_geo: 'Municipal',
     accesibilidad_formato: 'CSV', url_descarga: 'https://inegi.org.mx',
     url_valida: true, descripcion_notas: null, es_sintetico: false,
-    created_at: '2024-01-01T00:00:00Z',
+    created_at: '2024-01-01T00:00:00Z', embedding: null,
   },
 ]
 

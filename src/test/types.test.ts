@@ -20,6 +20,7 @@ describe('Dataset type', () => {
       descripcion_notas: null,
       es_sintetico: false,
       created_at: '2024-01-01T00:00:00Z',
+      embedding: null,
     }
     expectTypeOf(d.id).toBeString()
     expectTypeOf(d.agendas).toEqualTypeOf<string[]>()
@@ -42,6 +43,7 @@ describe('Normativa type', () => {
       descripcion_notas: null,
       es_sintetico: false,
       created_at: '2024-01-01T00:00:00Z',
+      embedding: null,
     }
     expectTypeOf(n.id).toBeString()
   })
@@ -66,5 +68,14 @@ describe('Pregunta type', () => {
       es_sintetico: false,
     }
     expectTypeOf(p.texto).toBeString()
+  })
+})
+
+describe('embedding field', () => {
+  it('Dataset has embedding field', () => {
+    expectTypeOf<Dataset['embedding']>().toEqualTypeOf<number[] | null>()
+  })
+  it('Normativa has embedding field', () => {
+    expectTypeOf<Normativa['embedding']>().toEqualTypeOf<number[] | null>()
   })
 })
