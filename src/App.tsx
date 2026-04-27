@@ -25,7 +25,7 @@ export default function App() {
           <Route path="/colectivo" element={<MonitorColectivo />} />
           <Route path="/datos" element={<DatosQueremos />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/ingresar" element={<ProtectedRoute><IngresoForm /></ProtectedRoute>} />
+          <Route path="/ingresar" element={<IngresoForm />} />
           <Route path="/revisar" element={<ProtectedRoute><Revisar /></ProtectedRoute>} />
         </Routes>
         <footer style={{

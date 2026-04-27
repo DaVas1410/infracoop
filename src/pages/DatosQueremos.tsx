@@ -147,22 +147,34 @@ function MetricaCard({ eyebrow, num, numColor, sub }: {
 
 // ── StackedWeekChart ──────────────────────────────────────────────────────────
 
+const MAX_CHART_BARS = 24
+
 function StackedWeekChart({ semanas, selectedIdx }: { semanas: SemanaStats[]; selectedIdx: number }) {
-  const maxNuevas = Math.max(...semanas.map(s => s.nuevas), 1)
+  // Show at most MAX_CHART_BARS, always including the selected week
+  const visible = semanas.length <= MAX_CHART_BARS
+    ? semanas
+    : semanas.slice(semanas.length - MAX_CHART_BARS)
+  const visibleSelectedIdx = semanas.length <= MAX_CHART_BARS
+    ? selectedIdx
+    : selectedIdx - (semanas.length - MAX_CHART_BARS)
+
+  const maxNuevas = Math.max(...visible.map(s => s.nuevas), 1)
+  const labelEvery = visible.length > 16 ? 4 : visible.length > 8 ? 2 : 1
 
   return (
     <div className="chart-section">
       <div className="chart-title">Preguntas nuevas por semana — distribución por severidad de brecha</div>
       <div className="chart-bars-scroll">
       <div className="chart-bars">
-        {semanas.map((s, i) => {
-          const isSelected = i === selectedIdx
-          const opacity = isSelected ? 1 : i < selectedIdx ? 0.45 : 0.15
+        {visible.map((s, i) => {
+          const isSelected = i === visibleSelectedIdx
+          const opacity = isSelected ? 1 : i < visibleSelectedIdx ? 0.45 : 0.15
           const totalH = 90
           const scale = s.nuevas / maxNuevas
           const critH = Math.round((s.criticas  / (s.nuevas || 1)) * totalH * scale)
           const parcH = Math.round((s.parciales / (s.nuevas || 1)) * totalH * scale)
           const cubH  = Math.round((s.cubiertas / (s.nuevas || 1)) * totalH * scale)
+          const showLabel = isSelected || i % labelEvery === 0
 
           return (
             <div key={s.isoWeek} className="stack-bar-group" style={{ opacity }}>
@@ -171,7 +183,7 @@ function StackedWeekChart({ semanas, selectedIdx }: { semanas: SemanaStats[]; se
                 <div className="stack-segment" style={{ height: parcH, background: 'var(--gap-part)' }} />
                 <div className="stack-segment" style={{ height: critH, background: 'var(--gap-crit)' }} />
               </div>
-              <div className="chart-bar-label" style={{ fontWeight: isSelected ? 600 : 400 }}>
+              <div className="chart-bar-label" style={{ fontWeight: isSelected ? 600 : 400, visibility: showLabel ? 'visible' : 'hidden' }}>
                 {s.label.replace('Sem. ', 'S')}
               </div>
             </div>
@@ -284,8 +296,8 @@ export function DatosQueremos() {
     <Layout>
       <main className="datos-page">
         <div className="hero">
-          <p className="hero-eyebrow">¿Qué queremos?</p>
-          <h1>La demanda <em>revelada</em> por las preguntas</h1>
+          <p className="hero-eyebrow">¿Qué datos queremos?</p>
+          <h1>Los datos que el corpus <em>no tiene</em></h1>
           <p className="hero-sub">
             {isReady
               ? `${totalAcumuladas} preguntas · demanda semanal de datos faltantes`
