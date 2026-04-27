@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const NAV_ITEMS = [
   { to: '/',          label: '¿Qué es Infra.Coop?',  num: '04' },
@@ -9,6 +10,7 @@ const NAV_ITEMS = [
 ]
 
 export function Header() {
+  const { user, signOut } = useAuth()
   return (
     <header className="site-header">
       <div className="site-header-inner">
@@ -34,6 +36,29 @@ export function Header() {
             </NavLink>
           ))}
         </nav>
+
+        {user && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: '11px', color: 'var(--ink-light)' }}>
+              {user.email}
+            </span>
+            <button
+              onClick={signOut}
+              style={{
+                fontFamily: 'var(--mono)',
+                fontSize: '11px',
+                padding: '2px 8px',
+                border: '1px solid var(--ink-light)',
+                background: 'transparent',
+                cursor: 'pointer',
+                borderRadius: '3px',
+                color: 'var(--ink)',
+              }}
+            >
+              Salir
+            </button>
+          </div>
+        )}
 
       </div>
     </header>

@@ -7,9 +7,13 @@ import { DatosQueremos } from './pages/DatosQueremos'
 import { IngresoForm } from './pages/IngresoForm'
 import { SearchIndexProvider } from './context/SearchIndexContext'
 import { EmbedderProvider } from './context/EmbedderContext'
+import { AuthProvider } from './context/AuthContext'
+import { Login } from './pages/Login'
+import { ProtectedRoute } from './components/ProtectedRoute'
 
 export default function App() {
   return (
+    <AuthProvider>
     <SearchIndexProvider>
       <EmbedderProvider>
       <BrowserRouter>
@@ -19,7 +23,8 @@ export default function App() {
           <Route path="/brechas" element={<MonitorBrechas />} />
           <Route path="/colectivo" element={<MonitorColectivo />} />
           <Route path="/datos" element={<DatosQueremos />} />
-          <Route path="/ingresar" element={<IngresoForm />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/ingresar" element={<ProtectedRoute><IngresoForm /></ProtectedRoute>} />
         </Routes>
         <footer style={{
           textAlign: 'center',
@@ -34,5 +39,6 @@ export default function App() {
       </BrowserRouter>
       </EmbedderProvider>
     </SearchIndexProvider>
+    </AuthProvider>
   )
 }
