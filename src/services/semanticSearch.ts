@@ -26,7 +26,7 @@ export function semanticSearch(
     datasets.push({
       id: doc.id, titulo: doc.titulo, fuente: doc.fuente_organismo,
       pais: doc.pais_iso3, anio: doc.anio_publicacion, calidad: doc.calidad,
-      similitud: Math.max(0, Math.round(sim * 100) / 100),
+      similitud: Math.min(1, Math.max(0, sim)),
       tipo: 'dataset', agendas: doc.agendas ?? [],
     })
   }
@@ -40,7 +40,7 @@ export function semanticSearch(
     normativas.push({
       id: doc.id, titulo: doc.nombre, fuente: doc.organismo_emisor,
       pais: doc.pais_alcance, anio: doc.anio_adopcion, calidad: null,
-      similitud: Math.max(0, Math.round(sim * 100) / 100),
+      similitud: Math.min(1, Math.max(0, sim)),
       tipo: 'normativa', agendas: doc.agendas ?? [],
     })
   }

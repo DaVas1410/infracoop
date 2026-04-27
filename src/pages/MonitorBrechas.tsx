@@ -141,7 +141,7 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
           />
         </div>
         <span className="hit-sim-pct" title="Similitud coseno con tu pregunta">
-          {Math.round(hit.similitud * 100)}%
+          {(hit.similitud * 100).toFixed(1)}%
         </span>
       </div>
     </div>
