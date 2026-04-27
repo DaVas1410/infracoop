@@ -86,3 +86,35 @@ describe('search', () => {
     expect(datasets.length).toBeLessThanOrEqual(5)
   })
 })
+
+describe('buildIndex with embeddings', () => {
+  it('populates datasetEmbeddings map for items that have an embedding', () => {
+    const vec = Array.from({ length: 768 }, (_, i) => i / 768)
+    const dsWithEmbed: Dataset[] = [
+      { ...mockDatasets[0], embedding: vec },
+      { ...mockDatasets[1], embedding: null },
+    ]
+    const normWithEmbed: Normativa[] = [{ ...mockNormativas[0], embedding: null }]
+    const index = buildIndex(dsWithEmbed, normWithEmbed)
+    expect(index.datasetEmbeddings.size).toBe(1)
+    expect(index.datasetEmbeddings.get('DS-001')).toBeInstanceOf(Float32Array)
+    expect(index.datasetEmbeddings.get('DS-002')).toBeUndefined()
+  })
+
+  it('populates normativaEmbeddings map for items that have an embedding', () => {
+    const vec = Array.from({ length: 768 }, (_, i) => i / 768)
+    const normWithEmbed: Normativa[] = [{ ...mockNormativas[0], embedding: vec }]
+    const dsWithEmbed: Dataset[] = mockDatasets.map(d => ({ ...d, embedding: null }))
+    const index = buildIndex(dsWithEmbed, normWithEmbed)
+    expect(index.normativaEmbeddings.size).toBe(1)
+    expect(index.normativaEmbeddings.get('NM-001')).toBeInstanceOf(Float32Array)
+  })
+
+  it('returns empty maps when no embeddings provided', () => {
+    const dsNoEmbed = mockDatasets.map(d => ({ ...d, embedding: null }))
+    const nmNoEmbed = mockNormativas.map(n => ({ ...n, embedding: null }))
+    const index = buildIndex(dsNoEmbed, nmNoEmbed)
+    expect(index.datasetEmbeddings.size).toBe(0)
+    expect(index.normativaEmbeddings.size).toBe(0)
+  })
+})

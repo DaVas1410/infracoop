@@ -9,6 +9,8 @@ export interface SearchIndex {
   fuseNormativas: Fuse<Normativa>
   datasetsMap: Map<string, Dataset>
   normativasMap: Map<string, Normativa>
+  datasetEmbeddings: Map<string, Float32Array>
+  normativaEmbeddings: Map<string, Float32Array>
 }
 
 export function buildIndex(datasets: Dataset[], normativas: Normativa[]): SearchIndex {
@@ -46,10 +48,22 @@ export function buildIndex(datasets: Dataset[], normativas: Normativa[]): Search
     includeScore: true, threshold: 0.6,
   })
 
+  const datasetEmbeddings = new Map<string, Float32Array>()
+  for (const d of datasets) {
+    if (d.embedding) datasetEmbeddings.set(d.id, new Float32Array(d.embedding))
+  }
+
+  const normativaEmbeddings = new Map<string, Float32Array>()
+  for (const n of normativas) {
+    if (n.embedding) normativaEmbeddings.set(n.id, new Float32Array(n.embedding))
+  }
+
   return {
     miniDatasets, miniNormativas, fuseDatasets, fuseNormativas,
     datasetsMap: new Map(datasets.map(d => [d.id, d])),
     normativasMap: new Map(normativas.map(n => [n.id, n])),
+    datasetEmbeddings,
+    normativaEmbeddings,
   }
 }
 
