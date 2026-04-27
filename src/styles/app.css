@@ -1008,6 +1008,70 @@
   flex-wrap: wrap;
 }
 
+/* ═══ Phase 6 — MonitorBrechas resultado band ═══ */
+
+.resultado-meta-band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.5rem;
+  align-items: center;
+  padding: .75rem 0 1rem;
+  border-bottom: 1px solid var(--ink-faint);
+  margin-bottom: 1.25rem;
+}
+
+.resultado-meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.resultado-meta-num {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.resultado-meta-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.resultado-meta-sep {
+  color: var(--ink-faint);
+  font-size: 18px;
+  align-self: center;
+}
+
+.btn-export-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  border: 1px solid var(--ink-faint);
+  background: white;
+  color: var(--ink-mid);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color .15s, color .15s;
+  margin-left: auto;
+}
+
+.btn-export-pdf:hover { border-color: var(--accent); color: var(--accent); }
+
+@media print {
+  .site-header, .motor-search, .btn-export-pdf, footer { display: none !important; }
+  .motor-results { padding: 0; }
+  .motor-results-inner { max-width: 100%; }
+  .resultado-meta-band { border-bottom: 1px solid #ccc; }
+}
+
 /* ═══ Phase 6 — DatosQueremos layout ═══ */
 
 .datos-layout {

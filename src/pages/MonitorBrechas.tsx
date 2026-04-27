@@ -214,6 +214,48 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
   )
 }
 
+// ── ResultadoMetaBand ─────────────────────────────────────────────────────────
+
+function ResultadoMetaBand({ resultado }: { resultado: GapResult }) {
+  const ds = resultado.datasets.length
+  const nm = resultado.normativas.length
+  const agendaColor = {
+    tecnologica: '#0C447C',
+    datos: '#3C3489',
+    genero: '#72243E',
+  }
+
+  return (
+    <div className="resultado-meta-band">
+      <div className="resultado-meta-item">
+        <span className="resultado-meta-num">{ds}</span>
+        <span className="resultado-meta-label">datasets</span>
+      </div>
+      <span className="resultado-meta-sep">·</span>
+      <div className="resultado-meta-item">
+        <span className="resultado-meta-num">{nm}</span>
+        <span className="resultado-meta-label">normativas</span>
+      </div>
+      <span className="resultado-meta-sep">·</span>
+      {(['tecnologica', 'datos', 'genero'] as const).map(ag => (
+        <div key={ag} className="resultado-meta-item">
+          <span className="resultado-meta-num" style={{ color: agendaColor[ag], fontSize: '1.1rem' }}>
+            {resultado.agendas[ag]}
+          </span>
+          <span className="resultado-meta-label">{ag}</span>
+        </div>
+      ))}
+      <button
+        className="btn-export-pdf"
+        onClick={() => window.print()}
+        title="Exportar resultado como PDF"
+      >
+        ↓ PDF
+      </button>
+    </div>
+  )
+}
+
 // ── ResultsColumns ────────────────────────────────────────────────────────────
 
 function ResultsColumns({ resultado }: { resultado: GapResult }) {
@@ -333,7 +375,10 @@ export function MonitorBrechas() {
         <div className="motor-results">
           <div className="motor-results-inner">
             <ScorePanel resultado={resultado} />
-            <ResultsColumns resultado={resultado} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <ResultadoMetaBand resultado={resultado} />
+              <ResultsColumns resultado={resultado} />
+            </div>
           </div>
         </div>
       )}
