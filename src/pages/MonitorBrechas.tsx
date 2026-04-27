@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useMotorBrechas } from '../hooks/useMotorBrechas'
 import { useSearchIndex } from '../context/SearchIndexContext'
+import { useEmbedder } from '../context/EmbedderContext'
 import type { GapResult, SearchHit } from '../types'
 
 const LOADING_STEPS = [
@@ -195,6 +196,7 @@ function ResultsColumns({ resultado }: { resultado: GapResult }) {
 export function MonitorBrechas() {
   const { isReady, error: indexError } = useSearchIndex()
   const { resultado, isLoading, error: searchError, buscar, limpiar } = useMotorBrechas()
+  const { status: embedderStatus, progress: embedderProgress, error: embedderError } = useEmbedder()
   const [query, setQuery] = useState('')
 
   const handleBuscar = () => {
@@ -204,6 +206,39 @@ export function MonitorBrechas() {
   const handleLimpiar = () => {
     limpiar()
     setQuery('')
+  }
+
+  if (embedderStatus === 'loading' || embedderStatus === 'error') {
+    return (
+      <main className="motor-page">
+        <div className="container">
+          <div className="hero">
+            <p className="hero-eyebrow">Monitor de Brechas</p>
+            <h1>¿Qué datos <em>faltan</em>?</h1>
+          </div>
+          <div className="search-box" style={{ textAlign: 'center', padding: '2rem' }}>
+            {embedderStatus === 'error' ? (
+              <p className="search-error">{embedderError ?? 'Error cargando el modelo semántico'}</p>
+            ) : (
+              <>
+                <p className="label-mono" style={{ marginBottom: 8 }}>{embedderProgress}</p>
+                <div style={{
+                  height: 4, background: 'var(--ink-faint)',
+                  borderRadius: 2, overflow: 'hidden',
+                }}>
+                  <div style={{
+                    height: '100%', width: '60%',
+                    background: 'var(--accent)',
+                    borderRadius: 2,
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                  }} />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </main>
+    )
   }
 
   return (

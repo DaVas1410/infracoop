@@ -6,10 +6,12 @@ import { MonitorColectivo } from './pages/MonitorColectivo'
 import { DatosQueremos } from './pages/DatosQueremos'
 import { IngresoForm } from './pages/IngresoForm'
 import { SearchIndexProvider } from './context/SearchIndexContext'
+import { EmbedderProvider } from './context/EmbedderContext'
 
 export default function App() {
   return (
     <SearchIndexProvider>
+      <EmbedderProvider>
       <BrowserRouter>
         <Header />
         <Routes>
@@ -30,6 +32,7 @@ export default function App() {
           Desarrollado por Diversa
         </footer>
       </BrowserRouter>
+      </EmbedderProvider>
     </SearchIndexProvider>
   )
 }
