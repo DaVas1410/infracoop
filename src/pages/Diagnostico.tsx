@@ -8,6 +8,25 @@ interface DiagnosticoState {
   chips: string[]
 }
 
+const CHIP_CONTEXT: Record<string, { titulo: string; descripcion: string }> = {
+  'Gobierno Abierto': {
+    titulo: 'Diagnóstico para Gobierno Abierto',
+    descripcion: 'En el marco de transparencia, rendición de cuentas y participación ciudadana, esta brecha señala datos que el Estado debería producir y publicar de forma abierta.',
+  },
+  'DDHH': {
+    titulo: 'Diagnóstico desde DDHH',
+    descripcion: 'Desde una perspectiva de derechos humanos, la ausencia de estos datos compromete la capacidad del Estado de cumplir sus obligaciones de producir evidencia sobre el goce efectivo de derechos.',
+  },
+  'Cooperación Digital': {
+    titulo: 'Diagnóstico para Cooperación Digital',
+    descripcion: 'En el contexto de la cooperación internacional para la gobernanza digital y los datos, esta brecha identifica áreas prioritarias donde se requiere apoyo técnico y financiero.',
+  },
+  'Gobernanza Cooperativa': {
+    titulo: 'Diagnóstico para Gobernanza Cooperativa',
+    descripcion: 'Bajo un modelo de datos cooperativos y gobernanza ciudadana, esta brecha señala la oportunidad de que las comunidades produzcan y controlen los datos que las representan.',
+  },
+}
+
 export function Diagnostico() {
   const location = useLocation()
   const state = location.state as DiagnosticoState | null
@@ -32,6 +51,16 @@ export function Diagnostico() {
 
   const { resultado, query, chips } = state
   const pct = Math.round(resultado.score * 100)
+
+  const reportTitulo = chips.length === 1
+    ? CHIP_CONTEXT[chips[0]]?.titulo ?? 'Diagnóstico de incidencia'
+    : chips.length > 1
+      ? `Diagnóstico de incidencia — ${chips.join(', ')}`
+      : 'Diagnóstico de incidencia'
+
+  const chipContexts = chips
+    .map(c => CHIP_CONTEXT[c])
+    .filter(Boolean)
   const colorMap: Record<string, string> = {
     critica: 'var(--gap-crit)',
     parcial: 'var(--gap-part)',
@@ -46,7 +75,7 @@ export function Diagnostico() {
       <div className="diagnostico-logo">
         Infra<span>.</span>Coop
       </div>
-      <div className="diagnostico-sub">Motor de brechas · Diagnóstico de incidencia</div>
+      <div className="diagnostico-sub">Motor de brechas · {reportTitulo}</div>
 
       <div className="diagnostico-query">"{query}"</div>
 
@@ -68,14 +97,19 @@ export function Diagnostico() {
       </div>
 
       {chips.length > 0 && (
-        <>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 10, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--ink-light)', marginBottom: '.5rem' }}>
+        <div style={{ marginBottom: '1.75rem', padding: '1rem 1.25rem', background: 'var(--accent-bg, #EEEDFE)', borderRadius: 'var(--r)', borderLeft: '3px solid var(--accent)' }}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 10, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', marginBottom: '.6rem' }}>
             Agenda de incidencia
           </div>
-          <div className="diagnostico-chips-row">
+          <div className="diagnostico-chips-row" style={{ marginBottom: chipContexts.length > 0 ? '.75rem' : 0 }}>
             {chips.map(c => <span key={c} className="diagnostico-chip">{c}</span>)}
           </div>
-        </>
+          {chipContexts.map((ctx, i) => (
+            <p key={i} style={{ fontSize: 13, lineHeight: 1.65, color: 'var(--ink-mid)', marginTop: i > 0 ? '.5rem' : 0 }}>
+              {ctx.descripcion}
+            </p>
+          ))}
+        </div>
       )}
 
       <div className="diagnostico-section-title">Datasets disponibles</div>
