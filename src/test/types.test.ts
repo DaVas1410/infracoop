@@ -73,9 +73,9 @@ describe('Pregunta type', () => {
 
 describe('embedding field', () => {
   it('Dataset has embedding field', () => {
-    expectTypeOf<Dataset['embedding']>().toEqualTypeOf<number[] | null>()
+    expectTypeOf<Dataset['embedding']>().toEqualTypeOf<number[] | string | null>()
   })
   it('Normativa has embedding field', () => {
-    expectTypeOf<Normativa['embedding']>().toEqualTypeOf<number[] | null>()
+    expectTypeOf<Normativa['embedding']>().toEqualTypeOf<number[] | string | null>()
   })
 })

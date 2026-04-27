@@ -50,12 +50,14 @@ export function buildIndex(datasets: Dataset[], normativas: Normativa[]): Search
 
   const datasetEmbeddings = new Map<string, Float32Array>()
   for (const d of datasets) {
-    if (d.embedding) datasetEmbeddings.set(d.id, new Float32Array(d.embedding))
+    const vec = parseEmbedding(d.embedding)
+    if (vec) datasetEmbeddings.set(d.id, vec)
   }
 
   const normativaEmbeddings = new Map<string, Float32Array>()
   for (const n of normativas) {
-    if (n.embedding) normativaEmbeddings.set(n.id, new Float32Array(n.embedding))
+    const vec = parseEmbedding(n.embedding)
+    if (vec) normativaEmbeddings.set(n.id, vec)
   }
 
   return {
@@ -65,6 +67,14 @@ export function buildIndex(datasets: Dataset[], normativas: Normativa[]): Search
     datasetEmbeddings,
     normativaEmbeddings,
   }
+}
+
+function parseEmbedding(raw: number[] | string | null | undefined): Float32Array | null {
+  if (!raw) return null
+  if (typeof raw === 'string') {
+    try { return new Float32Array(JSON.parse(raw)) } catch { return null }
+  }
+  return new Float32Array(raw)
 }
 
 function normalize(score: number, max: number): number {
