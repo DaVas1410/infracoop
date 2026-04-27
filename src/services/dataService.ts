@@ -76,25 +76,51 @@ export async function insertPregunta(
 export async function submitFormulario(
   formulario: FormularioData,
   modo: 'directo' | 'revision'
-): Promise<void> {
+): Promise<string | null> {
   const tabla = modo === 'directo' ? 'formularios_publicados' : 'formularios_en_revision'
   const payload = modo === 'revision'
     ? { ...formulario, status: 'pendiente' }
     : formulario
 
+  if (modo === 'directo') {
+    const { data, error } = await supabase.from(tabla).insert(payload).select('id').single()
+    if (error) throw new Error(error.message)
+    return (data as { id: string }).id
+  }
+
   const { error } = await supabase.from(tabla).insert(payload)
   if (error) throw new Error(error.message)
+  return null
 }
 
 export async function submitNormativa(
   normativa: NormativaFormData,
   modo: 'directo' | 'revision'
-): Promise<void> {
+): Promise<string | null> {
   const tabla = modo === 'directo' ? 'normativas' : 'normativas_en_revision'
   const payload = modo === 'revision'
     ? { ...normativa, status: 'pendiente' }
     : normativa
 
+  if (modo === 'directo') {
+    const { data, error } = await supabase.from(tabla).insert(payload).select('id').single()
+    if (error) throw new Error(error.message)
+    return (data as { id: string }).id
+  }
+
   const { error } = await supabase.from(tabla).insert(payload)
+  if (error) throw new Error(error.message)
+  return null
+}
+
+export async function updateEmbedding(
+  tabla: 'datasets' | 'normativas',
+  id: string,
+  embedding: number[]
+): Promise<void> {
+  const { error } = await supabase
+    .from(tabla)
+    .update({ embedding })
+    .eq('id', id)
   if (error) throw new Error(error.message)
 }

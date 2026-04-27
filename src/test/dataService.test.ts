@@ -79,20 +79,25 @@ describe('insertPregunta', () => {
 })
 
 describe('submitFormulario', () => {
-  it('inserts into formularios_publicados when mode is directo', async () => {
+  it('inserts into formularios_publicados when mode is directo and returns id', async () => {
     mockFrom.mockReturnValue({
-      insert: vi.fn().mockResolvedValue({ error: null }),
+      insert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: 'mock-id' }, error: null }),
+        }),
+      }),
     })
     const { submitFormulario } = await import('../services/dataService')
     const data = { titulo: 'Test', fuente_organismo: 'INEGI', pais_iso3: 'MEX',
       anio_publicacion: 2024, subtema: 'test', agendas: [], frecuencia: 'Anual',
       desagregacion_geo: 'Nacional', accesibilidad_formato: 'CSV',
       url_descarga: 'https://example.com', descripcion_notas: '', ingresado_por: 'test' }
-    await submitFormulario(data, 'directo')
+    const result = await submitFormulario(data, 'directo')
     expect(mockFrom).toHaveBeenCalledWith('formularios_publicados')
+    expect(result).toBe('mock-id')
   })
 
-  it('inserts into formularios_en_revision when mode is revision', async () => {
+  it('inserts into formularios_en_revision when mode is revision and returns null', async () => {
     mockFrom.mockReturnValue({
       insert: vi.fn().mockResolvedValue({ error: null }),
     })
@@ -101,15 +106,20 @@ describe('submitFormulario', () => {
       anio_publicacion: 2024, subtema: 'test', agendas: [], frecuencia: 'Anual',
       desagregacion_geo: 'Nacional', accesibilidad_formato: 'CSV',
       url_descarga: 'https://example.com', descripcion_notas: '', ingresado_por: 'test' }
-    await submitFormulario(data, 'revision')
+    const result = await submitFormulario(data, 'revision')
     expect(mockFrom).toHaveBeenCalledWith('formularios_en_revision')
+    expect(result).toBeNull()
   })
 })
 
 describe('submitNormativa', () => {
-  it('inserts into normativas when mode is directo', async () => {
+  it('inserts into normativas when mode is directo and returns id', async () => {
     mockFrom.mockReturnValue({
-      insert: vi.fn().mockResolvedValue({ error: null }),
+      insert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: 'mock-id' }, error: null }),
+        }),
+      }),
     })
     const { submitNormativa } = await import('../services/dataService')
     const data = {
@@ -119,11 +129,12 @@ describe('submitNormativa', () => {
       url_texto_oficial: 'https://example.com', descripcion_notas: '',
       ingresado_por: 'test',
     }
-    await submitNormativa(data, 'directo')
+    const result = await submitNormativa(data, 'directo')
     expect(mockFrom).toHaveBeenCalledWith('normativas')
+    expect(result).toBe('mock-id')
   })
 
-  it('inserts into normativas_en_revision when mode is revision', async () => {
+  it('inserts into normativas_en_revision when mode is revision and returns null', async () => {
     mockFrom.mockReturnValue({
       insert: vi.fn().mockResolvedValue({ error: null }),
     })
@@ -135,13 +146,18 @@ describe('submitNormativa', () => {
       url_texto_oficial: 'https://example.com', descripcion_notas: '',
       ingresado_por: 'test',
     }
-    await submitNormativa(data, 'revision')
+    const result = await submitNormativa(data, 'revision')
     expect(mockFrom).toHaveBeenCalledWith('normativas_en_revision')
+    expect(result).toBeNull()
   })
 
   it('throws on Supabase error', async () => {
     mockFrom.mockReturnValue({
-      insert: vi.fn().mockResolvedValue({ error: { message: 'DB error' } }),
+      insert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } }),
+        }),
+      }),
     })
     const { submitNormativa } = await import('../services/dataService')
     const data = {

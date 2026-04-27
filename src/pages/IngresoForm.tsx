@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Layout } from '../components/Layout'
-import { submitFormulario, submitNormativa } from '../services/dataService'
+import { submitFormulario, submitNormativa, updateEmbedding } from '../services/dataService'
+import { useEmbedder } from '../context/EmbedderContext'
 import type { FormularioData, NormativaFormData } from '../types'
 
 type TipoIngreso = 'dataset' | 'normativa'
@@ -29,6 +30,7 @@ export function IngresoForm() {
   const [normativaData, setNormativaData] = useState<NormativaFormData>(EMPTY_NORMATIVA)
   const [status, setStatus] = useState<FormStatus>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const { status: embedderStatus, embed } = useEmbedder()
 
   function handleAgendasChange(agenda: string, checked: boolean, isDataset: boolean) {
     if (isDataset) {
@@ -49,12 +51,23 @@ export function IngresoForm() {
     setStatus('loading')
     setErrorMsg('')
     try {
+      let insertedId: string | null = null
       if (tipo === 'dataset') {
-        await submitFormulario(datasetData, modo)
+        insertedId = await submitFormulario(datasetData, modo)
       } else {
-        await submitNormativa(normativaData, modo)
+        insertedId = await submitNormativa(normativaData, modo)
       }
       setStatus('success')
+
+      if (modo === 'directo' && insertedId && embedderStatus === 'ready') {
+        const tabla = tipo === 'dataset' ? 'datasets' : 'normativas'
+        const text = tipo === 'dataset'
+          ? `${datasetData.titulo} ${datasetData.subtema} ${datasetData.descripcion_notas}`
+          : `${normativaData.nombre} ${normativaData.obligacion_datos} ${normativaData.descripcion_notas}`
+        embed(text)
+          .then(vec => updateEmbedding(tabla, insertedId!, Array.from(vec)))
+          .catch(() => {})
+      }
     } catch (err) {
       setStatus('error')
       setErrorMsg(err instanceof Error ? err.message : 'Error desconocido')
