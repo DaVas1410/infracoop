@@ -62,6 +62,10 @@ export function EmbedderProvider({ children }: { children: React.ReactNode }) {
     worker.onerror = (e) => {
       setStatus('error')
       setError(e.message)
+      for (const [, [, reject]] of pendingRef.current) {
+        reject(new Error(e.message))
+      }
+      pendingRef.current.clear()
     }
 
     return () => { worker.terminate() }
