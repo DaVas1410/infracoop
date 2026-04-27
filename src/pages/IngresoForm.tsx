@@ -2,13 +2,11 @@ import { useState } from 'react'
 import { Layout } from '../components/Layout'
 import { submitFormulario, submitNormativa, updateEmbedding } from '../services/dataService'
 import { useEmbedder } from '../context/EmbedderContext'
+import { useAuth } from '../context/AuthContext'
 import type { FormularioData, NormativaFormData } from '../types'
 
 type TipoIngreso = 'dataset' | 'normativa'
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
-
-const requireSupervision = import.meta.env.VITE_REQUIRE_SUPERVISION !== 'false'
-const modo: 'directo' | 'revision' = requireSupervision ? 'revision' : 'directo'
 
 const AGENDAS = ['Ag. Tecnológica', 'Ag. Datos', 'Ag. Género']
 
@@ -31,6 +29,8 @@ export function IngresoForm() {
   const [status, setStatus] = useState<FormStatus>('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const { status: embedderStatus, embed } = useEmbedder()
+  const { perfil } = useAuth()
+  const modo: 'directo' | 'revision' = perfil?.rol === 'admin' ? 'directo' : 'revision'
 
   function handleAgendasChange(agenda: string, checked: boolean, isDataset: boolean) {
     if (isDataset) {
