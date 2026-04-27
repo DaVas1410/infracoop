@@ -91,7 +91,7 @@ export function search(
           pais: doc.pais_iso3, anio: doc.anio_publicacion, calidad: doc.calidad,
           similitud: normalize(r.score, maxScore), tipo: 'dataset' as const,
           agendas: doc.agendas ?? [],
-        }
+        } as SearchHit
       })
       .filter((h): h is SearchHit => h !== null)
   } else {
@@ -117,7 +117,7 @@ export function search(
           pais: doc.pais_alcance, anio: doc.anio_adopcion, calidad: null,
           similitud: normalize(r.score, maxScore), tipo: 'normativa' as const,
           agendas: doc.agendas ?? [],
-        }
+        } as SearchHit
       })
       .filter((h): h is SearchHit => h !== null)
   } else {

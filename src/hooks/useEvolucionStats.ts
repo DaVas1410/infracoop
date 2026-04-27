@@ -48,6 +48,7 @@ export function useEvolucionStats(): EvolucionStats {
 
   useEffect(() => {
     if (!indexReady || !index) return
+    const idx = index
     let cancelled = false
 
     async function compute() {
@@ -57,7 +58,7 @@ export function useEvolucionStats(): EvolucionStats {
 
         // Baseline: corpus coverage before any preguntas
         const baselineScores = BASELINE_QUERIES.map(q => {
-          const hits = search(q, index, 10)
+          const hits = search(q, idx, 10)
           return calcularScore(hits.datasets, hits.normativas).score
         })
         const baseline = {
@@ -106,7 +107,7 @@ export function useEvolucionStats(): EvolucionStats {
         const subtemaCounts = new Map<string, number>()
         for (const p of preguntas) {
           for (const id of p.datasets_encontrados) {
-            const ds = index.datasetsMap.get(id)
+            const ds = idx.datasetsMap.get(id)
             if (ds?.subtema) subtemaCounts.set(ds.subtema, (subtemaCounts.get(ds.subtema) ?? 0) + 1)
           }
         }

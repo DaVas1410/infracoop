@@ -16,7 +16,6 @@ const mockDatasets: Dataset[] = [
 // Chainable + thenable mock — works regardless of whether .eq()/.contains() are called
 function makeQuery(result: { data: unknown; error: { message: string } | null }) {
   const q: Record<string, unknown> = {}
-  const self = () => q
   q.select = vi.fn().mockReturnValue(q)
   q.eq = vi.fn().mockReturnValue(q)
   q.contains = vi.fn().mockReturnValue(q)

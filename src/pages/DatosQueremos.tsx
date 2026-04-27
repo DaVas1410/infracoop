@@ -269,7 +269,7 @@ export function DatosQueremos() {
   const selectedIdx = filteredSemanas.length - 1
   const selected = filteredSemanas[selectedIdx]
 
-  const totalAcumuladas = filteredSemanas.at(-1)?.acumuladas ?? 0
+  const totalAcumuladas = filteredSemanas[filteredSemanas.length - 1]?.acumuladas ?? 0
   const maxTopTema = topTemas[0]?.count ?? 1
 
   const sidebarMetrics = selected ? [

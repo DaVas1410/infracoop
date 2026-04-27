@@ -2,13 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useMotorBrechas } from '../hooks/useMotorBrechas'
 import { SearchIndexProvider } from '../context/SearchIndexContext'
-import type { SearchHit } from '../types'
-
-const mockHits: SearchHit[] = [
-  { id: 'DS-001', titulo: 'ENDIREH 2021', fuente: 'INEGI', pais: 'MEX', anio: 2021,
-    calidad: 'Completa', similitud: 0.85, tipo: 'dataset', agendas: ['Ag. de Género'] },
-]
-
 vi.mock('../context/EmbedderContext', () => ({
   useEmbedder: () => ({
     status: 'ready',

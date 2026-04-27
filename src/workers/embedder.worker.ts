@@ -1,4 +1,4 @@
-import { pipeline, env } from '@huggingface/transformers'
+import { pipeline, env, type FeatureExtractionPipeline } from '@huggingface/transformers'
 
 env.useBrowserCache = true
 env.allowLocalModels = false
@@ -12,11 +12,11 @@ type OutboundMessage =
   | { type: 'result'; id: string; vector: number[] }
   | { type: 'error'; message: string }
 
-let embedder: Awaited<ReturnType<typeof pipeline>> | null = null
+let embedder: FeatureExtractionPipeline | null = null
 
 async function loadModel() {
   embedder = await pipeline(
-    'feature-extraction',
+    'feature-extraction' as const,
     'Xenova/paraphrase-multilingual-mpnet-base-v2',
     {
       progress_callback: (info: { status: string; progress?: number; file?: string }) => {

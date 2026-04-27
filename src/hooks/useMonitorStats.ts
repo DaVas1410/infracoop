@@ -48,6 +48,7 @@ export function useMonitorStats(): MonitorStats {
 
   useEffect(() => {
     if (!indexReady || !index) return
+    const idx = index
     let cancelled = false
 
     async function compute() {
@@ -58,7 +59,7 @@ export function useMonitorStats(): MonitorStats {
         const agendas: AgendaStat[] = AGENDA_CONFIG.map(cfg => {
           const inAgenda = preguntas.filter(p => {
             if (p.agenda_clasificada) return cfg.pattern.test(p.agenda_clasificada)
-            return deriveAgenda(p.datasets_encontrados, index.datasetsMap) === cfg.id
+            return deriveAgenda(p.datasets_encontrados, idx.datasetsMap) === cfg.id
           })
 
           const criticas  = inAgenda.filter(p => (p.resultado_score ?? 0) >= 0.65).length
@@ -68,7 +69,7 @@ export function useMonitorStats(): MonitorStats {
           const subtemaCounts = new Map<string, number>()
           for (const p of inAgenda) {
             for (const id of p.datasets_encontrados) {
-              const ds = index.datasetsMap.get(id)
+              const ds = idx.datasetsMap.get(id)
               if (ds?.subtema) subtemaCounts.set(ds.subtema, (subtemaCounts.get(ds.subtema) ?? 0) + 1)
             }
           }
@@ -78,7 +79,7 @@ export function useMonitorStats(): MonitorStats {
 
           let datasets_en_agenda = 0
           const calidad_dist = { Completa: 0, Parcial: 0, Nula: 0 }
-          for (const ds of index.datasetsMap.values()) {
+          for (const ds of idx.datasetsMap.values()) {
             if (ds.agendas.some(a => cfg.pattern.test(a))) {
               datasets_en_agenda++
               if (ds.calidad === 'Completa') calidad_dist.Completa++
@@ -93,8 +94,8 @@ export function useMonitorStats(): MonitorStats {
         const topics: TopicStat[] = TOPIC_QUERIES.map(tq => {
           // Use Fuse.js raw scores (lower = better match) so the gap score reflects
           // actual corpus coverage, not just relative ranking within results.
-          const dsFuse = index.fuseDatasets.search(tq.query, { limit: 10 })
-          const nmFuse = index.fuseNormativas.search(tq.query, { limit: 10 })
+          const dsFuse = idx.fuseDatasets.search(tq.query, { limit: 10 })
+          const nmFuse = idx.fuseNormativas.search(tq.query, { limit: 10 })
           const maxDsSim = dsFuse.length > 0 ? 1 - Math.min(...dsFuse.map(r => r.score ?? 1)) : 0
           const maxNmSim = nmFuse.length > 0 ? 1 - Math.min(...nmFuse.map(r => r.score ?? 1)) : 0
           const gap_score = Math.round(((1 - maxDsSim) * 0.6 + (1 - maxNmSim) * 0.4) * 100) / 100
@@ -116,8 +117,8 @@ export function useMonitorStats(): MonitorStats {
         setState({
           agendas, topics,
           totalPreguntas: preguntas.length,
-          totalDatasets: index.datasetsMap.size,
-          totalNormativas: index.normativasMap.size,
+          totalDatasets: idx.datasetsMap.size,
+          totalNormativas: idx.normativasMap.size,
           isReady: true, error: null,
         })
       } catch (err) {
