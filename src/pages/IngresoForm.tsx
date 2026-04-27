@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { submitFormulario, submitNormativa, updateEmbedding } from '../services/dataService'
 import { useEmbedder } from '../context/EmbedderContext'
@@ -30,6 +31,7 @@ export function IngresoForm() {
   const [errorMsg, setErrorMsg] = useState('')
   const { status: embedderStatus, embed } = useEmbedder()
   const { perfil } = useAuth()
+  const navigate = useNavigate()
   const modo: 'directo' | 'revision' = perfil?.rol === 'admin' ? 'directo' : 'revision'
 
   function handleAgendasChange(agenda: string, checked: boolean, isDataset: boolean) {
@@ -159,6 +161,22 @@ export function IngresoForm() {
           </form>
         )}
       </div>
+      {perfil?.rol === 'admin' && (
+        <button
+          onClick={() => navigate('/revisar')}
+          style={{
+            position: 'fixed', bottom: '2rem', right: '2rem',
+            background: 'var(--accent)', color: 'white',
+            border: 'none', borderRadius: '9999px',
+            padding: '10px 20px',
+            fontFamily: 'var(--mono)', fontSize: '12px', fontWeight: 500,
+            cursor: 'pointer', zIndex: 100,
+            boxShadow: '0 2px 12px rgba(83,74,183,.35)',
+          }}
+        >
+          Cola de revisión →
+        </button>
+      )}
     </Layout>
   )
 }
