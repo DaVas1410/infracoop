@@ -10,6 +10,7 @@ import { EmbedderProvider } from './context/EmbedderContext'
 import { AuthProvider } from './context/AuthContext'
 import { Login } from './pages/Login'
 import { Revisar } from './pages/Revisar'
+import { Diagnostico } from './pages/Diagnostico'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ingresar" element={<IngresoForm />} />
           <Route path="/revisar" element={<ProtectedRoute><Revisar /></ProtectedRoute>} />
+          <Route path="/diagnostico" element={<Diagnostico />} />
         </Routes>
         <footer style={{
           textAlign: 'center',
