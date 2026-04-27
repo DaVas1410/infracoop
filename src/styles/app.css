@@ -892,9 +892,10 @@
 }
 
 .top-tema-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 20px 1fr 60px 20px;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-size: 12px;
 }
 
@@ -902,25 +903,22 @@
   font-family: var(--mono);
   font-size: 10px;
   color: var(--ink-light);
-  min-width: 18px;
   text-align: right;
 }
 
 .top-tema-name {
-  flex: 1;
   color: var(--ink-mid);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .top-tema-bar-wrap {
-  width: 80px;
   height: 4px;
   background: var(--ink-faint);
   border-radius: 2px;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .top-tema-bar-fill {
@@ -934,7 +932,6 @@
   font-family: var(--mono);
   font-size: 11px;
   color: var(--ink-light);
-  min-width: 24px;
   text-align: right;
 }
 
