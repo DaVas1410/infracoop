@@ -15,6 +15,28 @@ const calidadClass: Record<string, string> = {
   Completa: 'cubierta', Parcial: 'parcial', Nula: 'critica',
 }
 
+// ── Helper (exported for tests) ───────────────────────────────────────────────
+
+export function normalizeSimToMax(hits: { similitud: number }[]): number[] {
+  if (hits.length === 0) return []
+  const max = Math.max(...hits.map(h => h.similitud))
+  if (max === 0) return hits.map(() => 0)
+  return hits.map(h => h.similitud / max)
+}
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+
+function Tooltip({ text }: { text: string }) {
+  return (
+    <span className="tooltip-wrap">
+      <span className="tooltip-icon" tabIndex={0}>i</span>
+      <span className="tooltip-bubble">{text}</span>
+    </span>
+  )
+}
+
+// ── SearchBox ─────────────────────────────────────────────────────────────────
+
 interface SearchBoxProps {
   value: string
   onChange: (v: string) => void
@@ -76,7 +98,9 @@ function SearchBox({
   )
 }
 
-function HitRow({ hit, index }: { hit: SearchHit; index: number }) {
+// ── HitRow ────────────────────────────────────────────────────────────────────
+
+function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; normalizedSim: number }) {
   const [animated, setAnimated] = useState(false)
 
   useEffect(() => {
@@ -110,17 +134,21 @@ function HitRow({ hit, index }: { hit: SearchHit; index: number }) {
           <div
             className="hit-sim-bar"
             style={{
-              width: animated ? `${hit.similitud * 100}%` : '0%',
+              width: animated ? `${normalizedSim * 100}%` : '0%',
               background: barColor,
               transition: `width 0.6s cubic-bezier(0.4,0,0.2,1) ${index * 60}ms`,
             }}
           />
         </div>
-        <span className="hit-sim-pct">{Math.round(hit.similitud * 100)}%</span>
+        <span className="hit-sim-pct" title="Similitud coseno con tu pregunta">
+          {Math.round(hit.similitud * 100)}%
+        </span>
       </div>
     </div>
   )
 }
+
+// ── ScorePanel ────────────────────────────────────────────────────────────────
 
 function ScorePanel({ resultado }: { resultado: GapResult }) {
   const pct = Math.round(resultado.score * 100)
@@ -135,7 +163,13 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
     <div className="score-panel">
       <div>
         <div className="score-number" style={{ color }}>{pct}</div>
-        <div className="score-label label-mono">score brecha</div>
+        <div className="score-label label-mono" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          score de brecha
+          <Tooltip text="0 = dato completamente cubierto en el corpus · 100 = brecha crítica, pocos o ningún dato disponible para tu pregunta." />
+        </div>
+        <div style={{ fontSize: 10, fontFamily: 'var(--mono)', color: 'var(--ink-light)', marginTop: 2 }}>
+          0 = cubierto · 100 = crítico
+        </div>
       </div>
       <span className={`gap-category-badge ${resultado.categoria}`}>
         ● {resultado.categoria}
@@ -144,6 +178,19 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
       <div className="termometro-wrap">
         <div className="termometro-track">
           <div className="termometro-level" style={{ height: `${pct}%` }} />
+          {[0, 50, 100].map(mark => (
+            <div key={mark} style={{
+              position: 'absolute',
+              bottom: `${mark}%`,
+              left: '100%',
+              marginLeft: 4,
+              fontSize: 9,
+              fontFamily: 'var(--mono)',
+              color: 'var(--ink-light)',
+              transform: 'translateY(50%)',
+              whiteSpace: 'nowrap',
+            }}>{mark}</div>
+          ))}
         </div>
         <span className="termometro-pct label-mono">{pct}%</span>
       </div>
@@ -154,7 +201,8 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
           { tipo: 'datos',       label: 'Ag. de Datos',    val: resultado.agendas.datos },
           { tipo: 'genero',      label: 'Ag. de Género',   val: resultado.agendas.genero },
         ].map(a => (
-          <div key={a.tipo} className={`agenda-score-pill ${a.tipo}`}>
+          <div key={a.tipo} className={`agenda-score-pill ${a.tipo}`}
+            title="Proporción de la brecha atribuible a esta agenda, calculada sobre los datasets y normativas encontrados.">
             <span className="label-mono" style={{ fontSize: 10 }}>{a.label}</span>
             <span className="agenda-score-num">{a.val}</span>
           </div>
@@ -166,7 +214,13 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
   )
 }
 
+// ── ResultsColumns ────────────────────────────────────────────────────────────
+
 function ResultsColumns({ resultado }: { resultado: GapResult }) {
+  const allHits = [...resultado.datasets, ...resultado.normativas]
+  const maxSim = Math.max(...allHits.map(h => h.similitud), 0.001)
+  const normalize = (h: SearchHit) => h.similitud / maxSim
+
   return (
     <div className="results-columns">
       <div className="results-col">
@@ -176,7 +230,9 @@ function ResultsColumns({ resultado }: { resultado: GapResult }) {
         </div>
         {resultado.datasets.length === 0
           ? <p className="results-empty">Sin datasets relacionados</p>
-          : resultado.datasets.map((hit, i) => <HitRow key={hit.id} hit={hit} index={i} />)
+          : resultado.datasets.map((hit, i) => (
+              <HitRow key={hit.id} hit={hit} index={i} normalizedSim={normalize(hit)} />
+            ))
         }
       </div>
       <div className="results-col">
@@ -186,12 +242,16 @@ function ResultsColumns({ resultado }: { resultado: GapResult }) {
         </div>
         {resultado.normativas.length === 0
           ? <p className="results-empty">Sin normativas relacionadas</p>
-          : resultado.normativas.map((hit, i) => <HitRow key={hit.id} hit={hit} index={i} />)
+          : resultado.normativas.map((hit, i) => (
+              <HitRow key={hit.id} hit={hit} index={i} normalizedSim={normalize(hit)} />
+            ))
         }
       </div>
     </div>
   )
 }
+
+// ── MonitorBrechas ────────────────────────────────────────────────────────────
 
 export function MonitorBrechas() {
   const { isReady, error: indexError } = useSearchIndex()
