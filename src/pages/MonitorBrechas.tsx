@@ -317,15 +317,23 @@ function ChipsBar({ resultado, query }: { resultado: GapResult; query: string })
   return (
     <div className="chips-bar">
       <span className="chips-bar-label">Agenda de incidencia</span>
-      {ADVOCACY_CHIPS.map(chip => (
-        <button
-          key={chip}
-          className={`chip${selected.includes(chip) ? ' selected' : ''}`}
-          onClick={() => toggle(chip)}
-        >
-          {chip}
-        </button>
-      ))}
+      {ADVOCACY_CHIPS.map(chip => {
+        const isSelected = selected.includes(chip)
+        return (
+          <button
+            key={chip}
+            className="chip"
+            style={isSelected ? {
+              background: 'var(--accent)',
+              color: 'white',
+              borderColor: 'var(--accent)',
+            } : {}}
+            onClick={() => toggle(chip)}
+          >
+            {chip}
+          </button>
+        )
+      })}
       <button
         className="btn-primary"
         style={{ marginLeft: 'auto', fontSize: 12, padding: '6px 14px' }}
