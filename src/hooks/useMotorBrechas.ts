@@ -2,9 +2,12 @@ import { useState, useCallback } from 'react'
 import { useSearchIndex } from '../context/SearchIndexContext'
 import { useEmbedder } from '../context/EmbedderContext'
 import { semanticSearch } from '../services/semanticSearch'
+import { search as textSearch } from '../services/searchService'
 import { calcularScore, calcularAgendas, generarTitulo } from '../services/scoreService'
 import { insertPregunta } from '../services/dataService'
 import type { GapResult } from '../types'
+
+const SEMANTIC_MIN_SIM = 0.05
 
 interface MotorState {
   resultado: GapResult | null
@@ -27,7 +30,15 @@ export function useMotorBrechas() {
 
     try {
       const queryVector = await embed(query)
-      const hits = semanticSearch(queryVector, index)
+      const semHits = semanticSearch(queryVector, index)
+      const maxSemSim = Math.max(
+        ...semHits.datasets.map(h => h.similitud),
+        ...semHits.normativas.map(h => h.similitud),
+        0,
+      )
+      const hits = maxSemSim >= SEMANTIC_MIN_SIM
+        ? semHits
+        : textSearch(query, index)
       const { score, categoria } = calcularScore(hits.datasets, hits.normativas)
       const agendas = calcularAgendas(hits.datasets, hits.normativas, score)
       const titulo = generarTitulo(categoria, hits.datasets, hits.normativas)

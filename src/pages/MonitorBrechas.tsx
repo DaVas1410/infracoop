@@ -140,8 +140,11 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
             }}
           />
         </div>
-        <span className="hit-sim-pct" title="Similitud coseno con tu pregunta">
-          {(hit.similitud * 100).toFixed(1)}%
+        <span
+          className="hit-sim-pct"
+          title={`Similitud semántica: ${(hit.similitud * 100).toFixed(1)}%`}
+        >
+          {normalizedSim >= 0.66 ? 'alta' : normalizedSim >= 0.33 ? 'media' : 'baja'}
         </span>
       </div>
     </div>
