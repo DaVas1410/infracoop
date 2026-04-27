@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useMotorBrechas } from '../hooks/useMotorBrechas'
 import { useSearchIndex } from '../context/SearchIndexContext'
 import { useEmbedder } from '../context/EmbedderContext'
@@ -290,6 +291,52 @@ function ResultsColumns({ resultado }: { resultado: GapResult }) {
   )
 }
 
+// ── ChipsBar ──────────────────────────────────────────────────────────────────
+
+const ADVOCACY_CHIPS = [
+  'Gobierno Abierto',
+  'DDHH',
+  'Cooperación Digital',
+  'Gobernanza Cooperativa',
+]
+
+function ChipsBar({ resultado, query }: { resultado: GapResult; query: string }) {
+  const [selected, setSelected] = useState<string[]>([])
+  const navigate = useNavigate()
+
+  function toggle(chip: string) {
+    setSelected(prev =>
+      prev.includes(chip) ? prev.filter(c => c !== chip) : [...prev, chip]
+    )
+  }
+
+  function handleDescargar() {
+    navigate('/diagnostico', { state: { resultado, query, chips: selected } })
+  }
+
+  return (
+    <div className="chips-bar">
+      <span className="chips-bar-label">Agenda de incidencia</span>
+      {ADVOCACY_CHIPS.map(chip => (
+        <button
+          key={chip}
+          className={`chip${selected.includes(chip) ? ' selected' : ''}`}
+          onClick={() => toggle(chip)}
+        >
+          {chip}
+        </button>
+      ))}
+      <button
+        className="btn-primary"
+        style={{ marginLeft: 'auto', fontSize: 12, padding: '6px 14px' }}
+        onClick={handleDescargar}
+      >
+        Descargar diagnóstico →
+      </button>
+    </div>
+  )
+}
+
 // ── MonitorBrechas ────────────────────────────────────────────────────────────
 
 export function MonitorBrechas() {
@@ -375,6 +422,7 @@ export function MonitorBrechas() {
             <div style={{ flex: 1, minWidth: 0 }}>
               <ResultadoMetaBand resultado={resultado} />
               <ResultsColumns resultado={resultado} />
+              <ChipsBar resultado={resultado} query={query} />
             </div>
           </div>
         </div>
