@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useSearchIndex } from '../context/SearchIndexContext'
-import { search } from '../services/searchService'
+import { useEmbedder } from '../context/EmbedderContext'
+import { semanticSearch } from '../services/semanticSearch'
 import { calcularScore, calcularAgendas, generarTitulo } from '../services/scoreService'
 import { insertPregunta } from '../services/dataService'
 import type { GapResult } from '../types'
@@ -13,6 +14,7 @@ interface MotorState {
 
 export function useMotorBrechas() {
   const { index } = useSearchIndex()
+  const { embed } = useEmbedder()
   const [state, setState] = useState<MotorState>({
     resultado: null,
     isLoading: false,
@@ -24,7 +26,8 @@ export function useMotorBrechas() {
     setState(s => ({ ...s, isLoading: true, error: null }))
 
     try {
-      const hits = search(query, index)
+      const queryVector = await embed(query)
+      const hits = semanticSearch(queryVector, index)
       const { score, categoria } = calcularScore(hits.datasets, hits.normativas)
       const agendas = calcularAgendas(hits.datasets, hits.normativas, score)
       const titulo = generarTitulo(categoria, hits.datasets, hits.normativas)
@@ -37,9 +40,7 @@ export function useMotorBrechas() {
 
       setState({ resultado, isLoading: false, error: null })
 
-      insertPregunta(query, score, hits.datasets.map(h => h.id)).catch(() => {
-        // fire-and-forget: no bloquea la UX
-      })
+      insertPregunta(query, score, hits.datasets.map(h => h.id)).catch(() => {})
     } catch (err) {
       setState({
         resultado: null,
@@ -47,7 +48,7 @@ export function useMotorBrechas() {
         error: err instanceof Error ? err.message : 'Error al buscar',
       })
     }
-  }, [index])
+  }, [index, embed])
 
   const limpiar = useCallback(() => {
     setState({ resultado: null, isLoading: false, error: null })

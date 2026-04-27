@@ -9,9 +9,17 @@ const mockHits: SearchHit[] = [
     calidad: 'Completa', similitud: 0.85, tipo: 'dataset', agendas: ['Ag. de Género'] },
 ]
 
-vi.mock('../services/searchService', () => ({
-  buildIndex: vi.fn().mockReturnValue({}),
-  search: vi.fn().mockReturnValue({
+vi.mock('../context/EmbedderContext', () => ({
+  useEmbedder: () => ({
+    status: 'ready',
+    embed: vi.fn().mockResolvedValue(new Float32Array(768).fill(0.5)),
+    progress: 'Modelo listo',
+    error: null,
+  }),
+}))
+
+vi.mock('../services/semanticSearch', () => ({
+  semanticSearch: vi.fn().mockReturnValue({
     datasets: [{ id: 'DS-001', titulo: 'ENDIREH 2021', fuente: 'INEGI', pais: 'MEX', anio: 2021,
       calidad: 'Completa', similitud: 0.85, tipo: 'dataset', agendas: ['Ag. de Género'] }],
     normativas: [],
