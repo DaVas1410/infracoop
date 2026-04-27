@@ -696,11 +696,20 @@
   margin-bottom: 1.25rem;
 }
 
+.chart-bars-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-faint) transparent;
+  padding-bottom: 4px;
+  margin-bottom: -4px;
+}
+
 .chart-bars {
   display: flex;
-  gap: 12px;
+  gap: 6px;
   align-items: flex-end;
   height: 100px;
+  min-width: max-content;
 }
 
 .chart-bar-group {
@@ -936,7 +945,8 @@
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  flex: 1;
+  flex-shrink: 0;
+  width: 28px;
   height: 100%;
   justify-content: flex-end;
 }

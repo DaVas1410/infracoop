@@ -153,6 +153,7 @@ function StackedWeekChart({ semanas, selectedIdx }: { semanas: SemanaStats[]; se
   return (
     <div className="chart-section">
       <div className="chart-title">Preguntas nuevas por semana — distribución por severidad de brecha</div>
+      <div className="chart-bars-scroll">
       <div className="chart-bars">
         {semanas.map((s, i) => {
           const isSelected = i === selectedIdx
@@ -176,6 +177,7 @@ function StackedWeekChart({ semanas, selectedIdx }: { semanas: SemanaStats[]; se
             </div>
           )
         })}
+      </div>
       </div>
       <div className="chart-legend">
         {[
