@@ -1,0 +1,83 @@
+<h2>Issue 4 — Monitor de Brechas: UI confusa + barras en 0%</h2>
+<p class="subtitle">Dos sub-problemas: (1) las barras de similitud muestran 0% y (2) no se entiende qué significa cada parte del resultado.</p>
+
+<div class="section">
+  <h3>Sub-problema 1: barras de similitud</h3>
+  <p class="subtitle">El score coseno está entre 0.0 y 1.0 pero los valores reales del corpus son muy bajos (ej: 0.03). Se muestran como 3% — visualmente vacíos. Opciones:</p>
+
+  <div class="options">
+    <div class="option" data-choice="sim-a" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>Normalizar al máximo del resultado</h3>
+        <p>La barra más alta del lote = 100%. Las demás se escalan relativamente. El valor numérico muestra el score real.</p>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:11px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:140px;white-space:nowrap">Dataset A (0.42)</span>
+            <div style="flex:1;background:#eee;border-radius:3px;height:8px"><div style="width:100%;background:#534AB7;height:8px;border-radius:3px"></div></div>
+            <span style="width:30px;text-align:right;opacity:.6">0.42</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:140px;white-space:nowrap">Dataset B (0.31)</span>
+            <div style="flex:1;background:#eee;border-radius:3px;height:8px"><div style="width:74%;background:#534AB7;height:8px;border-radius:3px"></div></div>
+            <span style="width:30px;text-align:right;opacity:.6">0.31</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:140px;white-space:nowrap">Dataset C (0.18)</span>
+            <div style="flex:1;background:#eee;border-radius:3px;height:8px"><div style="width:43%;background:#534AB7;height:8px;border-radius:3px"></div></div>
+            <span style="width:30px;text-align:right;opacity:.6">0.18</span>
+          </div>
+        </div>
+        <p style="margin-top:8px;font-size:11px;opacity:.6">Visualmente informativo. El usuario ve relevancia relativa. Score real al costado para quien quiera el valor exacto.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="sim-b" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>Reemplazar barra por ranking ordinal</h3>
+        <p>Sin barra de porcentaje. Solo un badge con el orden (#1, #2, #3…) y la etiqueta de calidad.</p>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:11px">
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid #eee;border-radius:6px">
+            <span style="background:#534AB7;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">#1</span>
+            <span>Dataset A</span>
+            <span style="margin-left:auto;background:#1d6e4a;color:white;border-radius:4px;padding:2px 6px;font-size:9px">Completa</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid #eee;border-radius:6px">
+            <span style="background:#7F77DD;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">#2</span>
+            <span>Dataset B</span>
+            <span style="margin-left:auto;background:#7F77DD;color:white;border-radius:4px;padding:2px 6px;font-size:9px">Parcial</span>
+          </div>
+        </div>
+        <p style="margin-top:8px;font-size:11px;opacity:.6">Evita el problema del 0% completamente. Más limpio pero pierde info de qué tan relevante es cada resultado.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:2rem">
+  <h3>Sub-problema 2: explicaciones en pantalla</h3>
+  <p class="subtitle">El ScorePanel muestra un número grande, 3 pills de agenda y un termómetro, pero sin contexto. ¿Qué nivel de explicación querés?</p>
+
+  <div class="options">
+    <div class="option" data-choice="exp-a" onclick="toggleSelect(this)">
+      <div class="letter">X</div>
+      <div class="content">
+        <h3>Labels descriptivos + tooltip en score</h3>
+        <p>El score grande lleva una etiqueta "Score de brecha (0=cubierto, 100=crítico)". Las agendas tienen tooltip ⓘ. El termómetro tiene una escala visible.</p>
+        <p style="margin-top:6px;font-size:11px;opacity:.6">Mínimo invasivo. No cambia el layout, solo agrega contexto.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="exp-b" onclick="toggleSelect(this)">
+      <div class="letter">Y</div>
+      <div class="content">
+        <h3>Panel de interpretación debajo del score</h3>
+        <p>Una sección colapsable "¿Qué significa este resultado?" con texto generado dinámicamente según la categoría (crítica / parcial / cubierta).</p>
+        <p style="margin-top:6px;font-size:11px;opacity:.6">Más explicativo para usuarias nuevas. Puede sentirse verboso para usuarias frecuentes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:1rem">Mi recomendación: <strong>A + X</strong> — barras normalizadas al máximo + labels descriptivos con tooltips.</p>

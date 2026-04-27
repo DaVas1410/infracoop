@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchIndex } from '../context/SearchIndexContext'
 import { getPreguntas } from '../services/dataService'
-import { search } from '../services/searchService'
-import { calcularScore } from '../services/scoreService'
 import type { MonitorStats, AgendaStat, TopicStat, Dataset } from '../types'
 
 const AGENDA_CONFIG = [
@@ -93,16 +91,24 @@ export function useMonitorStats(): MonitorStats {
         })
 
         const topics: TopicStat[] = TOPIC_QUERIES.map(tq => {
-          const hits = search(tq.query, index, 10)
-          const { score, categoria } = calcularScore(hits.datasets, hits.normativas)
-          const topicDatasetIds = new Set(hits.datasets.map(h => h.id))
+          // Use Fuse.js raw scores (lower = better match) so the gap score reflects
+          // actual corpus coverage, not just relative ranking within results.
+          const dsFuse = index.fuseDatasets.search(tq.query, { limit: 10 })
+          const nmFuse = index.fuseNormativas.search(tq.query, { limit: 10 })
+          const maxDsSim = dsFuse.length > 0 ? 1 - Math.min(...dsFuse.map(r => r.score ?? 1)) : 0
+          const maxNmSim = nmFuse.length > 0 ? 1 - Math.min(...nmFuse.map(r => r.score ?? 1)) : 0
+          const gap_score = Math.round(((1 - maxDsSim) * 0.6 + (1 - maxNmSim) * 0.4) * 100) / 100
+          const categoria: 'critica' | 'parcial' | 'cubierta' =
+            gap_score >= 0.65 ? 'critica' : gap_score >= 0.35 ? 'parcial' : 'cubierta'
+
+          const topicDatasetIds = new Set(dsFuse.map(r => String(r.item.id)))
           const preguntas_relacionadas = preguntas.filter(p =>
             p.datasets_encontrados.some(id => topicDatasetIds.has(id))
           ).length
           return {
-            id: tq.id, label: tq.label, gap_score: score, categoria,
-            datasets_cubriendo: hits.datasets.length,
-            normativas_cubriendo: hits.normativas.length,
+            id: tq.id, label: tq.label, gap_score, categoria,
+            datasets_cubriendo: dsFuse.length,
+            normativas_cubriendo: nmFuse.length,
             preguntas_relacionadas,
           }
         })

@@ -1,0 +1,81 @@
+<h2>Issue 3 — Monitor Colectivo: más métricas y contexto</h2>
+<p class="subtitle">La página muestra datos pero no explica qué significan. ¿Cómo agregamos contexto?</p>
+
+<div class="section">
+  <div class="options">
+
+    <div class="option" data-choice="a" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>Banda de métricas resumen + bajadas por sección</h3>
+        <p>Una fila de 4 métricas clave debajo del hero, y un párrafo corto antes de cada sección (agendas y tópicos).</p>
+        <div class="mockup" style="margin-top:10px;font-size:11px">
+          <div class="mockup-header">Wireframe /colectivo</div>
+          <div class="mockup-body" style="display:flex;flex-direction:column;gap:6px;padding:10px">
+            <div style="background:#f0edff;border-radius:4px;padding:6px 10px;font-weight:600">Hero — "El corpus disponible"</div>
+            <div style="display:flex;gap:4px">
+              <div style="flex:1;background:#e8e4ff;border-radius:4px;padding:6px 8px;text-align:center;font-size:10px">
+                <div style="font-size:18px;font-weight:700;color:#534AB7">77</div>
+                <div>total entradas</div>
+              </div>
+              <div style="flex:1;background:#e8e4ff;border-radius:4px;padding:6px 8px;text-align:center;font-size:10px">
+                <div style="font-size:18px;font-weight:700;color:#534AB7">3</div>
+                <div>agendas</div>
+              </div>
+              <div style="flex:1;background:#fbeaf0;border-radius:4px;padding:6px 8px;text-align:center;font-size:10px">
+                <div style="font-size:18px;font-weight:700;color:#72243E">2</div>
+                <div>tópicos críticos</div>
+              </div>
+              <div style="flex:1;background:#e6f4ee;border-radius:4px;padding:6px 8px;text-align:center;font-size:10px">
+                <div style="font-size:18px;font-weight:700;color:#1d6e4a">42%</div>
+                <div>cobertura media</div>
+              </div>
+            </div>
+            <div style="background:#f9f9f9;border-radius:4px;padding:6px 10px;font-style:italic;font-size:10px;color:#666">"Cada agenda agrupa los datasets según el marco temático al que pertenecen…"</div>
+            <div style="background:#eee;border-radius:4px;padding:6px 10px">Cards por agenda (×3)</div>
+            <div style="background:#f9f9f9;border-radius:4px;padding:6px 10px;font-style:italic;font-size:10px;color:#666">"El score de brecha mide qué tan cubierto está cada tópico en el corpus…"</div>
+            <div style="background:#eee;border-radius:4px;padding:6px 10px">Cards por tópico (×5)</div>
+          </div>
+        </div>
+        <p style="margin-top:6px;font-size:11px;opacity:.6">Cambio moderado. Agrega contexto sin rediseñar. Mi recomendación.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="b" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>Tooltips / íconos de ayuda en cada métrica</h3>
+        <p>Cada número o barra tiene un ícono ⓘ que al hover muestra una explicación breve.</p>
+        <div class="mockup" style="margin-top:10px;font-size:11px">
+          <div class="mockup-header">Ejemplo — AgendaCard con tooltip</div>
+          <div class="mockup-body" style="padding:10px">
+            <div style="border:1px solid #e0e0e0;border-radius:6px;padding:10px;max-width:220px">
+              <div style="font-size:10px;font-weight:700;color:#0C447C;margin-bottom:4px">Agenda Tecnológica</div>
+              <div style="font-size:22px;font-weight:700;color:#0C447C">18</div>
+              <div style="font-size:10px;color:#888;display:flex;align-items:center;gap:4px">
+                datasets disponibles
+                <span style="background:#534AB7;color:white;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:8px;cursor:pointer">i</span>
+              </div>
+              <div style="background:#534AB7;color:white;border-radius:4px;padding:5px 8px;margin-top:6px;font-size:10px">
+                "Datasets clasificados bajo la agenda tecnológica — incluye acceso a tecnología, brecha digital, IA y derechos digitales."
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:6px;font-size:11px;opacity:.6">No ocupa espacio permanente. Bueno para usuarias expertas que saben dónde buscar ayuda, pero fácil de ignorar.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="c" onclick="toggleSelect(this)">
+      <div class="letter">C</div>
+      <div class="content">
+        <h3>A + B combinados: banda de métricas + tooltips en tarjetas</h3>
+        <p>Métricas resumen arriba con bajadas por sección, Y tooltips en los números dentro de cada tarjeta.</p>
+        <p style="margin-top:6px;font-size:11px;opacity:.6">Máximo contexto. Más trabajo de implementación pero cubre tanto el "¿qué muestra esta página?" como el "¿qué significa este número?".</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:1rem">Mi recomendación: <strong>A</strong> — banda de métricas + bajadas por sección. Simple y efectivo.</p>

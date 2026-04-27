@@ -35,10 +35,6 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="site-header-meta">
-          <span className="site-header-dot" />
-          42 datasets · 35 normativas · ALyC
-        </div>
       </div>
     </header>
   )
