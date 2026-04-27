@@ -175,24 +175,18 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
         ● {resultado.categoria}
       </span>
 
-      <div className="termometro-wrap">
-        <div className="termometro-track">
-          <div className="termometro-level" style={{ height: `${pct}%` }} />
-          {[0, 50, 100].map(mark => (
-            <div key={mark} style={{
-              position: 'absolute',
-              bottom: `${mark}%`,
-              left: '100%',
-              marginLeft: 4,
-              fontSize: 9,
-              fontFamily: 'var(--mono)',
-              color: 'var(--ink-light)',
-              transform: 'translateY(50%)',
-              whiteSpace: 'nowrap',
-            }}>{mark}</div>
-          ))}
+      <div className="score-gauge">
+        <div className="score-gauge-track">
+          <div
+            className="score-gauge-marker"
+            style={{ left: `${pct}%` }}
+            aria-label={`Score: ${pct}`}
+          />
         </div>
-        <span className="termometro-pct label-mono">{pct}%</span>
+        <div className="score-gauge-labels">
+          <span>cubierto</span>
+          <span>crítico</span>
+        </div>
       </div>
 
       <div className="agenda-score-list">

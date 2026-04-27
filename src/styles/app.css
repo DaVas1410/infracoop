@@ -207,36 +207,37 @@
   margin-top: -0.5rem;
 }
 
-.termometro-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 4px 0;
+.score-gauge {
+  padding: 4px 0 2px;
 }
 
-.termometro-track {
-  width: 10px;
-  height: 88px;
-  border-radius: 5px;
-  background: var(--gap-cov);
+.score-gauge-track {
   position: relative;
-  overflow: hidden;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, var(--gap-cov), var(--gap-part) 50%, var(--gap-crit));
 }
 
-.termometro-level {
+.score-gauge-marker {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, var(--gap-part), var(--gap-crit));
-  border-radius: 5px;
-  transition: height 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--ink);
+  transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.termometro-pct {
+.score-gauge-labels {
+  display: flex;
+  justify-content: space-between;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 9px;
   color: var(--ink-light);
+  margin-top: 4px;
+  letter-spacing: .03em;
 }
 
 .agenda-score-list {
