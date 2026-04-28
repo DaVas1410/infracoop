@@ -103,7 +103,7 @@ function AgendaCard({ a, semanas }: { a: AgendaStat; semanas: SemanaStats[] }) {
           {delta !== null && (
             <div style={{
               fontSize: 12, fontFamily: 'var(--mono)', marginTop: 4,
-              color: delta > 0 ? '#C2185B' : delta < 0 ? '#3F7A4E' : 'var(--ink-light)',
+              color: delta > 0 ? 'var(--gap-crit)' : delta < 0 ? 'var(--gap-cov)' : 'var(--ink-light)',
             }}>
               {delta > 0 ? '▲' : delta < 0 ? '▼' : '—'} {Math.abs(Math.round(delta * 100))}% esta semana
             </div>
