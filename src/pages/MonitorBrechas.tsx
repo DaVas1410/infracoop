@@ -123,8 +123,9 @@ function qualityDims(hit: SearchHit): { label: string; value: number; color: str
     : hit.calidad === 'Parcial' ? 0.55
     : 0.15
 
+  // SVG fill doesn't evaluate CSS vars — use hex values from tokens.css
   const color = (v: number) =>
-    v >= 0.7 ? 'var(--gap-cov)' : v >= 0.4 ? 'var(--gap-part)' : 'var(--ink-faint)'
+    v >= 0.7 ? '#3F7A4E' : v >= 0.4 ? '#C77B0E' : '#E6DEF1'
 
   return [
     { label: 'org',  value: hit.fuente ? 0.9 : 0.15,  color: color(hit.fuente ? 0.9 : 0.15) },
