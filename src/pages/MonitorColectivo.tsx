@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Layout } from '../components/Layout'
 import { useMonitorStats } from '../hooks/useMonitorStats'
+import { SkeletonMetricsBand, SkeletonAgendaGrid, SkeletonTopicGrid } from '../components/Skeleton'
 import type { AgendaStat, TopicStat, ColectivoFiltros } from '../types'
 
 // ── Helpers (exported for tests) ─────────────────────────────────────────────
@@ -103,9 +104,6 @@ function AgendaCard({ a }: { a: AgendaStat }) {
         </div>
       )}
 
-      <div style={{ marginTop: 10, fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--ink-light)' }}>
-        {a.total} preguntas han explorado esta agenda
-      </div>
     </div>
   )
 }
@@ -129,9 +127,6 @@ function TopicCard({ t }: { t: TopicStat }) {
         <span>{t.datasets_cubriendo} datasets</span>
         <span>·</span>
         <span>{t.normativas_cubriendo} normativas</span>
-        {t.preguntas_relacionadas > 0 && (
-          <><span>·</span><span>{t.preguntas_relacionadas} preguntas</span></>
-        )}
       </div>
     </div>
   )
@@ -143,7 +138,7 @@ export function MonitorColectivo() {
   const [filtros, setFiltros] = useState<ColectivoFiltros>({
     agenda: 'todas', pais: 'todos', calidad: 'todas',
   })
-  const { agendas, topics, totalPreguntas, totalDatasets, totalNormativas, paises, isReady, error } = useMonitorStats(filtros)
+  const { agendas, topics, totalDatasets, totalNormativas, paises, isReady, error } = useMonitorStats(filtros)
 
   return (
     <Layout>
@@ -152,9 +147,7 @@ export function MonitorColectivo() {
           <p className="hero-eyebrow">¿Qué tenemos?</p>
           <h1>El corpus de datos <em>disponible</em></h1>
           <p className="hero-sub">
-            {isReady
-              ? `${totalDatasets} datasets · ${totalNormativas} normativas · ${totalPreguntas} preguntas ingresadas`
-              : 'Cargando corpus…'}
+            Cada pregunta ingresada contribuye al mapa común de brechas.
           </p>
         </div>
 
@@ -192,31 +185,41 @@ export function MonitorColectivo() {
           )}
         </div>
 
-        {isReady && (
+        {isReady ? (
           <MetricsBand
             totalDatasets={totalDatasets}
             totalNormativas={totalNormativas}
             topics={topics}
           />
+        ) : (
+          <SkeletonMetricsBand />
         )}
 
-        <p className="mapa-section-title">Cobertura por agenda</p>
+        <p className="mapa-section-title">Brechas por Agenda</p>
         <p className="section-description">
           Cada agenda agrupa los datasets según el marco temático al que pertenecen.
           La barra de calidad indica qué porcentaje de los datasets tiene metadatos completos, parciales o nulos.
         </p>
-        <div className="monitor-grid">
-          {agendas.map(a => <AgendaCard key={a.id} a={a} />)}
-        </div>
+        {isReady ? (
+          <div className="monitor-grid">
+            {agendas.map(a => <AgendaCard key={a.id} a={a} />)}
+          </div>
+        ) : (
+          <SkeletonAgendaGrid />
+        )}
 
-        <p className="mapa-section-title">Cobertura por tópico</p>
+        <p className="mapa-section-title">Brechas por Tópico</p>
         <p className="section-description">
           El score de brecha mide qué tan cubierto está cada tópico en el corpus — mayor % = menos cubierto.
           0% = completamente cubierto · 100% = brecha crítica sin datos.
         </p>
-        <div className="mapa-grid">
-          {topics.map(t => <TopicCard key={t.id} t={t} />)}
-        </div>
+        {isReady ? (
+          <div className="mapa-grid">
+            {topics.map(t => <TopicCard key={t.id} t={t} />)}
+          </div>
+        ) : (
+          <SkeletonTopicGrid />
+        )}
       </main>
     </Layout>
   )
