@@ -13,7 +13,7 @@ vi.mock('recharts', async () => {
   const actual = await vi.importActual<typeof import('recharts')>('recharts')
   return {
     ...actual,
-    ResponsiveContainer: ({ children }: { children: React.ReactNode }) =>
+    ResponsiveContainer: ({ children }: { children: import('react').ReactNode }) =>
       children,
   }
 })
