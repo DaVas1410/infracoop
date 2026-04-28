@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Layout } from '../components/Layout'
 import { useMonitorStats } from '../hooks/useMonitorStats'
+import { useEvolucionStats } from '../hooks/useEvolucionStats'
+import { LineChart, Line } from 'recharts'
 import { SkeletonMetricsBand, SkeletonAgendaGrid, SkeletonTopicGrid } from '../components/Skeleton'
-import type { AgendaStat, TopicStat, ColectivoFiltros } from '../types'
+import type { AgendaStat, TopicStat, ColectivoFiltros, SemanaStats } from '../types'
 
 // ── Helpers (exported for tests) ─────────────────────────────────────────────
 
@@ -14,6 +16,21 @@ export function calcCoberturaMedia(topics: TopicStat[]): number {
   if (topics.length === 0) return 0
   const mean = topics.reduce((acc, t) => acc + t.gap_score, 0) / topics.length
   return Math.round((1 - mean) * 100)
+}
+
+// ── Agenda spark helpers ──────────────────────────────────────────────────────
+
+type AgendaKey = 'tecnologica' | 'datos' | 'genero'
+
+function agendaSparkData(semanas: SemanaStats[], agKey: AgendaKey) {
+  return semanas.slice(-8).map(s => ({ v: s.por_agenda[agKey].score_avg }))
+}
+
+function agendaDelta(semanas: SemanaStats[], agKey: AgendaKey): number | null {
+  if (semanas.length < 2) return null
+  const last = semanas[semanas.length - 1].por_agenda[agKey].score_avg
+  const prev = semanas[semanas.length - 2].por_agenda[agKey].score_avg
+  return last - prev
 }
 
 // ── Tooltip ───────────────────────────────────────────────────────────────────
@@ -65,19 +82,46 @@ function MetricsBand({ totalDatasets, totalNormativas, topics }: {
 
 // ── AgendaCard ────────────────────────────────────────────────────────────────
 
-function AgendaCard({ a }: { a: AgendaStat }) {
+function AgendaCard({ a, semanas }: { a: AgendaStat; semanas: SemanaStats[] }) {
   const totalCalidad = a.calidad_dist.Completa + a.calidad_dist.Parcial + a.calidad_dist.Nula || 1
   const pct = (n: number) => `${Math.round((n / totalCalidad) * 100)}%`
+  const agKey = a.id as AgendaKey
+  const sparkData = agendaSparkData(semanas, agKey)
+  const delta = agendaDelta(semanas, agKey)
 
   return (
     <div className="agenda-monitor-card" style={{ borderTopColor: a.barColor, color: a.color }}>
       <div className="agenda-monitor-eyebrow" style={{ color: a.color }}>{a.label}</div>
 
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-        <div className="agenda-monitor-total" style={{ color: a.color }}>{a.datasets_en_agenda}</div>
-        <Tooltip text="Datasets clasificados bajo esta agenda en el corpus. Incluye todos los datasets independientemente de su calidad." />
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+            <div className="agenda-monitor-total" style={{ color: a.color }}>{a.datasets_en_agenda}</div>
+            <Tooltip text="Datasets clasificados bajo esta agenda en el corpus. Incluye todos los datasets independientemente de su calidad." />
+          </div>
+          <div className="agenda-monitor-label" style={{ color: 'var(--ink-light)' }}>datasets disponibles en esta agenda</div>
+          {delta !== null && (
+            <div style={{
+              fontSize: 12, fontFamily: 'var(--mono)', marginTop: 4,
+              color: delta > 0 ? '#C2185B' : delta < 0 ? '#3F7A4E' : 'var(--ink-light)',
+            }}>
+              {delta > 0 ? '▲' : delta < 0 ? '▼' : '—'} {Math.abs(Math.round(delta * 100))}% esta semana
+            </div>
+          )}
+        </div>
+        {sparkData.length > 1 && (
+          <LineChart width={100} height={36} data={sparkData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
+            <Line
+              type="monotone"
+              dataKey="v"
+              stroke={a.color}
+              strokeWidth={2}
+              dot={false}
+              isAnimationActive
+            />
+          </LineChart>
+        )}
       </div>
-      <div className="agenda-monitor-label" style={{ color: 'var(--ink-light)' }}>datasets disponibles en esta agenda</div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
         <div className="calidad-bar" style={{ flex: 1 }}>
@@ -139,6 +183,7 @@ export function MonitorColectivo() {
     agenda: 'todas', pais: 'todos', calidad: 'todas',
   })
   const { agendas, topics, totalDatasets, totalNormativas, paises, isReady, error } = useMonitorStats(filtros)
+  const { semanas } = useEvolucionStats()
 
   return (
     <Layout>
@@ -202,7 +247,7 @@ export function MonitorColectivo() {
         </p>
         {isReady ? (
           <div className="monitor-grid">
-            {agendas.map(a => <AgendaCard key={a.id} a={a} />)}
+            {agendas.map(a => <AgendaCard key={a.id} a={a} semanas={semanas} />)}
           </div>
         ) : (
           <SkeletonAgendaGrid />
