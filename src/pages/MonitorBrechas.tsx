@@ -265,7 +265,7 @@ function ResultsColumns({ resultado }: { resultado: GapResult }) {
     <div className="results-columns">
       <div className="results-col">
         <div className="results-col-header">
-          <span className="label-mono">Datasets</span>
+          <span className="label-mono">Datasets disponibles</span>
           <span className="results-col-count">{resultado.datasets.length}</span>
         </div>
         {resultado.datasets.length === 0
@@ -277,7 +277,7 @@ function ResultsColumns({ resultado }: { resultado: GapResult }) {
       </div>
       <div className="results-col">
         <div className="results-col-header">
-          <span className="label-mono">Normativas</span>
+          <span className="label-mono">Marcos normativos relevantes</span>
           <span className="results-col-count">{resultado.normativas.length}</span>
         </div>
         {resultado.normativas.length === 0
@@ -316,7 +316,12 @@ function ChipsBar({ resultado, query }: { resultado: GapResult; query: string })
 
   return (
     <div className="chips-bar">
-      <span className="chips-bar-label">Agenda de incidencia</span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <span className="chips-bar-label">Termómetro de Incidencia</span>
+        <span style={{ fontSize: 12, color: 'var(--ink-light)', fontFamily: 'var(--sans)' }}>
+          Elegí hacia dónde querés llevar esta brecha.
+        </span>
+      </div>
       {ADVOCACY_CHIPS.map(chip => {
         const isSelected = selected.includes(chip)
         return (
@@ -367,8 +372,8 @@ export function MonitorBrechas() {
       <main className="motor-page">
         <div className="container">
           <div className="hero">
-            <p className="hero-eyebrow">Monitor de Brechas</p>
-            <h1>¿Qué datos <em>faltan</em>?</h1>
+            <p className="hero-eyebrow">Monitoreo de brechas</p>
+            <h1>¿Qué datos nos <em>faltan</em>?</h1>
           </div>
           <div className="search-box" style={{ textAlign: 'center', padding: '2rem' }}>
             {embedderStatus === 'error' ? (
@@ -399,9 +404,29 @@ export function MonitorBrechas() {
     <main className="motor-page">
       <div className="container">
         <div className="hero">
-          <p className="hero-eyebrow">Monitor de Brechas</p>
-          <h1>¿Qué datos <em>faltan</em>?</h1>
-          <p className="hero-sub">Escribe una pregunta sobre datos de género en América Latina.</p>
+          <p className="hero-eyebrow">Monitoreo de brechas</p>
+          <h1>¿Qué datos nos <em>faltan</em>?</h1>
+          <p className="hero-sub">
+            Escribí una pregunta sobre datos de género que te interese. El monitor busca qué datos existen,
+            qué exige la normativa vigente y dónde está la brecha de datos teniendo en cuenta tu info.
+          </p>
+          <div style={{
+            marginTop: '1.25rem',
+            padding: '.75rem 1rem',
+            borderLeft: '3px solid var(--accent)',
+            borderRadius: '0 var(--r) var(--r) 0',
+            background: 'var(--paper)',
+          }}>
+            <p style={{ fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--accent)', letterSpacing: '.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 5 }}>
+              * ¿Por qué te solicitamos una pregunta?
+            </p>
+            <p style={{ fontSize: 13, color: 'var(--ink-light)', lineHeight: 1.7, margin: 0 }}>
+              El objetivo del monitor es poner en evidencia qué datos tenemos vs qué datos queremos.
+              DCL pone la lupa en la primera instancia de cualquier proceso de recolección de datos,
+              el problema detrás de esos datos. En el ciclo de datos esa primera fase se llama{' '}
+              <em style={{ color: 'var(--ink-mid)' }}>problematización</em> y es allí donde queremos incidir.
+            </p>
+          </div>
         </div>
 
         <div className="motor-search">
