@@ -103,7 +103,7 @@
 /* ═══ Layout ═══ */
 
 .container {
-  max-width: 860px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 3rem 1.5rem 6rem;
 }
@@ -176,10 +176,10 @@
 }
 
 .motor-results-inner {
-  max-width: 1100px;
+  max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 272px 1fr;
+  grid-template-columns: 260px 1fr;
   gap: 1.5rem;
   align-items: start;
 }
@@ -207,37 +207,48 @@
   margin-top: -0.5rem;
 }
 
-.score-gauge {
-  padding: 4px 0 2px;
+/* ── Score arc gauge ── */
+.score-arc-gauge {
+  width: 100%;
+  margin: 0.5rem 0;
 }
 
-.score-gauge-track {
-  position: relative;
+.score-arc-fill {
+  width: 100%;
   height: 8px;
   border-radius: 4px;
-  background: linear-gradient(to right, var(--gap-cov), var(--gap-part) 50%, var(--gap-crit));
+  background: linear-gradient(
+    to right,
+    var(--gap-cov) 0%,
+    var(--gap-part) 50%,
+    var(--gap-crit) 100%
+  );
+  position: relative;
+  overflow: visible;
 }
 
-.score-gauge-marker {
+.score-arc-fill::after {
+  content: '';
   position: absolute;
   top: 50%;
+  left: calc(var(--arc-pct, 0) * 1%);
   transform: translate(-50%, -50%);
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background: white;
-  border: 2px solid var(--ink);
-  transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid currentColor;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.score-gauge-labels {
+.score-arc-labels {
   display: flex;
   justify-content: space-between;
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 10px;
   color: var(--ink-light);
   margin-top: 4px;
-  letter-spacing: .03em;
 }
 
 .agenda-score-list {
@@ -319,7 +330,7 @@
 .hit-row:last-child { border-bottom: none; }
 
 .hit-titulo {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink);
   line-height: 1.45;
@@ -332,7 +343,7 @@
   flex-wrap: wrap;
   gap: 4px;
   margin-bottom: 7px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
   font-family: var(--mono);
 }
@@ -343,6 +354,38 @@
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.hit-sim-label {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--ink-light);
+  flex-shrink: 0;
+  letter-spacing: .02em;
+}
+
+.results-col-legend {
+  padding: 10px 14px;
+  border-top: 1px solid var(--ink-faint);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-light);
+}
+
+.results-col-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.results-col-legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .hit-sim-track {
@@ -362,10 +405,10 @@
 }
 
 .hit-sim-pct {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
   font-family: var(--mono);
-  min-width: 26px;
+  min-width: 32px;
   text-align: right;
 }
 
@@ -483,7 +526,7 @@
 
 .agenda-monitor-label {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-light);
   margin-top: 2px;
   margin-bottom: 12px;
@@ -658,7 +701,7 @@
 
 .evolucion-card-eyebrow {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 13px;
   color: var(--ink-light);
   text-transform: uppercase;
   letter-spacing: .06em;
@@ -674,7 +717,7 @@
 
 .evolucion-card-delta {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 14px;
   margin-top: 3px;
 }
 
@@ -828,7 +871,7 @@
 }
 
 .evol-bar-label {
-  font-size: 10px;
+  font-size: 14px;
   font-family: var(--mono);
   color: var(--ink-light);
   margin-bottom: 3px;
@@ -848,7 +891,7 @@
 }
 
 .evol-bar-pct {
-  font-size: 10px;
+  font-size: 14px;
   font-family: var(--mono);
   color: var(--ink-light);
   margin-top: 2px;
@@ -870,7 +913,7 @@
 .calidad-legend {
   display: flex;
   gap: 10px;
-  font-size: 10px;
+  font-size: 13px;
   font-family: var(--mono);
   color: var(--ink-light);
   flex-wrap: wrap;
@@ -994,7 +1037,7 @@
 
 .topic-score-sublabel {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 13px;
   color: var(--ink-light);
   text-transform: uppercase;
   letter-spacing: .06em;
@@ -1004,7 +1047,7 @@
 .topic-meta {
   display: flex;
   gap: 8px;
-  font-size: 11px;
+  font-size: 14px;
   font-family: var(--mono);
   color: var(--ink-light);
   flex-wrap: wrap;
@@ -1178,7 +1221,7 @@
 
 .metrics-band-label {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 13px;
   color: var(--ink-light);
   text-transform: uppercase;
   letter-spacing: .04em;
@@ -1270,12 +1313,18 @@
 
 .chips-bar {
   display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-  align-items: center;
+  flex-direction: column;
+  gap: .6rem;
   padding: 1rem 0 .5rem;
   border-top: 1px solid var(--ink-faint);
   margin-top: 1rem;
+}
+
+.chips-bar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
 }
 
 .chips-bar-label {
@@ -1353,7 +1402,7 @@
 
 .diagnostico-query {
   font-family: var(--serif);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   line-height: 1.5;
   color: var(--ink);
   border-left: 3px solid var(--accent);
@@ -1373,7 +1422,7 @@
 
 .diagnostico-score-num {
   font-family: var(--serif);
-  font-size: 3rem;
+  font-size: 3.5rem;
   line-height: 1;
   letter-spacing: -.03em;
 }
@@ -1415,17 +1464,58 @@
 }
 
 .diagnostico-hit {
-  padding: .6rem 0;
+  padding: .75rem 0;
   border-bottom: 1px solid var(--ink-faint);
-  font-size: 13px;
+  font-size: 15px;
 }
 
-.diagnostico-hit-title { font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+.diagnostico-hit-title { font-weight: 500; color: var(--ink); margin-bottom: 3px; }
 
 .diagnostico-hit-meta {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
+}
+
+.diagnostico-marco {
+  padding: .75rem 0 .75rem 1rem;
+  border-left: 2px solid var(--ink-faint);
+  margin-bottom: .75rem;
+}
+
+.diagnostico-marco-principio {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: .35rem;
+}
+
+.diagnostico-marco-cita {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  margin: 0 0 .35rem;
+  padding: 0;
+}
+
+.diagnostico-marco-fuente {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-light);
+  letter-spacing: .02em;
+}
+
+.diagnostico-acciones {
+  margin: 0;
+  padding-left: 1.4rem;
+}
+
+.diagnostico-accion {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-mid);
+  margin-bottom: .6rem;
 }
 
 .diagnostico-footer {

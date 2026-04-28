@@ -5,6 +5,18 @@ import { useSearchIndex } from '../context/SearchIndexContext'
 import { useEmbedder } from '../context/EmbedderContext'
 import type { GapResult, SearchHit } from '../types'
 
+const CHIP_KEYWORDS: Record<string, string[]> = {
+  'Gobierno Abierto':      ['estadística', 'oficial', 'gobierno', 'abierto', 'transparencia', 'rendición', 'público', 'nacional', 'ministerio', 'instituto', 'censos', 'registro', 'administrativo'],
+  'DDHH':                  ['género', 'violencia', 'salud', 'reproductiva', 'discriminación', 'derechos', 'mujeres', 'interseccionalidad', 'comunidad', 'vulnerabilidad', 'migrante', 'indígena', 'justicia', 'litigios', 'femicidio'],
+  'Cooperación Digital':   ['tecnología', 'digital', 'sistema', 'plataforma', 'datos', 'interoperabilidad', 'infraestructura', 'algoritmo', 'software', 'TIC', 'conectividad', 'inteligencia artificial', 'cooperación'],
+  'Gobernanza Cooperativa':['comunidad', 'cooperativa', 'colectivo', 'organización', 'sociedad civil', 'participación', 'ciudadana', 'gobernanza', 'OSC', 'cooperativismo', 'autogestión', 'barrio', 'territorial'],
+}
+
+function scoreHit(titulo: string, keywords: string[]): number {
+  const text = titulo.toLowerCase()
+  return keywords.reduce((acc, kw) => acc + (text.includes(kw.toLowerCase()) ? 1 : 0), 0)
+}
+
 const LOADING_STEPS = [
   'Buscando similitudes…',
   'Calculando score de brecha…',
@@ -119,8 +131,11 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 6 }}>
         <span className="hit-titulo">{hit.titulo}</span>
         {hit.calidad && (
-          <span className={`gap-category-badge ${calidadClass[hit.calidad] ?? 'parcial'}`}
-            style={{ flexShrink: 0, fontSize: 10 }}>
+          <span
+            className={`gap-category-badge ${calidadClass[hit.calidad] ?? 'parcial'}`}
+            style={{ flexShrink: 0, fontSize: 10 }}
+            title={`Calidad del dato — Completa: bien documentado y accesible · Parcial: incompleto o con restricciones · Nula: dato ausente o no sistematizado`}
+          >
             {hit.calidad}
           </span>
         )}
@@ -131,6 +146,7 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
         {hit.anio && <><span className="hit-meta-sep">·</span><span>{hit.anio}</span></>}
       </div>
       <div className="hit-sim-wrap">
+        <span className="hit-sim-label">relevancia</span>
         <div className="hit-sim-track">
           <div
             className="hit-sim-bar"
@@ -143,7 +159,7 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
         </div>
         <span
           className="hit-sim-pct"
-          title={`Similitud semántica: ${(hit.similitud * 100).toFixed(1)}%`}
+          title={`Similitud semántica con tu consulta: ${(hit.similitud * 100).toFixed(1)}%`}
         >
           {normalizedSim >= 0.66 ? 'alta' : normalizedSim >= 0.33 ? 'media' : 'baja'}
         </span>
@@ -179,17 +195,14 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
         ● {resultado.categoria}
       </span>
 
-      <div className="score-gauge">
-        <div className="score-gauge-track">
-          <div
-            className="score-gauge-marker"
-            style={{ left: `${pct}%` }}
-            aria-label={`Score: ${pct}`}
-          />
-        </div>
-        <div className="score-gauge-labels">
-          <span>cubierto</span>
-          <span>crítico</span>
+      <div className="score-arc-gauge" aria-label={`Score de brecha: ${pct} de 100`}>
+        <div
+          className="score-arc-fill"
+          style={{ '--arc-pct': pct } as React.CSSProperties}
+        />
+        <div className="score-arc-labels">
+          <span>0</span>
+          <span>100</span>
         </div>
       </div>
 
@@ -256,36 +269,84 @@ function ResultadoMetaBand({ resultado }: { resultado: GapResult }) {
 
 // ── ResultsColumns ────────────────────────────────────────────────────────────
 
-function ResultsColumns({ resultado }: { resultado: GapResult }) {
+function ResultsColumns({ resultado, selectedChips }: { resultado: GapResult; selectedChips: string[] }) {
   const allHits = [...resultado.datasets, ...resultado.normativas]
   const maxSim = Math.max(...allHits.map(h => h.similitud), 0.001)
   const normalize = (h: SearchHit) => h.similitud / maxSim
+
+  const keywords = selectedChips.flatMap(c => CHIP_KEYWORDS[c] ?? [])
+
+  function sortedHits<T extends { titulo: string }>(hits: T[]): T[] {
+    if (keywords.length === 0) return hits
+    return [...hits].sort((a, b) => scoreHit(b.titulo, keywords) - scoreHit(a.titulo, keywords))
+  }
+
+  const datasets   = sortedHits(resultado.datasets)
+  const normativas = sortedHits(resultado.normativas)
 
   return (
     <div className="results-columns">
       <div className="results-col">
         <div className="results-col-header">
-          <span className="label-mono">Datasets disponibles</span>
-          <span className="results-col-count">{resultado.datasets.length}</span>
+          <div>
+            <div className="label-mono">Datasets disponibles</div>
+            <div style={{ fontSize: 10, color: 'var(--ink-light)', fontFamily: 'var(--mono)', marginTop: 2 }}>
+              Datos existentes ordenados por relevancia para tu consulta
+            </div>
+          </div>
+          <span className="results-col-count">{datasets.length}</span>
         </div>
-        {resultado.datasets.length === 0
+        {datasets.length === 0
           ? <p className="results-empty">Sin datasets relacionados</p>
-          : resultado.datasets.map((hit, i) => (
+          : datasets.map((hit, i) => (
               <HitRow key={hit.id} hit={hit} index={i} normalizedSim={normalize(hit)} />
             ))
         }
+        <div className="results-col-legend">
+          <span className="results-col-legend-item">
+            <span className="results-col-legend-dot" style={{ background: 'var(--gap-cov)' }} />
+            Completa — dato accesible y bien documentado
+          </span>
+          <span className="results-col-legend-item">
+            <span className="results-col-legend-dot" style={{ background: 'var(--gap-part)' }} />
+            Parcial — incompleto o con restricciones
+          </span>
+          <span className="results-col-legend-item">
+            <span className="results-col-legend-dot" style={{ background: 'var(--gap-crit)' }} />
+            Nula — dato ausente o no sistematizado
+          </span>
+        </div>
       </div>
       <div className="results-col">
         <div className="results-col-header">
-          <span className="label-mono">Marcos normativos relevantes</span>
-          <span className="results-col-count">{resultado.normativas.length}</span>
+          <div>
+            <div className="label-mono">Marcos normativos relevantes</div>
+            <div style={{ fontSize: 10, color: 'var(--ink-light)', fontFamily: 'var(--mono)', marginTop: 2 }}>
+              Leyes y normativas que regulan o exigen este tipo de dato
+            </div>
+          </div>
+          <span className="results-col-count">{normativas.length}</span>
         </div>
-        {resultado.normativas.length === 0
+        {normativas.length === 0
           ? <p className="results-empty">Sin normativas relacionadas</p>
-          : resultado.normativas.map((hit, i) => (
+          : normativas.map((hit, i) => (
               <HitRow key={hit.id} hit={hit} index={i} normalizedSim={normalize(hit)} />
             ))
         }
+        <div className="results-col-legend">
+          <span className="results-col-legend-item">
+            <span className="results-col-legend-dot" style={{ background: 'var(--gap-cov)' }} />
+            Completa — dato accesible y bien documentado
+          </span>
+          <span className="results-col-legend-item">
+            <span className="results-col-legend-dot" style={{ background: 'var(--gap-part)' }} />
+            Parcial — incompleto o con restricciones
+          </span>
+          <span className="results-col-legend-item">
+            <span className="results-col-legend-dot" style={{ background: 'var(--gap-crit)' }} />
+            Nula — dato ausente o no sistematizado
+          </span>
+        </div>
       </div>
     </div>
   )
@@ -300,15 +361,10 @@ const ADVOCACY_CHIPS = [
   'Gobernanza Cooperativa',
 ]
 
-function ChipsBar({ resultado, query }: { resultado: GapResult; query: string }) {
-  const [selected, setSelected] = useState<string[]>([])
+function ChipsBar({ resultado, query, selected, onToggle }: {
+  resultado: GapResult; query: string; selected: string[]; onToggle: (chip: string) => void
+}) {
   const navigate = useNavigate()
-
-  function toggle(chip: string) {
-    setSelected(prev =>
-      prev.includes(chip) ? prev.filter(c => c !== chip) : [...prev, chip]
-    )
-  }
 
   function handleDescargar() {
     navigate('/diagnostico', { state: { resultado, query, chips: selected } })
@@ -319,33 +375,30 @@ function ChipsBar({ resultado, query }: { resultado: GapResult; query: string })
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <span className="chips-bar-label">Termómetro de Incidencia</span>
         <span style={{ fontSize: 12, color: 'var(--ink-light)', fontFamily: 'var(--sans)' }}>
-          Elegí hacia dónde querés llevar esta brecha.
+          Elegí los marcos de incidencia para personalizar el diagnóstico.
         </span>
       </div>
-      {ADVOCACY_CHIPS.map(chip => {
-        const isSelected = selected.includes(chip)
-        return (
-          <button
-            key={chip}
-            className="chip"
-            style={isSelected ? {
-              background: 'var(--accent)',
-              color: 'white',
-              borderColor: 'var(--accent)',
-            } : {}}
-            onClick={() => toggle(chip)}
-          >
-            {chip}
-          </button>
-        )
-      })}
-      <button
-        className="btn-primary"
-        style={{ marginLeft: 'auto', fontSize: 12, padding: '6px 14px' }}
-        onClick={handleDescargar}
-      >
-        Descargar diagnóstico →
-      </button>
+      <div className="chips-bar-row">
+        {ADVOCACY_CHIPS.map(chip => {
+          const isSelected = selected.includes(chip)
+          return (
+            <button
+              key={chip}
+              className={`chip${isSelected ? ' selected' : ''}`}
+              onClick={() => onToggle(chip)}
+            >
+              {chip}
+            </button>
+          )
+        })}
+        <button
+          className="btn-primary"
+          style={{ marginLeft: 'auto', fontSize: 12, padding: '6px 14px' }}
+          onClick={handleDescargar}
+        >
+          {selected.length > 0 ? `Descargar diagnóstico (${selected.length}) →` : 'Descargar diagnóstico →'}
+        </button>
+      </div>
     </div>
   )
 }
@@ -357,14 +410,25 @@ export function MonitorBrechas() {
   const { resultado, isLoading, error: searchError, buscar, limpiar } = useMotorBrechas()
   const { status: embedderStatus, progress: embedderProgress, error: embedderError } = useEmbedder()
   const [query, setQuery] = useState('')
+  const [selectedChips, setSelectedChips] = useState<string[]>([])
+
+  function toggleChip(chip: string) {
+    setSelectedChips(prev =>
+      prev.includes(chip) ? prev.filter(c => c !== chip) : [...prev, chip]
+    )
+  }
 
   const handleBuscar = () => {
-    if (query.trim().length >= 5) buscar(query.trim())
+    if (query.trim().length >= 5) {
+      setSelectedChips([])
+      buscar(query.trim())
+    }
   }
 
   const handleLimpiar = () => {
     limpiar()
     setQuery('')
+    setSelectedChips([])
   }
 
   if (embedderStatus === 'loading' || embedderStatus === 'error') {
@@ -454,8 +518,8 @@ export function MonitorBrechas() {
             <ScorePanel resultado={resultado} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <ResultadoMetaBand resultado={resultado} />
-              <ResultsColumns resultado={resultado} />
-              <ChipsBar resultado={resultado} query={query} />
+              <ResultsColumns resultado={resultado} selectedChips={selectedChips} />
+              <ChipsBar resultado={resultado} query={query} selected={selectedChips} onToggle={toggleChip} />
             </div>
           </div>
         </div>
