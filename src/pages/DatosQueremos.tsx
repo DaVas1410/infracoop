@@ -1,4 +1,8 @@
 import { useState, useMemo } from 'react'
+import {
+  ComposedChart, Bar, Line, XAxis, YAxis, Tooltip,
+  ResponsiveContainer, CartesianGrid, Legend,
+} from 'recharts'
 import { Layout } from '../components/Layout'
 import { useEvolucionStats } from '../hooks/useEvolucionStats'
 import { Skeleton } from '../components/Skeleton'
@@ -150,60 +154,61 @@ function MetricaCard({ eyebrow, num, numColor, sub }: {
 
 const MAX_CHART_BARS = 24
 
-function StackedWeekChart({ semanas, selectedIdx }: { semanas: SemanaStats[]; selectedIdx: number }) {
-  // Show at most MAX_CHART_BARS, always including the selected week
+function StackedWeekChart({ semanas }: { semanas: SemanaStats[] }) {
   const visible = semanas.length <= MAX_CHART_BARS
     ? semanas
     : semanas.slice(semanas.length - MAX_CHART_BARS)
-  const visibleSelectedIdx = semanas.length <= MAX_CHART_BARS
-    ? selectedIdx
-    : selectedIdx - (semanas.length - MAX_CHART_BARS)
 
-  const maxNuevas = Math.max(...visible.map(s => s.nuevas), 1)
   const labelEvery = visible.length > 16 ? 4 : visible.length > 8 ? 2 : 1
+
+  const data = visible.map(s => ({
+    label: s.label.replace('Sem. ', 'S'),
+    tecnologica: s.por_agenda.tecnologica.nuevas,
+    datos: s.por_agenda.datos.nuevas,
+    genero: s.por_agenda.genero.nuevas,
+    total: s.nuevas,
+  }))
 
   return (
     <div className="chart-section">
-      <div className="chart-title">Preguntas nuevas por semana — distribución por severidad de brecha</div>
-      <div className="chart-bars-scroll">
-      <div className="chart-bars">
-        {visible.map((s, i) => {
-          const isSelected = i === visibleSelectedIdx
-          const opacity = isSelected ? 1 : i < visibleSelectedIdx ? 0.45 : 0.15
-          const totalH = 90
-          const scale = s.nuevas / maxNuevas
-          const critH = Math.round((s.criticas  / (s.nuevas || 1)) * totalH * scale)
-          const parcH = Math.round((s.parciales / (s.nuevas || 1)) * totalH * scale)
-          const cubH  = Math.round((s.cubiertas / (s.nuevas || 1)) * totalH * scale)
-          const showLabel = isSelected || i % labelEvery === 0
-
-          return (
-            <div key={s.isoWeek} className="stack-bar-group" style={{ opacity }}>
-              <div className="stack-bar" style={{ height: totalH * scale }}>
-                <div className="stack-segment" style={{ height: cubH,  background: 'var(--gap-cov)' }} />
-                <div className="stack-segment" style={{ height: parcH, background: 'var(--gap-part)' }} />
-                <div className="stack-segment" style={{ height: critH, background: 'var(--gap-crit)' }} />
-              </div>
-              <div className="chart-bar-label" style={{ fontWeight: isSelected ? 600 : 400, visibility: showLabel ? 'visible' : 'hidden' }}>
-                {s.label.replace('Sem. ', 'S')}
-              </div>
-            </div>
-          )
-        })}
-      </div>
-      </div>
-      <div className="chart-legend">
-        {[
-          { label: 'Brecha crítica', color: 'var(--gap-crit)' },
-          { label: 'Brecha parcial', color: 'var(--gap-part)' },
-          { label: 'Bien cubierta',  color: 'var(--gap-cov)' },
-        ].map(l => (
-          <div key={l.label} className="chart-legend-item">
-            <div className="chart-legend-dot" style={{ background: l.color }} />
-            {l.label}
-          </div>
-        ))}
-      </div>
+      <div className="chart-title">Preguntas nuevas por semana — distribución por agenda</div>
+      <ResponsiveContainer width="100%" height={220}>
+        <ComposedChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--ink-faint)" vertical={false} />
+          <XAxis
+            dataKey="label"
+            tick={{ fontSize: 10, fontFamily: 'var(--mono)', fill: 'var(--ink-light)' }}
+            interval={labelEvery - 1}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis
+            tick={{ fontSize: 10, fontFamily: 'var(--mono)', fill: 'var(--ink-light)' }}
+            tickLine={false}
+            axisLine={false}
+            width={28}
+          />
+          <Tooltip
+            contentStyle={{ fontFamily: 'var(--mono)', fontSize: 12, border: '1px solid var(--ink-faint)', borderRadius: 6 }}
+            labelStyle={{ fontWeight: 600, marginBottom: 4 }}
+          />
+          <Bar dataKey="tecnologica" stackId="a" fill="#378ADD" name="Ag. Tecnológica" isAnimationActive />
+          <Bar dataKey="datos"       stackId="a" fill="#7F77DD" name="Ag. de Datos"    isAnimationActive />
+          <Bar dataKey="genero"      stackId="a" fill="#D4537E" name="Ag. de Género"   isAnimationActive radius={[2, 2, 0, 0]} />
+          <Line
+            type="monotone"
+            dataKey="total"
+            name="Total"
+            stroke="var(--ink)"
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive
+          />
+          <Legend
+            wrapperStyle={{ fontSize: 11, fontFamily: 'var(--mono)', paddingTop: 8 }}
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
     </div>
   )
 }
@@ -222,11 +227,11 @@ function AgendaDemandCard({ agKey, sem, baseline }: {
       <div className="agenda-evol-header">
         <div>
           <div className="agenda-evol-title" style={{ color: cfg.color }}>{cfg.label}</div>
-          <div style={{ fontSize: 12, color: 'var(--ink-mid)', marginTop: 2 }}>
+          <div style={{ fontSize: 15, color: 'var(--ink-mid)', marginTop: 2 }}>
             Score promedio brecha: <strong>{Math.round(ag.score_avg * 100)}%</strong>
           </div>
         </div>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-light)' }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 15, color: 'var(--ink-light)' }}>
           {ag.nuevas} preguntas esta semana
         </div>
       </div>
@@ -281,8 +286,7 @@ export function DatosQueremos() {
     [semanas, desdeStr, hastaStr]
   )
 
-  const selectedIdx = filteredSemanas.length - 1
-  const selected = filteredSemanas[selectedIdx]
+  const selected = filteredSemanas[filteredSemanas.length - 1]
 
   const totalAcumuladas = filteredSemanas[filteredSemanas.length - 1]?.acumuladas ?? 0
   const maxTopTema = topTemas[0]?.count ?? 1
@@ -387,7 +391,7 @@ export function DatosQueremos() {
 
             {/* ── Main content ── */}
             <div className="datos-main">
-              <StackedWeekChart semanas={filteredSemanas} selectedIdx={selectedIdx} />
+              <StackedWeekChart semanas={filteredSemanas} />
 
               {selected && (
                 <div className="agenda-evol-list" style={{ marginTop: '2rem' }}>
