@@ -195,7 +195,7 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
         ● {resultado.categoria}
       </span>
 
-      <div className="score-arc-gauge" aria-label={`Score de brecha: ${pct} de 100`}>
+      <div className="score-arc-gauge" aria-label={`Score de brecha: ${pct} de 100`} style={{ color }}>
         <div
           className="score-arc-fill"
           style={{ '--arc-pct': pct } as React.CSSProperties}
