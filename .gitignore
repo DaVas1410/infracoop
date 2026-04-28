@@ -27,3 +27,4 @@ __pycache__/
 *.pyc
 scripts/import/import_log.json
 scripts/seed/output/
+.superpowers/
