@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Layout } from '../components/Layout'
 import { useEvolucionStats } from '../hooks/useEvolucionStats'
+import { Skeleton } from '../components/Skeleton'
 import type { SemanaStats } from '../types'
 
 const AGENDA_CFG = {
@@ -309,6 +310,26 @@ export function DatosQueremos() {
           <p style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--warn)', marginBottom: '1rem' }}>
             {error}
           </p>
+        )}
+
+        {!isReady && !error && (
+          <div className="datos-layout">
+            <aside className="datos-sidebar">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <Skeleton height={36} width="70%" />
+                <Skeleton height={36} width="80%" />
+                <Skeleton height={80} width="100%" style={{ marginTop: 8 }} />
+                <Skeleton height={80} width="100%" />
+              </div>
+            </aside>
+            <div className="datos-main">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: '1rem' }}>
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} height={32} width="100%" />
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
         {semanas.length === 0 && isReady && (
