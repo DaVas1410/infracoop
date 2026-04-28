@@ -125,7 +125,7 @@
 
 .hero h1 {
   font-family: var(--serif);
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2.8rem, 6vw, 4.2rem);
   line-height: 1.1;
   letter-spacing: -0.03em;
   color: var(--ink);
@@ -136,7 +136,7 @@
 .hero h1 em { font-style: italic; color: var(--accent); }
 
 .hero-sub {
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink-mid);
   max-width: 520px;
   line-height: 1.65;
@@ -536,7 +536,7 @@
 
 .mapa-section-title {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--accent);
@@ -1185,7 +1185,7 @@
 }
 
 .section-description {
-  font-size: 12px;
+  font-size: 15px;
   font-family: var(--mono);
   color: var(--ink-light);
   margin-bottom: 1rem;
@@ -1439,6 +1439,19 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 4px;
+}
+
+/* ═══ Skeleton loading ═══ */
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+.skeleton {
+  background: var(--ink-faint);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
 }
 
 @media print {
