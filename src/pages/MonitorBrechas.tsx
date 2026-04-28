@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { BarChart, Bar, Cell } from 'recharts'
 import { useNavigate } from 'react-router-dom'
 import { useMotorBrechas } from '../hooks/useMotorBrechas'
 import { useSearchIndex } from '../context/SearchIndexContext'
@@ -111,6 +112,28 @@ function SearchBox({
   )
 }
 
+// ── qualityDims ───────────────────────────────────────────────────────────────
+
+function qualityDims(hit: SearchHit): { label: string; value: number; color: string }[] {
+  const anioScore = hit.anio
+    ? Math.max(0.15, Math.min(1, (hit.anio - 2000) / 24))
+    : 0.15
+  const calidadScore =
+    hit.calidad === 'Completa' ? 1
+    : hit.calidad === 'Parcial' ? 0.55
+    : 0.15
+
+  const color = (v: number) =>
+    v >= 0.7 ? 'var(--gap-cov)' : v >= 0.4 ? 'var(--gap-part)' : 'var(--ink-faint)'
+
+  return [
+    { label: 'org',  value: hit.fuente ? 0.9 : 0.15,  color: color(hit.fuente ? 0.9 : 0.15) },
+    { label: 'geo',  value: hit.pais   ? 0.9 : 0.15,  color: color(hit.pais   ? 0.9 : 0.15) },
+    { label: 'año',  value: anioScore,                 color: color(anioScore) },
+    { label: 'meta', value: calidadScore,              color: color(calidadScore) },
+  ]
+}
+
 // ── HitRow ────────────────────────────────────────────────────────────────────
 
 function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; normalizedSim: number }) {
@@ -120,8 +143,6 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
     const t = setTimeout(() => setAnimated(true), index * 60 + 100)
     return () => clearTimeout(t)
   }, [index])
-
-  const barColor = hit.tipo === 'dataset' ? 'var(--accent)' : 'var(--agenda-genero)'
 
   return (
     <div
@@ -145,21 +166,24 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
         {hit.pais && <><span className="hit-meta-sep">·</span><span>{hit.pais}</span></>}
         {hit.anio && <><span className="hit-meta-sep">·</span><span>{hit.anio}</span></>}
       </div>
-      <div className="hit-sim-wrap">
-        <span className="hit-sim-label">relevancia</span>
-        <div className="hit-sim-track">
-          <div
-            className="hit-sim-bar"
-            style={{
-              width: animated ? `${normalizedSim * 100}%` : '0%',
-              background: barColor,
-              transition: `width 0.6s cubic-bezier(0.4,0,0.2,1) ${index * 60}ms`,
-            }}
-          />
-        </div>
+      <div className="hit-sim-wrap" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span className="hit-sim-label">calidad</span>
+        <BarChart
+          width={80}
+          height={32}
+          data={qualityDims(hit)}
+          margin={{ top: 2, right: 0, bottom: 0, left: 0 }}
+          style={{ opacity: animated ? 1 : 0, transition: `opacity 0.4s ease ${index * 60}ms` }}
+        >
+          <Bar dataKey="value" isAnimationActive animationBegin={index * 80} animationDuration={600} radius={[2, 2, 0, 0]}>
+            {qualityDims(hit).map((d, i) => (
+              <Cell key={i} fill={d.color} />
+            ))}
+          </Bar>
+        </BarChart>
         <span
           className="hit-sim-pct"
-          title={`Similitud semántica con tu consulta: ${(hit.similitud * 100).toFixed(1)}%`}
+          title={`Similitud semántica: ${(hit.similitud * 100).toFixed(1)}%`}
         >
           {normalizedSim >= 0.66 ? 'alta' : normalizedSim >= 0.33 ? 'media' : 'baja'}
         </span>
