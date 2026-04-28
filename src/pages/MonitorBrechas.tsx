@@ -115,6 +115,7 @@ function SearchBox({
 // ── qualityDims ───────────────────────────────────────────────────────────────
 
 function qualityDims(hit: SearchHit): { label: string; value: number; color: string }[] {
+  // 2000 + 24 = 2024 reference year; clamp keeps values in [0.15, 1] for years beyond it
   const anioScore = hit.anio
     ? Math.max(0.15, Math.min(1, (hit.anio - 2000) / 24))
     : 0.15
@@ -127,11 +128,14 @@ function qualityDims(hit: SearchHit): { label: string; value: number; color: str
   const color = (v: number) =>
     v >= 0.7 ? '#3F7A4E' : v >= 0.4 ? '#C77B0E' : '#E6DEF1'
 
+  const orgScore  = hit.fuente !== null ? 0.9 : 0.15
+  const geoScore  = hit.pais   !== null ? 0.9 : 0.15
+
   return [
-    { label: 'org',  value: hit.fuente ? 0.9 : 0.15,  color: color(hit.fuente ? 0.9 : 0.15) },
-    { label: 'geo',  value: hit.pais   ? 0.9 : 0.15,  color: color(hit.pais   ? 0.9 : 0.15) },
-    { label: 'año',  value: anioScore,                 color: color(anioScore) },
-    { label: 'meta', value: calidadScore,              color: color(calidadScore) },
+    { label: 'org',  value: orgScore,     color: color(orgScore) },
+    { label: 'geo',  value: geoScore,     color: color(geoScore) },
+    { label: 'año',  value: anioScore,    color: color(anioScore) },
+    { label: 'meta', value: calidadScore, color: color(calidadScore) },
   ]
 }
 
@@ -139,6 +143,7 @@ function qualityDims(hit: SearchHit): { label: string; value: number; color: str
 
 function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; normalizedSim: number }) {
   const [animated, setAnimated] = useState(false)
+  const dims = qualityDims(hit)
 
   useEffect(() => {
     const t = setTimeout(() => setAnimated(true), index * 60 + 100)
@@ -172,12 +177,12 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
         <BarChart
           width={80}
           height={32}
-          data={qualityDims(hit)}
+          data={dims}
           margin={{ top: 2, right: 0, bottom: 0, left: 0 }}
           style={{ opacity: animated ? 1 : 0, transition: `opacity 0.4s ease ${index * 60}ms` }}
         >
           <Bar dataKey="value" isAnimationActive animationBegin={index * 80} animationDuration={600} radius={[2, 2, 0, 0]}>
-            {qualityDims(hit).map((d, i) => (
+            {dims.map((d, i) => (
               <Cell key={i} fill={d.color} />
             ))}
           </Bar>

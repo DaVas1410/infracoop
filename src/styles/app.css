@@ -388,21 +388,6 @@
   flex-shrink: 0;
 }
 
-.hit-sim-track {
-  flex: 1;
-  height: 3px;
-  background: var(--ink-faint);
-  border-radius: 2px;
-  overflow: hidden;
-  position: relative;
-}
-
-.hit-sim-bar {
-  position: absolute;
-  left: 0; top: 0;
-  height: 100%;
-  border-radius: 2px;
-}
 
 .hit-sim-pct {
   font-size: 12px;
