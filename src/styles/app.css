@@ -1096,10 +1096,35 @@
 .btn-export-pdf:hover { border-color: var(--accent); color: var(--accent); }
 
 @media print {
-  .site-header, .motor-search, .btn-export-pdf, footer { display: none !important; }
-  .motor-results { padding: 0; }
-  .motor-results-inner { max-width: 100%; }
-  .resultado-meta-band { border-bottom: 1px solid #ccc; }
+  nav, .header, .btn-export-pdf, .chip-bar { display: none !important; }
+
+  body { background: white; }
+
+  .diagnostico-page {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .diagnostico-dataset,
+  .diagnostico-normativa,
+  .diagnostico-marco {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .diagnostico-marco-cita {
+    background: #f8f8f8 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .gap-category-badge {
+    border: 1px solid currentColor;
+    background: transparent !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 
 /* ═══ Phase 6 — DatosQueremos layout ═══ */
