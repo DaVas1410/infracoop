@@ -1213,6 +1213,7 @@
 
 @media (max-width: 600px) {
   .metrics-band { grid-template-columns: repeat(2, 1fr); }
+  .monitor-grid { grid-template-columns: 1fr; }
 }
 
 .metrics-band-card {

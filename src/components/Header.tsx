@@ -19,7 +19,7 @@ export function Header() {
             <div className="site-logo-name">
               Infra<span style={{ color: 'var(--accent)' }}>.</span>Coop
             </div>
-            <div className="site-logo-sub">Motor de brechas · v0.4</div>
+            <div className="site-logo-sub" aria-hidden="true">Motor de brechas · v0.4</div>
           </div>
         </NavLink>
 
