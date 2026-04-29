@@ -1,4 +1,5 @@
 import { Layout } from '../components/Layout'
+import { useLandingStats } from '../hooks/useLandingStats'
 
 function Section({ eyebrow, title, children }: {
   eyebrow: string
@@ -33,7 +34,55 @@ function FutureLayer({ title, children }: { title: string; children: React.React
   )
 }
 
+function StatsStrip({ datasets, normativas, preguntas, isLoading }: {
+  datasets: number; normativas: number; preguntas: number; isLoading: boolean
+}) {
+  const items = [
+    { num: datasets,   label: 'datasets en el corpus' },
+    { num: normativas, label: 'marcos normativos' },
+    { num: preguntas,  label: 'preguntas registradas' },
+  ]
+  return (
+    <div style={{
+      display: 'flex',
+      gap: '2rem',
+      flexWrap: 'wrap',
+      padding: '1.25rem 0',
+      borderTop: '1px solid var(--ink-faint)',
+      borderBottom: '1px solid var(--ink-faint)',
+      marginBottom: '2rem',
+    }}>
+      {items.map(({ num, label }) => (
+        <div key={label}>
+          <div style={{
+            fontFamily: 'var(--serif)',
+            fontSize: 'clamp(1.6rem, 4vw, 2.2rem)',
+            lineHeight: 1,
+            letterSpacing: '-0.03em',
+            color: isLoading ? 'var(--ink-faint)' : 'var(--ink)',
+            transition: 'color .3s',
+          }}>
+            {isLoading ? '—' : num.toLocaleString('es-MX')}
+          </div>
+          <div style={{
+            fontFamily: 'var(--mono)',
+            fontSize: 10,
+            textTransform: 'uppercase',
+            letterSpacing: '.1em',
+            color: 'var(--ink-light)',
+            marginTop: 4,
+          }}>
+            {label}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export function Landing() {
+  const { datasets, normativas, preguntas, isLoading } = useLandingStats()
+
   return (
     <Layout>
       <div style={{ maxWidth: 740, margin: '0 auto', padding: '3rem 1rem 6rem' }}>
@@ -50,6 +99,14 @@ export function Landing() {
             Infra.Coop es la dimensión tecnosocial de Data Cooperativas Latinas. Una infraestructura digital inclusiva basada en los conceptos y modelo de gobernanza de datos cooperativos.
           </p>
         </div>
+
+        {/* Live stats */}
+        <StatsStrip
+          datasets={datasets}
+          normativas={normativas}
+          preguntas={preguntas}
+          isLoading={isLoading}
+        />
 
         {/* Monitor de Brechas */}
         <Section eyebrow="01 · Monitor de Brechas" title="La pregunta como evidencia">

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import type { Dataset } from '../types'
 
@@ -15,6 +15,12 @@ vi.mock('../services/dataService', () => ({
   getDatasets: vi.fn().mockResolvedValue(mockDatasets),
   getNormativas: vi.fn().mockResolvedValue([]),
   getPreguntas: vi.fn().mockResolvedValue([]),
+}))
+
+vi.mock('../services/supabase', () => ({
+  supabase: {
+    from: vi.fn(),
+  },
 }))
 
 describe('useDatasets', () => {
@@ -37,5 +43,42 @@ describe('useNormativas', () => {
     expect(result.current.loading).toBe(true)
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.normativas).toEqual([])
+  })
+})
+
+import { supabase } from '../services/supabase'
+import { useLandingStats } from '../hooks/useLandingStats'
+
+describe('useLandingStats', () => {
+  function makeCountChain(count: number) {
+    return {
+      select: vi.fn().mockResolvedValue({ count, error: null }),
+    }
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    ;(supabase.from as ReturnType<typeof vi.fn>)
+      .mockReturnValueOnce(makeCountChain(42))   // datasets
+      .mockReturnValueOnce(makeCountChain(35))   // normativas
+      .mockReturnValueOnce(makeCountChain(150))  // preguntas
+  })
+
+  it('returns dataset, normativa, and pregunta counts', async () => {
+    const { result } = renderHook(() => useLandingStats())
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    expect(result.current.datasets).toBe(42)
+    expect(result.current.normativas).toBe(35)
+    expect(result.current.preguntas).toBe(150)
+  })
+
+  it('starts in loading state', () => {
+    ;(supabase.from as ReturnType<typeof vi.fn>)
+      .mockReturnValueOnce(makeCountChain(0))
+      .mockReturnValueOnce(makeCountChain(0))
+      .mockReturnValueOnce(makeCountChain(0))
+    const { result } = renderHook(() => useLandingStats())
+    expect(result.current.isLoading).toBe(true)
   })
 })
