@@ -107,4 +107,20 @@ describe('MonitorBrechas empty state', () => {
       expect(screen.queryByText(/¿Existen datos sobre feminicidio/i)).not.toBeInTheDocument()
     })
   })
+
+  it('does not show example questions when there is a search error', async () => {
+    mockUseMotorBrechas.mockReturnValue({
+      resultado: null,
+      isLoading: false,
+      error: 'Error al buscar',
+      buscar: vi.fn(),
+      limpiar: vi.fn(),
+    })
+
+    render(<MonitorBrechas />, { wrapper: AllProviders })
+
+    await waitFor(() => {
+      expect(screen.queryByText(/¿Existen datos sobre feminicidio/i)).not.toBeInTheDocument()
+    })
+  })
 })

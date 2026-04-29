@@ -594,7 +594,7 @@ export function MonitorBrechas() {
               {searchError}
             </p>
           )}
-          {resultado === null && !isLoading && (
+          {resultado === null && !isLoading && !searchError && (
             <ExampleQuestions onSelect={q => { setQuery(q); buscar(q) }} />
           )}
         </div>
