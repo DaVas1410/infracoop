@@ -98,20 +98,20 @@ export async function submitNormativa(
   normativa: NormativaFormData,
   modo: 'directo' | 'revision'
 ): Promise<string | null> {
-  const tabla = modo === 'directo' ? 'normativas' : 'normativas_en_revision'
-  const payload = modo === 'revision'
-    ? { ...normativa, status: 'pendiente' }
-    : normativa
-
-  if (modo === 'directo') {
-    const { data, error } = await supabase.from(tabla).insert(payload).select('id').single()
+  if (modo === 'revision') {
+    const { error } = await supabase
+      .from('normativas_en_revision')
+      .insert({ ...normativa, status: 'pendiente' })
     if (error) throw new Error(error.message)
-    return (data as { id: string }).id
+    return null
   }
 
-  const { error } = await supabase.from(tabla).insert(payload)
+  // directo: strip form-only field, write straight to normativas
+  const { ingresado_por: _ip, ...rest } = normativa
+  const { data, error } = await supabase
+    .from('normativas').insert(rest).select('id').single()
   if (error) throw new Error(error.message)
-  return null
+  return (data as { id: string }).id
 }
 
 export async function updateEmbedding(

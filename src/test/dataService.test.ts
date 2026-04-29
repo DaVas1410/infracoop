@@ -166,6 +166,28 @@ describe('submitNormativa', () => {
     }
     await expect(submitNormativa(data, 'directo')).rejects.toThrow('DB error')
   })
+
+  it('inserts into normativas without ingresado_por when directo', async () => {
+    const mockChain = {
+      insert: vi.fn().mockReturnThis(),
+      select: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: { id: 'nm-new' }, error: null }),
+    }
+    ;(mockFrom as ReturnType<typeof vi.fn>).mockReturnValueOnce(mockChain)
+
+    const normativa = {
+      nombre: 'Ley Test', organismo_emisor: 'Congreso', tipo: 'ley',
+      pais_alcance: 'MEX', anio_adopcion: 2024, articulo_numeral: '',
+      obligacion_datos: '', agendas: [], url_texto_oficial: '',
+      descripcion_notas: '', ingresado_por: 'admin@x.com',
+    }
+    const { submitNormativa } = await import('../services/dataService')
+    const id = await submitNormativa(normativa, 'directo')
+    expect(id).toBe('nm-new')
+    expect(mockChain.insert).not.toHaveBeenCalledWith(
+      expect.objectContaining({ ingresado_por: expect.anything() })
+    )
+  })
 })
 
 describe('submitFormulario directo', () => {
