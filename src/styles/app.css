@@ -1277,20 +1277,21 @@
 .tooltip-bubble {
   display: none;
   position: absolute;
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   background: var(--ink);
   color: white;
-  font-size: 11px;
+  font-size: 12px;
   font-family: var(--sans);
-  line-height: 1.5;
-  padding: 6px 10px;
-  border-radius: 6px;
+  line-height: 1.6;
+  padding: 8px 12px;
+  border-radius: 8px;
   white-space: normal;
-  width: 220px;
+  width: 260px;
   z-index: 200;
   pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
 }
 
 /* ═══ Filtros Monitor Colectivo ═══ */
@@ -1543,5 +1544,52 @@
   background: var(--ink-faint);
   border-radius: 4px;
   animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+/* ═══ Mobile — ≤ 640 px ═══ */
+
+@media (max-width: 640px) {
+  /* Container */
+  .container {
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* Header: hide tagline on very small screens */
+  .site-logo-sub {
+    display: none;
+  }
+
+  /* Motor de Brechas: stack score panel above results */
+  .motor-results {
+    padding: 1.25rem 1rem 3rem;
+  }
+
+  .motor-results-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .score-panel {
+    position: static; /* undo sticky */
+  }
+
+  /* Results columns: single column */
+  .results-columns {
+    grid-template-columns: 1fr;
+  }
+
+  /* Monitor Colectivo: 1 column agenda cards */
+  .monitor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* DatosQueremos: metricas compare */
+  .metricas-compare {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hero text: tighten on small screens */
+  .hero h1 {
+    font-size: clamp(2rem, 9vw, 2.8rem);
+  }
 }
 
