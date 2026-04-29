@@ -8,10 +8,10 @@ vi.mock('../services/supabase', () => ({
 }))
 
 vi.mock('../services/dataService', () => ({
-  aprobarFormulario: vi.fn().mockResolvedValue(undefined),
+  aprobarFormulario:  vi.fn().mockResolvedValue('new-dataset-id'),
   rechazarFormulario: vi.fn().mockResolvedValue(undefined),
-  aprobarNormativa: vi.fn().mockResolvedValue(undefined),
-  rechazarNormativa: vi.fn().mockResolvedValue(undefined),
+  aprobarNormativa:   vi.fn().mockResolvedValue('new-normativa-id'),
+  rechazarNormativa:  vi.fn().mockResolvedValue(undefined),
 }))
 
 import { supabase } from '../services/supabase'
@@ -34,11 +34,20 @@ function makeChain(data: unknown[]) {
   }
 }
 
+// Minimal channel stub used by the original describe block
+const stubOn          = vi.fn().mockReturnThis()
+const stubSubscribe   = vi.fn().mockReturnValue({ unsubscribe: vi.fn() })
+const stubChannel     = { on: stubOn, subscribe: stubSubscribe }
+
 beforeEach(() => {
   vi.clearAllMocks()
   ;(supabase.from as ReturnType<typeof vi.fn>)
     .mockReturnValueOnce(makeChain(mockFormularios))
     .mockReturnValueOnce(makeChain(mockNormativas))
+  ;(supabase as unknown as { channel: ReturnType<typeof vi.fn> }).channel =
+    vi.fn().mockReturnValue(stubChannel)
+  ;(supabase as unknown as { removeChannel: ReturnType<typeof vi.fn> }).removeChannel =
+    vi.fn()
 })
 
 describe('useRevisionQueue', () => {
@@ -63,12 +72,14 @@ describe('useRevisionQueue', () => {
     const { result } = renderHook(() => useRevisionQueue())
     await waitFor(() => expect(result.current.isLoading).toBe(false))
 
+    let returnedId: string = ''
     await act(async () => {
-      await result.current.aprobar(result.current.items[0])
+      returnedId = await result.current.aprobar(result.current.items[0])
     })
 
     expect(aprobarFormulario).toHaveBeenCalledWith('f1')
     expect(result.current.items.find(i => i.id === 'f1')).toBeUndefined()
+    expect(returnedId).toBe('new-dataset-id')
   })
 
   it('rechazar normativa calls rechazarNormativa and removes item', async () => {
@@ -107,5 +118,53 @@ describe('useRevisionQueue', () => {
     })
 
     expect(aprobarNormativa).toHaveBeenCalledWith('n1')
+  })
+
+  it('rawItems contains full records keyed by id', async () => {
+    const { result } = renderHook(() => useRevisionQueue())
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    expect(result.current.rawItems['f1']).toMatchObject({ id: 'f1', titulo: 'Dataset A' })
+    expect(result.current.rawItems['n1']).toMatchObject({ id: 'n1', nombre: 'Ley X' })
+  })
+})
+
+// ── Realtime subscription ─────────────────────────────────────────────────────
+
+const mockUnsubscribe = vi.fn()
+const mockSubscribe   = vi.fn().mockReturnValue({ unsubscribe: mockUnsubscribe })
+const mockOn          = vi.fn().mockReturnThis()
+const mockChannel     = { on: mockOn, subscribe: mockSubscribe }
+
+describe('useRevisionQueue realtime', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    ;(supabase.from as ReturnType<typeof vi.fn>)
+      .mockReturnValueOnce(makeChain(mockFormularios))
+      .mockReturnValueOnce(makeChain(mockNormativas))
+    ;(supabase as unknown as { channel: ReturnType<typeof vi.fn> }).channel =
+      vi.fn().mockReturnValue(mockChannel)
+    ;(supabase as unknown as { removeChannel: ReturnType<typeof vi.fn> }).removeChannel =
+      vi.fn()
+  })
+
+  it('subscribes to a channel on mount', async () => {
+    const { result } = renderHook(() => useRevisionQueue())
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    expect((supabase as unknown as { channel: ReturnType<typeof vi.fn> }).channel)
+      .toHaveBeenCalledWith('revision-queue')
+    expect(mockOn).toHaveBeenCalledTimes(2)
+    expect(mockSubscribe).toHaveBeenCalled()
+  })
+
+  it('calls removeChannel on unmount', async () => {
+    const { result, unmount } = renderHook(() => useRevisionQueue())
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    unmount()
+
+    expect((supabase as unknown as { removeChannel: ReturnType<typeof vi.fn> }).removeChannel)
+      .toHaveBeenCalled()
   })
 })
