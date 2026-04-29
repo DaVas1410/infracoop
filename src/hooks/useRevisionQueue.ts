@@ -26,7 +26,7 @@ export function useRevisionQueue(): RevisionQueue {
   const [rawItems, setRawItems] = useState<Record<string, Record<string, unknown>>>({})
   const [isLoading, setLoading] = useState(true)
   const [error, setError]       = useState<string | null>(null)
-  const isMounted = useRef(true)
+  const isMounted = useRef(false)
 
   const fetchQueue = useCallback(async () => {
     setLoading(true)
