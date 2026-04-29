@@ -152,7 +152,7 @@ export async function aprobarNormativa(id: string): Promise<string> {
     .from('normativas_en_revision').select('*').eq('id', id).single()
   if (readErr || !data) throw new Error(readErr?.message ?? 'No encontrado')
 
-  const { status: _s, ...payload } = data as Record<string, unknown>
+  const { status: _s, fecha_revision: _fr, ingresado_por: _ip, ...payload } = data as Record<string, unknown>
 
   const { data: inserted, error: insErr } = await supabase
     .from('normativas').insert(payload).select('id').single()
