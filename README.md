@@ -384,5 +384,4 @@ Los admins se crean insertando en `profiles` con `rol = 'admin'` desde el dashbo
 `EmbedderProvider` lanza el Web Worker con el modelo ONNX. La primera carga descarga ~330MB desde HuggingFace y los cachea en el navegador. Las búsquedas posteriores son instantáneas.
 
 ---
-
-*Desarrollado por Data Cooperativas Latinas · Mozilla Fellowship 2024–2026*
+ 

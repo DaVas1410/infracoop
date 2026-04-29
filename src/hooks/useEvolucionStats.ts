@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchIndex } from '../context/SearchIndexContext'
 import { getPreguntas } from '../services/dataService'
-import { search } from '../services/searchService'
-import { calcularScore } from '../services/scoreService'
-import type { EvolucionStats, SemanaStats } from '../types'
+import type { EvolucionStats, SemanaStats, Dataset } from '../types'
 
 const AGENDA_PATTERNS = {
   tecnologica: /tecnol/i,
@@ -18,6 +16,27 @@ const BASELINE_QUERIES = [
   'interseccionalidad etnia raza indígena',
   'tecnología datos digitales acceso internet',
 ]
+
+function deriveAgendaKey(
+  datasetsEncontrados: string[],
+  datasetsMap: Map<string, Dataset>
+): keyof typeof AGENDA_PATTERNS | null {
+  const counts = { tecnologica: 0, datos: 0, genero: 0 }
+  for (const id of datasetsEncontrados) {
+    const ds = datasetsMap.get(id)
+    if (!ds) continue
+    for (const ag of ds.agendas) {
+      if (/tecnol/i.test(ag)) counts.tecnologica++
+      else if (/dato/i.test(ag)) counts.datos++
+      else if (/g[eé]nero/i.test(ag)) counts.genero++
+    }
+  }
+  const max = Math.max(counts.tecnologica, counts.datos, counts.genero)
+  if (max === 0) return null
+  if (counts.genero === max) return 'genero'
+  if (counts.datos === max) return 'datos'
+  return 'tecnologica'
+}
 
 function toIsoWeek(dateStr: string): string {
   const d = new Date(dateStr)
@@ -56,10 +75,15 @@ export function useEvolucionStats(): EvolucionStats {
         const preguntas = await getPreguntas()
         if (cancelled) return
 
-        // Baseline: corpus coverage before any preguntas
+        // Baseline: corpus coverage before any preguntas.
+        // Uses Fuse.js raw scores (lower = better match) to get real similarity values,
+        // avoiding the normalization issue where MiniSearch always makes maxSim=1.
         const baselineScores = BASELINE_QUERIES.map(q => {
-          const hits = search(q, idx, 10)
-          return calcularScore(hits.datasets, hits.normativas).score
+          const dsFuse = idx.fuseDatasets.search(q, { limit: 10 })
+          const nmFuse = idx.fuseNormativas.search(q, { limit: 10 })
+          const maxDsSim = dsFuse.length > 0 ? 1 - Math.min(...dsFuse.map(r => r.score ?? 1)) : 0
+          const maxNmSim = nmFuse.length > 0 ? 1 - Math.min(...nmFuse.map(r => r.score ?? 1)) : 0
+          return Math.round(((1 - maxDsSim) * 0.6 + (1 - maxNmSim) * 0.4) * 100) / 100
         })
         const baseline = {
           score: avg(baselineScores),
@@ -83,7 +107,9 @@ export function useEvolucionStats(): EvolucionStats {
 
           const agendaStats = (key: keyof typeof AGENDA_PATTERNS) => {
             const ag = wPqs.filter(p =>
-              p.agenda_clasificada ? AGENDA_PATTERNS[key].test(p.agenda_clasificada) : false
+              p.agenda_clasificada
+                ? AGENDA_PATTERNS[key].test(p.agenda_clasificada)
+                : deriveAgendaKey(p.datasets_encontrados, idx.datasetsMap) === key
             )
             return { nuevas: ag.length, score_avg: avg(ag.map(p => p.resultado_score ?? 0)) }
           }

@@ -20,7 +20,7 @@ vi.mock('../context/SearchIndexContext', () => ({
       ]),
       normativasMap: new Map(),
       miniDatasets: {} as any, miniNormativas: {} as any,
-      fuseDatasets: {} as any, fuseNormativas: {} as any,
+      fuseDatasets: { search: () => [] } as any, fuseNormativas: { search: () => [] } as any,
     },
     isReady: true, error: null,
   }),

@@ -1096,7 +1096,7 @@
 .btn-export-pdf:hover { border-color: var(--accent); color: var(--accent); }
 
 @media print {
-  nav, .header, .btn-export-pdf, .chip-bar { display: none !important; }
+  nav, .header, .btn-export-pdf, .chip-bar, .diagnostico-back { display: none !important; }
 
   body { background: white; }
 
@@ -1401,15 +1401,6 @@
 
 .diagnostico-logo span { color: var(--accent); }
 
-.diagnostico-sub {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-light);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  margin-bottom: 2rem;
-}
-
 .diagnostico-query {
   font-family: var(--serif);
   font-size: 1.3rem;
@@ -1554,8 +1545,3 @@
   animation: skeleton-pulse 1.4s ease-in-out infinite;
 }
 
-@media print {
-  .diagnostico-back { display: none; }
-  .diagnostico-page { padding: 1.5rem; }
-  body { background: white; }
-}

@@ -8,8 +8,10 @@ import type { FormularioData, NormativaFormData } from '../types'
 
 type TipoIngreso = 'dataset' | 'normativa'
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
+type FieldErrors = Record<string, string>
 
 const AGENDAS = ['Ag. Tecnológica', 'Ag. Datos', 'Ag. Género']
+const CURRENT_YEAR = new Date().getFullYear()
 
 const EMPTY_DATASET: FormularioData = {
   titulo: '', fuente_organismo: '', pais_iso3: '', anio_publicacion: null,
@@ -29,10 +31,34 @@ export function IngresoForm() {
   const [normativaData, setNormativaData] = useState<NormativaFormData>(EMPTY_NORMATIVA)
   const [status, setStatus] = useState<FormStatus>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [errors, setErrors] = useState<FieldErrors>({})
   const { status: embedderStatus, embed } = useEmbedder()
   const { perfil } = useAuth()
   const navigate = useNavigate()
   const modo: 'directo' | 'revision' = perfil?.rol === 'admin' ? 'directo' : 'revision'
+
+  function clearError(field: string) {
+    setErrors(prev => { const next = { ...prev }; delete next[field]; return next })
+  }
+
+  function validate(): boolean {
+    const errs: FieldErrors = {}
+    if (tipo === 'dataset') {
+      if (datasetData.titulo.trim().length < 5) errs.titulo = 'Mínimo 5 caracteres'
+      if (datasetData.fuente_organismo && datasetData.fuente_organismo.trim().length < 3) errs.fuente_organismo = 'Mínimo 3 caracteres'
+      if (datasetData.pais_iso3 && !/^[A-Z]{3}$/.test(datasetData.pais_iso3)) errs.pais_iso3 = '3 letras mayúsculas (ej. ARG)'
+      if (datasetData.anio_publicacion != null && (datasetData.anio_publicacion < 1900 || datasetData.anio_publicacion > CURRENT_YEAR))
+        errs.anio_publicacion = `Entre 1900 y ${CURRENT_YEAR}`
+      if (datasetData.subtema && datasetData.subtema.trim().length < 3) errs.subtema = 'Mínimo 3 caracteres'
+    } else {
+      if (normativaData.nombre.trim().length < 5) errs.nombre = 'Mínimo 5 caracteres'
+      if (normativaData.organismo_emisor && normativaData.organismo_emisor.trim().length < 3) errs.organismo_emisor = 'Mínimo 3 caracteres'
+      if (normativaData.anio_adopcion != null && (normativaData.anio_adopcion < 1900 || normativaData.anio_adopcion > CURRENT_YEAR))
+        errs.anio_adopcion = `Entre 1900 y ${CURRENT_YEAR}`
+    }
+    setErrors(errs)
+    return Object.keys(errs).length === 0
+  }
 
   function handleAgendasChange(agenda: string, checked: boolean, isDataset: boolean) {
     if (isDataset) {
@@ -50,6 +76,7 @@ export function IngresoForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!validate()) return
     setStatus('loading')
     setErrorMsg('')
     try {
@@ -81,6 +108,7 @@ export function IngresoForm() {
     setNormativaData(EMPTY_NORMATIVA)
     setStatus('idle')
     setErrorMsg('')
+    setErrors({})
   }
 
   const currentAgendas = tipo === 'dataset' ? datasetData.agendas : normativaData.agendas
@@ -107,7 +135,7 @@ export function IngresoForm() {
               key={t}
               type="button"
               className={tipo === t ? 'btn-primary' : 'btn-ghost'}
-              onClick={() => { setTipo(t); setStatus('idle'); setErrorMsg('') }}
+              onClick={() => { setTipo(t); setStatus('idle'); setErrorMsg(''); setErrors({}) }}
               style={{ textTransform: 'capitalize' }}
             >
               {t === 'dataset' ? 'Dataset' : 'Normativa'}
@@ -129,11 +157,11 @@ export function IngresoForm() {
             <button className="btn-ghost" onClick={handleReset}>Ingresar otro</button>
           </div>
         ) : (
-          <form className="card" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <form className="card" onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {tipo === 'dataset' ? (
-              <DatasetFields data={datasetData} onChange={setDatasetData} agendas={currentAgendas} onAgendasChange={(a, c) => handleAgendasChange(a, c, true)} />
+              <DatasetFields data={datasetData} onChange={setDatasetData} agendas={currentAgendas} onAgendasChange={(a, c) => handleAgendasChange(a, c, true)} errors={errors} clearError={clearError} />
             ) : (
-              <NormativaFields data={normativaData} onChange={setNormativaData} agendas={currentAgendas} onAgendasChange={(a, c) => handleAgendasChange(a, c, false)} />
+              <NormativaFields data={normativaData} onChange={setNormativaData} agendas={currentAgendas} onAgendasChange={(a, c) => handleAgendasChange(a, c, false)} errors={errors} clearError={clearError} />
             )}
 
             {/* ingresado_por — shared */}
@@ -161,6 +189,21 @@ export function IngresoForm() {
           </form>
         )}
       </div>
+      {!perfil && (
+        <button
+          onClick={() => navigate('/login')}
+          style={{
+            position: 'fixed', bottom: '2rem', right: '2rem',
+            background: 'white', color: 'var(--ink-light)',
+            border: '1px solid var(--ink-faint)', borderRadius: '9999px',
+            padding: '8px 16px',
+            fontFamily: 'var(--mono)', fontSize: '11px',
+            cursor: 'pointer', zIndex: 100,
+          }}
+        >
+          Acceso admin →
+        </button>
+      )}
       {perfil?.rol === 'admin' && (
         <button
           onClick={() => navigate('/revisar')}
@@ -186,16 +229,22 @@ export function IngresoForm() {
 interface FieldProps {
   label: string
   required?: boolean
+  error?: string
   children: React.ReactNode
 }
 
-function Field({ label, required, children }: FieldProps) {
+function Field({ label, required, error, children }: FieldProps) {
   return (
     <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <span style={{ fontSize: '11px', fontFamily: 'var(--mono)', color: 'var(--ink-mid)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
         {label}{required && <span style={{ color: 'var(--gap-crit)' }}> *</span>}
       </span>
       {children}
+      {error && (
+        <span style={{ fontSize: '11px', color: 'var(--gap-crit)', fontFamily: 'var(--mono)' }}>
+          {error}
+        </span>
+      )}
     </label>
   )
 }
@@ -211,39 +260,64 @@ const inputStyle: React.CSSProperties = {
   width: '100%',
 }
 
+const inputErrorStyle: React.CSSProperties = {
+  ...inputStyle,
+  border: '1px solid var(--gap-crit)',
+}
+
 interface DatasetFieldsProps {
   data: FormularioData
   onChange: React.Dispatch<React.SetStateAction<FormularioData>>
   agendas: string[]
   onAgendasChange: (agenda: string, checked: boolean) => void
+  errors: FieldErrors
+  clearError: (field: string) => void
 }
 
-function DatasetFields({ data, onChange, agendas, onAgendasChange }: DatasetFieldsProps) {
+function DatasetFields({ data, onChange, agendas, onAgendasChange, errors, clearError }: DatasetFieldsProps) {
   function set(field: keyof FormularioData) {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       onChange(prev => ({ ...prev, [field]: e.target.value }))
+      clearError(field)
+    }
   }
 
   return (
     <>
-      <Field label="Título" required>
-        <input style={inputStyle} type="text" value={data.titulo} onChange={set('titulo')} required />
+      <Field label="Título" required error={errors.titulo}>
+        <input style={errors.titulo ? inputErrorStyle : inputStyle} type="text" value={data.titulo} onChange={set('titulo')} />
       </Field>
-      <Field label="Fuente / Organismo">
-        <input style={inputStyle} type="text" value={data.fuente_organismo} onChange={set('fuente_organismo')} />
+      <Field label="Fuente / Organismo" error={errors.fuente_organismo}>
+        <input style={errors.fuente_organismo ? inputErrorStyle : inputStyle} type="text" value={data.fuente_organismo} onChange={set('fuente_organismo')} />
       </Field>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-        <Field label="País (ISO3)">
-          <input style={inputStyle} type="text" maxLength={3} value={data.pais_iso3} onChange={set('pais_iso3')} />
+        <Field label="País (ISO3)" error={errors.pais_iso3}>
+          <input
+            style={errors.pais_iso3 ? inputErrorStyle : inputStyle}
+            type="text"
+            maxLength={3}
+            placeholder="ARG"
+            value={data.pais_iso3}
+            onChange={e => {
+              onChange(prev => ({ ...prev, pais_iso3: e.target.value.toUpperCase().replace(/[^A-Z]/g, '') }))
+              clearError('pais_iso3')
+            }}
+          />
         </Field>
-        <Field label="Año publicación">
-          <input style={inputStyle} type="number" min={1900} max={2100}
+        <Field label="Año publicación" error={errors.anio_publicacion}>
+          <input
+            style={errors.anio_publicacion ? inputErrorStyle : inputStyle}
+            type="number" min={1900} max={CURRENT_YEAR}
             value={data.anio_publicacion ?? ''}
-            onChange={e => onChange(prev => ({ ...prev, anio_publicacion: e.target.value ? parseInt(e.target.value) : null }))} />
+            onChange={e => {
+              onChange(prev => ({ ...prev, anio_publicacion: e.target.value ? parseInt(e.target.value) : null }))
+              clearError('anio_publicacion')
+            }}
+          />
         </Field>
       </div>
-      <Field label="Subtema">
-        <input style={inputStyle} type="text" value={data.subtema} onChange={set('subtema')} />
+      <Field label="Subtema" error={errors.subtema}>
+        <input style={errors.subtema ? inputErrorStyle : inputStyle} type="text" value={data.subtema} onChange={set('subtema')} />
       </Field>
       <AgendasCheckboxes selected={agendas} onChange={onAgendasChange} />
       <Field label="Frecuencia">
@@ -270,21 +344,25 @@ interface NormativaFieldsProps {
   onChange: React.Dispatch<React.SetStateAction<NormativaFormData>>
   agendas: string[]
   onAgendasChange: (agenda: string, checked: boolean) => void
+  errors: FieldErrors
+  clearError: (field: string) => void
 }
 
-function NormativaFields({ data, onChange, agendas, onAgendasChange }: NormativaFieldsProps) {
+function NormativaFields({ data, onChange, agendas, onAgendasChange, errors, clearError }: NormativaFieldsProps) {
   function set(field: keyof NormativaFormData) {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       onChange(prev => ({ ...prev, [field]: e.target.value }))
+      clearError(field)
+    }
   }
 
   return (
     <>
-      <Field label="Nombre" required>
-        <input style={inputStyle} type="text" value={data.nombre} onChange={set('nombre')} required />
+      <Field label="Nombre" required error={errors.nombre}>
+        <input style={errors.nombre ? inputErrorStyle : inputStyle} type="text" value={data.nombre} onChange={set('nombre')} />
       </Field>
-      <Field label="Organismo emisor">
-        <input style={inputStyle} type="text" value={data.organismo_emisor} onChange={set('organismo_emisor')} />
+      <Field label="Organismo emisor" error={errors.organismo_emisor}>
+        <input style={errors.organismo_emisor ? inputErrorStyle : inputStyle} type="text" value={data.organismo_emisor} onChange={set('organismo_emisor')} />
       </Field>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
         <Field label="Tipo">
@@ -295,10 +373,16 @@ function NormativaFields({ data, onChange, agendas, onAgendasChange }: Normativa
         </Field>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-        <Field label="Año adopción">
-          <input style={inputStyle} type="number" min={1900} max={2100}
+        <Field label="Año adopción" error={errors.anio_adopcion}>
+          <input
+            style={errors.anio_adopcion ? inputErrorStyle : inputStyle}
+            type="number" min={1900} max={CURRENT_YEAR}
             value={data.anio_adopcion ?? ''}
-            onChange={e => onChange(prev => ({ ...prev, anio_adopcion: e.target.value ? parseInt(e.target.value) : null }))} />
+            onChange={e => {
+              onChange(prev => ({ ...prev, anio_adopcion: e.target.value ? parseInt(e.target.value) : null }))
+              clearError('anio_adopcion')
+            }}
+          />
         </Field>
         <Field label="Artículo / Numeral">
           <input style={inputStyle} type="text" value={data.articulo_numeral} onChange={set('articulo_numeral')} />
