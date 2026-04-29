@@ -78,7 +78,7 @@ describe('insertPregunta', () => {
 })
 
 describe('submitFormulario', () => {
-  it('inserts into formularios_publicados when mode is directo and returns id', async () => {
+  it('inserts into datasets when mode is directo and returns id', async () => {
     mockFrom.mockReturnValue({
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
@@ -92,7 +92,7 @@ describe('submitFormulario', () => {
       desagregacion_geo: 'Nacional', accesibilidad_formato: 'CSV',
       url_descarga: 'https://example.com', descripcion_notas: '', ingresado_por: 'test' }
     const result = await submitFormulario(data, 'directo')
-    expect(mockFrom).toHaveBeenCalledWith('formularios_publicados')
+    expect(mockFrom).toHaveBeenCalledWith('datasets')
     expect(result).toBe('mock-id')
   })
 
@@ -165,6 +165,29 @@ describe('submitNormativa', () => {
       agendas: [], url_texto_oficial: '', descripcion_notas: '', ingresado_por: '',
     }
     await expect(submitNormativa(data, 'directo')).rejects.toThrow('DB error')
+  })
+})
+
+describe('submitFormulario directo', () => {
+  it('inserts into datasets (not formularios_publicados) and returns new id', async () => {
+    const mockInsertChain = {
+      insert: vi.fn().mockReturnThis(),
+      select: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: { id: 'ds-new' }, error: null }),
+    }
+    ;(mockFrom as ReturnType<typeof vi.fn>).mockReturnValueOnce(mockInsertChain)
+
+    const formulario = {
+      titulo: 'Test', fuente_organismo: 'INE', pais_iso3: 'MEX',
+      anio_publicacion: 2024, subtema: '', agendas: [], frecuencia: '',
+      desagregacion_geo: '', accesibilidad_formato: '', url_descarga: '',
+      descripcion_notas: '', ingresado_por: 'admin@x.com',
+    }
+    const { submitFormulario } = await import('../services/dataService')
+    const id = await submitFormulario(formulario, 'directo')
+    expect(id).toBe('ds-new')
+    expect(mockFrom).toHaveBeenCalledWith('datasets')
+    expect(mockFrom).not.toHaveBeenCalledWith('formularios_publicados')
   })
 })
 

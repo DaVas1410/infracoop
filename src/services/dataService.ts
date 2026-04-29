@@ -77,20 +77,21 @@ export async function submitFormulario(
   formulario: FormularioData,
   modo: 'directo' | 'revision'
 ): Promise<string | null> {
-  const tabla = modo === 'directo' ? 'formularios_publicados' : 'formularios_en_revision'
-  const payload = modo === 'revision'
-    ? { ...formulario, status: 'pendiente' }
-    : formulario
-
-  if (modo === 'directo') {
-    const { data, error } = await supabase.from(tabla).insert(payload).select('id').single()
+  if (modo === 'revision') {
+    const { error } = await supabase
+      .from('formularios_en_revision')
+      .insert({ ...formulario, status: 'pendiente' })
     if (error) throw new Error(error.message)
-    return (data as { id: string }).id
+    return null
   }
 
-  const { error } = await supabase.from(tabla).insert(payload)
+  // directo: strip form-only field, write straight to datasets
+  const { ingresado_por: _ip, ...rest } = formulario
+  const payload = { ...rest, es_sintetico: false }
+  const { data, error } = await supabase
+    .from('datasets').insert(payload).select('id').single()
   if (error) throw new Error(error.message)
-  return null
+  return (data as { id: string }).id
 }
 
 export async function submitNormativa(
