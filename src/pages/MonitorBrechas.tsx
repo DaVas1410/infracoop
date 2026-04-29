@@ -5,6 +5,7 @@ import { useMotorBrechas } from '../hooks/useMotorBrechas'
 import { useSearchIndex } from '../context/SearchIndexContext'
 import { useEmbedder } from '../context/EmbedderContext'
 import type { GapResult, SearchHit } from '../types'
+import { Tooltip } from '../components/Tooltip'
 
 const CHIP_KEYWORDS: Record<string, string[]> = {
   'Gobierno Abierto':      ['estadística', 'oficial', 'gobierno', 'abierto', 'transparencia', 'rendición', 'público', 'nacional', 'ministerio', 'instituto', 'censos', 'registro', 'administrativo'],
@@ -36,17 +37,6 @@ export function normalizeSimToMax(hits: { similitud: number }[]): number[] {
   const max = Math.max(...hits.map(h => h.similitud))
   if (max === 0) return hits.map(() => 0)
   return hits.map(h => h.similitud / max)
-}
-
-// ── Tooltip ───────────────────────────────────────────────────────────────────
-
-function Tooltip({ text }: { text: string }) {
-  return (
-    <span className="tooltip-wrap">
-      <span className="tooltip-icon" tabIndex={0}>i</span>
-      <span className="tooltip-bubble">{text}</span>
-    </span>
-  )
 }
 
 // ── SearchBox ─────────────────────────────────────────────────────────────────
@@ -173,7 +163,10 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
         {hit.anio && <><span className="hit-meta-sep">·</span><span>{hit.anio}</span></>}
       </div>
       <div className="hit-sim-wrap" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span className="hit-sim-label">calidad</span>
+        <span className="hit-sim-label" style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+          calidad
+          <Tooltip text="4 dimensiones de calidad del dato — org: tiene organismo fuente · geo: tiene país asignado · año: año de publicación (más reciente = mejor) · meta: calidad general de metadatos (Completa/Parcial/Nula)." />
+        </span>
         <BarChart
           width={80}
           height={32}
@@ -187,11 +180,9 @@ function HitRow({ hit, index, normalizedSim }: { hit: SearchHit; index: number; 
             ))}
           </Bar>
         </BarChart>
-        <span
-          className="hit-sim-pct"
-          title={`Similitud semántica: ${(hit.similitud * 100).toFixed(1)}%`}
-        >
+        <span className="hit-sim-pct" style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
           {normalizedSim >= 0.66 ? 'alta' : normalizedSim >= 0.33 ? 'media' : 'baja'}
+          <Tooltip text={`Relevancia relativa al resultado más similar de esta búsqueda. Similitud semántica absoluta: ${(hit.similitud * 100).toFixed(1)}%.`} />
         </span>
       </div>
     </div>
@@ -237,13 +228,18 @@ function ScorePanel({ resultado }: { resultado: GapResult }) {
       </div>
 
       <div className="agenda-score-list">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-light)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            distribución por agenda
+          </span>
+          <Tooltip text="Proporción de la brecha atribuible a cada agenda, calculada sobre los datasets y normativas encontrados para tu pregunta." />
+        </div>
         {[
           { tipo: 'tecnologica', label: 'Ag. Tecnológica', val: resultado.agendas.tecnologica },
           { tipo: 'datos',       label: 'Ag. de Datos',    val: resultado.agendas.datos },
           { tipo: 'genero',      label: 'Ag. de Género',   val: resultado.agendas.genero },
         ].map(a => (
-          <div key={a.tipo} className={`agenda-score-pill ${a.tipo}`}
-            title="Proporción de la brecha atribuible a esta agenda, calculada sobre los datasets y normativas encontrados.">
+          <div key={a.tipo} className={`agenda-score-pill ${a.tipo}`}>
             <span className="label-mono" style={{ fontSize: 10 }}>{a.label}</span>
             <span className="agenda-score-num">{a.val}</span>
           </div>
@@ -403,7 +399,10 @@ function ChipsBar({ resultado, query, selected, onToggle }: {
   return (
     <div className="chips-bar">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <span className="chips-bar-label">Termómetro de Incidencia</span>
+        <span className="chips-bar-label" style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          Termómetro de Incidencia
+          <Tooltip text="Seleccioná uno o más marcos para filtrar y ordenar los resultados según el enfoque de incidencia política que más te interese. También personaliza el diagnóstico descargable." />
+        </span>
         <span style={{ fontSize: 12, color: 'var(--ink-light)', fontFamily: 'var(--sans)' }}>
           Elegí los marcos de incidencia para personalizar el diagnóstico.
         </span>
@@ -428,6 +427,62 @@ function ChipsBar({ resultado, query, selected, onToggle }: {
         >
           {selected.length > 0 ? `Descargar diagnóstico (${selected.length}) →` : 'Descargar diagnóstico →'}
         </button>
+      </div>
+    </div>
+  )
+}
+
+// ── ExampleQuestions ──────────────────────────────────────────────────────────
+
+const EXAMPLE_QUESTIONS = [
+  '¿Existen datos sobre feminicidio desagregados por estado y edad de la víctima?',
+  '¿Qué países tienen datos abiertos sobre brechas salariales de género en el sector tecnológico?',
+  '¿Hay estadísticas sobre acceso de mujeres rurales a servicios de salud reproductiva?',
+  '¿Existen datasets sobre participación de mujeres en cooperativas y economía social en LATAM?',
+]
+
+function ExampleQuestions({ onSelect }: { onSelect: (q: string) => void }) {
+  return (
+    <div style={{ marginTop: '2rem' }}>
+      <p style={{
+        fontFamily: 'var(--mono)',
+        fontSize: 11,
+        textTransform: 'uppercase',
+        letterSpacing: '0.12em',
+        color: 'var(--ink-light)',
+        marginBottom: '0.75rem',
+      }}>
+        Preguntas de ejemplo — hacé clic para buscar
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {EXAMPLE_QUESTIONS.map(q => (
+          <button
+            key={q}
+            onClick={() => onSelect(q)}
+            style={{
+              textAlign: 'left',
+              background: 'var(--surface)',
+              border: '1px solid var(--ink-faint)',
+              borderRadius: 'var(--r)',
+              padding: '0.7rem 1rem',
+              fontSize: 14,
+              color: 'var(--ink-mid)',
+              cursor: 'pointer',
+              lineHeight: 1.5,
+              transition: 'border-color .15s, color .15s',
+            }}
+            onMouseEnter={e => {
+              ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--accent)'
+              ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--ink)'
+            }}
+            onMouseLeave={e => {
+              ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ink-faint)'
+              ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--ink-mid)'
+            }}
+          >
+            {q}
+          </button>
+        ))}
       </div>
     </div>
   )
@@ -538,6 +593,9 @@ export function MonitorBrechas() {
             <p className="search-error" style={{ marginTop: 8, borderRadius: 'var(--r)' }}>
               {searchError}
             </p>
+          )}
+          {resultado === null && !isLoading && (
+            <ExampleQuestions onSelect={q => { setQuery(q); buscar(q) }} />
           )}
         </div>
       </div>

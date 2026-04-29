@@ -1,5 +1,47 @@
-import { describe, it, expect } from 'vitest'
-import { normalizeSimToMax } from '../pages/MonitorBrechas'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import { normalizeSimToMax, MonitorBrechas } from '../pages/MonitorBrechas'
+
+// ── Mocks ─────────────────────────────────────────────────────────────────────
+
+const mockUseMotorBrechas = vi.fn()
+
+vi.mock('../hooks/useMotorBrechas', () => ({
+  useMotorBrechas: () => mockUseMotorBrechas(),
+}))
+
+vi.mock('../context/SearchIndexContext', () => ({
+  useSearchIndex: () => ({ index: null, isReady: true, error: null }),
+  SearchIndexProvider: ({ children }: { children: React.ReactNode }) => children,
+}))
+
+vi.mock('../context/EmbedderContext', () => ({
+  useEmbedder: () => ({
+    status: 'ready',
+    progress: 'Modelo listo',
+    embed: vi.fn(),
+    error: null,
+  }),
+  EmbedderProvider: ({ children }: { children: React.ReactNode }) => children,
+}))
+
+function AllProviders({ children }: { children: React.ReactNode }) {
+  return <MemoryRouter>{children}</MemoryRouter>
+}
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  mockUseMotorBrechas.mockReturnValue({
+    resultado: null,
+    isLoading: false,
+    error: null,
+    buscar: vi.fn(),
+    limpiar: vi.fn(),
+  })
+})
+
+// ── normalizeSimToMax unit tests ───────────────────────────────────────────────
 
 describe('normalizeSimToMax', () => {
   it('maps the highest value to 1.0', () => {
@@ -30,5 +72,39 @@ describe('normalizeSimToMax', () => {
 
   it('handles empty array', () => {
     expect(normalizeSimToMax([])).toEqual([])
+  })
+})
+
+// ── MonitorBrechas empty state ─────────────────────────────────────────────────
+
+describe('MonitorBrechas empty state', () => {
+  it('shows example questions when no resultado and not loading', async () => {
+    render(<MonitorBrechas />, { wrapper: AllProviders })
+
+    await waitFor(() => {
+      expect(screen.getByText(/¿Existen datos sobre feminicidio/i)).toBeInTheDocument()
+    })
+  })
+
+  it('does not show example questions after a search result', async () => {
+    const mockResult = {
+      score: 0.7, categoria: 'critica' as const,
+      titulo: 'Brecha crítica detectada',
+      datasets: [], normativas: [],
+      agendas: { tecnologica: 0, datos: 0, genero: 0 },
+    }
+    mockUseMotorBrechas.mockReturnValue({
+      resultado: mockResult,
+      isLoading: false,
+      error: null,
+      buscar: vi.fn(),
+      limpiar: vi.fn(),
+    })
+
+    render(<MonitorBrechas />, { wrapper: AllProviders })
+
+    await waitFor(() => {
+      expect(screen.queryByText(/¿Existen datos sobre feminicidio/i)).not.toBeInTheDocument()
+    })
   })
 })
