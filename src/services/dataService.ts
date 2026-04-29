@@ -125,16 +125,20 @@ export async function updateEmbedding(
   if (error) throw new Error(error.message)
 }
 
-export async function aprobarFormulario(id: string): Promise<void> {
+export async function aprobarFormulario(id: string): Promise<string> {
   const { data, error: readErr } = await supabase
     .from('formularios_en_revision').select('*').eq('id', id).single()
   if (readErr || !data) throw new Error(readErr?.message ?? 'No encontrado')
 
-  const { status: _s, ...payload } = data as Record<string, unknown>
-  const { error: insErr } = await supabase.from('formularios_publicados').insert(payload)
-  if (insErr) throw new Error(insErr.message)
+  const { status: _s, fecha_revision: _fr, ingresado_por: _ip, ...rest } = data as Record<string, unknown>
+  const payload = { ...rest, es_sintetico: false }
+
+  const { data: inserted, error: insErr } = await supabase
+    .from('datasets').insert(payload).select('id').single()
+  if (insErr || !inserted) throw new Error(insErr?.message ?? 'Error insertando')
 
   await supabase.from('formularios_en_revision').delete().eq('id', id)
+  return (inserted as { id: string }).id
 }
 
 export async function rechazarFormulario(id: string): Promise<void> {
@@ -143,16 +147,19 @@ export async function rechazarFormulario(id: string): Promise<void> {
   if (error) throw new Error(error.message)
 }
 
-export async function aprobarNormativa(id: string): Promise<void> {
+export async function aprobarNormativa(id: string): Promise<string> {
   const { data, error: readErr } = await supabase
     .from('normativas_en_revision').select('*').eq('id', id).single()
   if (readErr || !data) throw new Error(readErr?.message ?? 'No encontrado')
 
   const { status: _s, ...payload } = data as Record<string, unknown>
-  const { error: insErr } = await supabase.from('normativas').insert(payload)
-  if (insErr) throw new Error(insErr.message)
+
+  const { data: inserted, error: insErr } = await supabase
+    .from('normativas').insert(payload).select('id').single()
+  if (insErr || !inserted) throw new Error(insErr?.message ?? 'Error insertando')
 
   await supabase.from('normativas_en_revision').delete().eq('id', id)
+  return (inserted as { id: string }).id
 }
 
 export async function rechazarNormativa(id: string): Promise<void> {

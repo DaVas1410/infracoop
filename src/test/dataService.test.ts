@@ -167,3 +167,65 @@ describe('submitNormativa', () => {
     await expect(submitNormativa(data, 'directo')).rejects.toThrow('DB error')
   })
 })
+
+describe('aprobarFormulario', () => {
+  it('returns the id of the newly inserted dataset', async () => {
+    const mockRecord = {
+      id: 'f1', titulo: 'Dataset X', status: 'pendiente',
+      fecha_revision: null, ingresado_por: 'user@x.com',
+      descripcion_notas: 'notas',
+    }
+    const mockInsertChain = {
+      insert: vi.fn().mockReturnThis(),
+      select: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: { id: 'new-ds-1' }, error: null }),
+    }
+    const mockSelectChain = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: mockRecord, error: null }),
+    }
+    const mockDeleteChain = {
+      delete: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockResolvedValue({ error: null }),
+    }
+
+    mockFrom
+      .mockReturnValueOnce(mockSelectChain)     // read from formularios_en_revision
+      .mockReturnValueOnce(mockInsertChain)     // insert into datasets
+      .mockReturnValueOnce(mockDeleteChain)     // delete from formularios_en_revision
+
+    const { aprobarFormulario } = await import('../services/dataService')
+    const id = await aprobarFormulario('f1')
+    expect(id).toBe('new-ds-1')
+  })
+})
+
+describe('aprobarNormativa', () => {
+  it('returns the id of the newly inserted normativa', async () => {
+    const mockRecord = { id: 'n1', nombre: 'Ley Y', status: 'pendiente' }
+    const mockInsertChain = {
+      insert: vi.fn().mockReturnThis(),
+      select: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: { id: 'new-nm-1' }, error: null }),
+    }
+    const mockSelectChain = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: mockRecord, error: null }),
+    }
+    const mockDeleteChain = {
+      delete: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockResolvedValue({ error: null }),
+    }
+
+    mockFrom
+      .mockReturnValueOnce(mockSelectChain)
+      .mockReturnValueOnce(mockInsertChain)
+      .mockReturnValueOnce(mockDeleteChain)
+
+    const { aprobarNormativa } = await import('../services/dataService')
+    const id = await aprobarNormativa('n1')
+    expect(id).toBe('new-nm-1')
+  })
+})
