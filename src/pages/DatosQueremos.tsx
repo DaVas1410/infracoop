@@ -54,85 +54,55 @@ export function deriveWeeksForYear(semanas: { isoWeek: string }[], year: number)
   return [...new Set(weeks)].sort((a, b) => a - b)
 }
 
-// ── RangoSelector ─────────────────────────────────────────────────────────────
+const MESES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 
-interface IsoWeekValue { year: number; week: number }
-
-interface RangoSelectorProps {
-  semanas: SemanaStats[]
-  desde: IsoWeekValue
-  hasta: IsoWeekValue
-  onDesdeChange: (v: IsoWeekValue) => void
-  onHastaChange: (v: IsoWeekValue) => void
+export function isoWeekToYearMonth(isoWeek: string): string {
+  const { year, week } = parseIsoWeek(isoWeek)
+  // ISO week to approximate date: Jan 4 is always in week 1
+  const jan4 = new Date(year, 0, 4)
+  const dayOfWeek = jan4.getDay() || 7
+  const weekStart = new Date(jan4)
+  weekStart.setDate(jan4.getDate() - (dayOfWeek - 1) + (week - 1) * 7)
+  const m = String(weekStart.getMonth() + 1).padStart(2, '0')
+  return `${weekStart.getFullYear()}-${m}`
 }
 
-function RangoSelector({ semanas, desde, hasta, onDesdeChange, onHastaChange }: RangoSelectorProps) {
-  const years = deriveYears(semanas)
+export function getUniqueMeses(semanas: { isoWeek: string }[]): string[] {
+  const set = new Set(semanas.map(s => isoWeekToYearMonth(s.isoWeek)))
+  return [...set].sort()
+}
 
-  const desdeWeeks = deriveWeeksForYear(semanas, desde.year)
-  const hastaWeeks = deriveWeeksForYear(semanas, hasta.year)
+export function filterSemanasByMes(semanas: SemanaStats[], mesKey: string): SemanaStats[] {
+  return semanas.filter(s => isoWeekToYearMonth(s.isoWeek) === mesKey)
+}
 
-  function handleDesdeYear(year: number) {
-    const weeks = deriveWeeksForYear(semanas, year)
-    const week = weeks[0] ?? 1
-    const newDesde = { year, week }
-    onDesdeChange(newDesde)
-    if (isoWeekToNum(`${hasta.year}-W${String(hasta.week).padStart(2,'0')}`) <
-        isoWeekToNum(`${year}-W${String(week).padStart(2,'0')}`)) {
-      onHastaChange(newDesde)
-    }
-  }
+function mesLabel(mesKey: string): string {
+  const [year, month] = mesKey.split('-')
+  return `${MESES_ES[Number(month) - 1]} ${year}`
+}
 
-  function handleDesdeWeek(week: number) {
-    const newDesde = { ...desde, week }
-    onDesdeChange(newDesde)
-    if (isoWeekToNum(`${hasta.year}-W${String(hasta.week).padStart(2,'0')}`) <
-        isoWeekToNum(`${newDesde.year}-W${String(week).padStart(2,'0')}`)) {
-      onHastaChange(newDesde)
-    }
-  }
+// ── MesSelector ───────────────────────────────────────────────────────────────
 
-  function handleHastaYear(year: number) {
-    const weeks = deriveWeeksForYear(semanas, year)
-    const week = weeks[weeks.length - 1] ?? 52
-    onHastaChange({ year, week })
-  }
+interface MesSelectorProps {
+  meses: string[]
+  selected: string
+  onChange: (m: string) => void
+}
 
+function MesSelector({ meses, selected, onChange }: MesSelectorProps) {
   return (
-    <div className="rango-selector">
-      <div className="rango-selector-title">Rango de tiempo</div>
-      <div className="rango-row">
-        <div>
-          <label>Desde</label>
-          <div className="rango-selects">
-            <select className="rango-select" value={desde.year}
-              onChange={e => handleDesdeYear(Number(e.target.value))}>
-              {years.map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
-            <select className="rango-select" value={desde.week}
-              onChange={e => handleDesdeWeek(Number(e.target.value))}>
-              {desdeWeeks.map(w => (
-                <option key={w} value={w}>S{String(w).padStart(2,'0')}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div>
-          <label>Hasta</label>
-          <div className="rango-selects">
-            <select className="rango-select" value={hasta.year}
-              onChange={e => handleHastaYear(Number(e.target.value))}>
-              {years.map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
-            <select className="rango-select" value={hasta.week}
-              onChange={e => onHastaChange({ ...hasta, week: Number(e.target.value) })}>
-              {hastaWeeks.map(w => (
-                <option key={w} value={w}>S{String(w).padStart(2,'0')}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
+    <div className="mes-selector">
+      <div className="mes-selector-title">Mes y año</div>
+      <select
+        className="mes-select"
+        value={selected}
+        onChange={e => onChange(e.target.value)}
+      >
+        {meses.map(m => (
+          <option key={m} value={m}>{mesLabel(m)}</option>
+        ))}
+      </select>
     </div>
   )
 }
@@ -276,30 +246,15 @@ function AgendaDemandCard({ agKey, sem, baselineScore }: {
 export function DatosQueremos() {
   const { semanas, topTemas, baseline, baselinePerAgenda, isReady, error } = useEvolucionStats()
 
-  const initialDesde = useMemo(() => {
-    if (semanas.length === 0) return { year: new Date().getFullYear(), week: 1 }
-    return parseIsoWeek(semanas[0].isoWeek)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [semanas.length > 0 ? semanas[0].isoWeek : ''])
+  const meses = useMemo(() => getUniqueMeses(semanas), [semanas])
 
-  const initialHasta = useMemo(() => {
-    if (semanas.length === 0) return { year: new Date().getFullYear(), week: 52 }
-    return parseIsoWeek(semanas[semanas.length - 1].isoWeek)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [semanas.length > 0 ? semanas[semanas.length - 1].isoWeek : ''])
+  const [selectedMes, setSelectedMes] = useState<string | null>(null)
 
-  const [desde, setDesde] = useState<{ year: number; week: number } | null>(null)
-  const [hasta, setHasta] = useState<{ year: number; week: number } | null>(null)
-
-  const effectiveDesde = desde ?? initialDesde
-  const effectiveHasta = hasta ?? initialHasta
-
-  const desdeStr = `${effectiveDesde.year}-W${String(effectiveDesde.week).padStart(2,'0')}`
-  const hastaStr = `${effectiveHasta.year}-W${String(effectiveHasta.week).padStart(2,'0')}`
+  const effectiveMes = selectedMes ?? meses[meses.length - 1] ?? ''
 
   const filteredSemanas = useMemo(
-    () => filterSemanasByRange(semanas, desdeStr, hastaStr),
-    [semanas, desdeStr, hastaStr]
+    () => filterSemanasByMes(semanas, effectiveMes),
+    [semanas, effectiveMes]
   )
 
   const selected = filteredSemanas[filteredSemanas.length - 1]
@@ -308,9 +263,9 @@ export function DatosQueremos() {
   const maxTopTema = topTemas[0]?.count ?? 1
 
   const sidebarMetrics = selected ? [
-    { eyebrow: 'Preguntas en rango', num: totalAcumuladas, numColor: 'var(--ink)', sub: `${filteredSemanas.length} semanas` },
+    { eyebrow: 'Preguntas en el mes', num: totalAcumuladas, numColor: 'var(--ink)', sub: `${filteredSemanas.length} semanas` },
     { eyebrow: 'Brechas críticas', num: selected.criticas, numColor: 'var(--gap-crit)', sub: `${selected.parciales} parciales` },
-    { eyebrow: 'Score promedio', num: `${Math.round(selected.score_promedio * 100)}%`, numColor: 'var(--gap-part)', sub: 'en el rango' },
+    { eyebrow: 'Score promedio', num: `${Math.round(selected.score_promedio * 100)}%`, numColor: 'var(--gap-part)', sub: 'en el mes' },
   ] : []
 
   return (
@@ -321,7 +276,7 @@ export function DatosQueremos() {
           <h1>Los datos que el corpus <em>no tiene</em></h1>
           <p className="hero-sub">
             {isReady
-              ? `${totalAcumuladas} preguntas · demanda semanal de datos faltantes`
+              ? `${totalAcumuladas} preguntas · demanda mensual de datos`
               : 'Cargando demanda…'}
           </p>
         </div>
@@ -362,12 +317,10 @@ export function DatosQueremos() {
           <div className="datos-layout">
             {/* ── Sidebar ── */}
             <aside className="datos-sidebar">
-              <RangoSelector
-                semanas={semanas}
-                desde={effectiveDesde}
-                hasta={effectiveHasta}
-                onDesdeChange={v => setDesde(v)}
-                onHastaChange={v => setHasta(v)}
+              <MesSelector
+                meses={meses}
+                selected={effectiveMes}
+                onChange={m => setSelectedMes(m)}
               />
 
               <div className="metricas-compare" style={{ gridTemplateColumns: '1fr', gap: '.75rem' }}>
@@ -381,7 +334,7 @@ export function DatosQueremos() {
                 </div>
                 {selected && (
                   <div style={{ marginTop: '.5rem' }}>
-                    <div className="metricas-col-label">Rango seleccionado</div>
+                    <div className="metricas-col-label">Mes seleccionado</div>
                     {sidebarMetrics.map(m => (
                       <MetricaCard key={m.eyebrow} {...m} />
                     ))}

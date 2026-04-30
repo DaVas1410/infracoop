@@ -4,6 +4,9 @@ import {
   deriveYears,
   deriveWeeksForYear,
   isoWeekToNum,
+  isoWeekToYearMonth,
+  getUniqueMeses,
+  filterSemanasByMes,
 } from '../pages/DatosQueremos'
 import type { SemanaStats } from '../types'
 
@@ -63,5 +66,38 @@ describe('deriveWeeksForYear', () => {
 describe('isoWeekToNum', () => {
   it('converts correctly for cross-year comparison', () => {
     expect(isoWeekToNum('2025-W52')).toBeLessThan(isoWeekToNum('2026-W01'))
+  })
+})
+
+describe('isoWeekToYearMonth', () => {
+  it('extracts year-month from iso week', () => {
+    expect(isoWeekToYearMonth('2025-W03')).toBe('2025-01')
+    expect(isoWeekToYearMonth('2025-W05')).toBe('2025-01')
+    // Week 9 of 2025 starts 2025-02-24
+    expect(isoWeekToYearMonth('2025-W09')).toBe('2025-02')
+  })
+})
+
+describe('getUniqueMeses', () => {
+  const semanas = [
+    { isoWeek: '2025-W03' } as SemanaStats,
+    { isoWeek: '2025-W04' } as SemanaStats,
+    { isoWeek: '2025-W09' } as SemanaStats,
+  ]
+  it('returns sorted unique YYYY-MM strings', () => {
+    expect(getUniqueMeses(semanas)).toEqual(['2025-01', '2025-02'])
+  })
+})
+
+describe('filterSemanasByMes', () => {
+  const semanas = [
+    { isoWeek: '2025-W03' } as SemanaStats,
+    { isoWeek: '2025-W04' } as SemanaStats,
+    { isoWeek: '2025-W09' } as SemanaStats,
+  ]
+  it('returns only weeks belonging to the given month', () => {
+    const result = filterSemanasByMes(semanas, '2025-01')
+    expect(result).toHaveLength(2)
+    expect(result[0].isoWeek).toBe('2025-W03')
   })
 })
