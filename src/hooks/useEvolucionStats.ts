@@ -62,6 +62,7 @@ export function useEvolucionStats(): EvolucionStats {
   const [state, setState] = useState<EvolucionStats>({
     semanas: [], topTemas: [],
     baseline: { score: 0, criticas: 0, parciales: 0, cubiertas: 0 },
+    baselinePerAgenda: { tecnologica: 0, datos: 0, genero: 0 },
     isReady: false, error: null,
   })
 
@@ -90,6 +91,12 @@ export function useEvolucionStats(): EvolucionStats {
           criticas:  baselineScores.filter(s => s >= 0.65).length,
           parciales: baselineScores.filter(s => s >= 0.35 && s < 0.65).length,
           cubiertas: baselineScores.filter(s => s < 0.35).length,
+        }
+        // Per-agenda baselines: genero=q[0,1], datos=q[2,3], tecnologica=q[4]
+        const baselinePerAgenda = {
+          genero:      avg([baselineScores[0], baselineScores[1]]),
+          datos:       avg([baselineScores[2], baselineScores[3]]),
+          tecnologica: baselineScores[4],
         }
 
         // Group by ISO week
@@ -141,7 +148,7 @@ export function useEvolucionStats(): EvolucionStats {
           .sort((a, b) => b[1] - a[1]).slice(0, 5)
           .map(([subtema, count]) => ({ subtema, count }))
 
-        setState({ semanas, topTemas, baseline, isReady: true, error: null })
+        setState({ semanas, topTemas, baseline, baselinePerAgenda, isReady: true, error: null })
       } catch (err) {
         if (!cancelled) setState(s => ({
           ...s, isReady: true,

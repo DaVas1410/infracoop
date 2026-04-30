@@ -180,6 +180,7 @@ export interface EvolucionStats {
   semanas: SemanaStats[]
   topTemas: { subtema: string; count: number }[]
   baseline: { score: number; criticas: number; parciales: number; cubiertas: number }
+  baselinePerAgenda: { tecnologica: number; datos: number; genero: number }
   isReady: boolean
   error: string | null
 }

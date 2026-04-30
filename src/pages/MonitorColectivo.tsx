@@ -5,6 +5,7 @@ import { useEvolucionStats } from '../hooks/useEvolucionStats'
 import { LineChart, Line } from 'recharts'
 import { SkeletonMetricsBand, SkeletonAgendaGrid, SkeletonTopicGrid } from '../components/Skeleton'
 import type { AgendaStat, TopicStat, ColectivoFiltros, SemanaStats } from '../types'
+import { Tooltip } from '../components/Tooltip'
 
 // ── Helpers (exported for tests) ─────────────────────────────────────────────
 
@@ -33,17 +34,6 @@ function agendaDelta(semanas: SemanaStats[], agKey: AgendaKey): number | null {
   return last - prev
 }
 
-// ── Tooltip ───────────────────────────────────────────────────────────────────
-
-function Tooltip({ text }: { text: string }) {
-  return (
-    <span className="tooltip-wrap">
-      <span className="tooltip-icon" tabIndex={0}>i</span>
-      <span className="tooltip-bubble">{text}</span>
-    </span>
-  )
-}
-
 // ── MetricsBand ───────────────────────────────────────────────────────────────
 
 function MetricsBand({ totalDatasets, totalNormativas, topics }: {
@@ -58,23 +48,35 @@ function MetricsBand({ totalDatasets, totalNormativas, topics }: {
     <div className="metrics-band">
       <div className="metrics-band-card">
         <div className="metrics-band-num">{totalDatasets + totalNormativas}</div>
-        <div className="metrics-band-label">total entradas</div>
+        <div className="metrics-band-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          total entradas
+          <Tooltip text="Suma de datasets y normativas en el corpus, aplicando los filtros activos de agenda, país y calidad." />
+        </div>
       </div>
       <div className="metrics-band-card">
         <div className="metrics-band-num">3</div>
-        <div className="metrics-band-label">agendas activas</div>
+        <div className="metrics-band-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          agendas activas
+          <Tooltip text="Tres agendas temáticas del proyecto: Tecnológica, de Datos y de Género." />
+        </div>
       </div>
       <div className="metrics-band-card">
         <div className="metrics-band-num" style={{ color: criticas > 0 ? 'var(--gap-crit)' : 'var(--gap-cov)' }}>
           {criticas}
         </div>
-        <div className="metrics-band-label">tópicos críticos</div>
+        <div className="metrics-band-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          tópicos críticos
+          <Tooltip text="Tópicos con score de brecha ≥ 65%: el corpus tiene muy pocos datos relevantes para ese tema." />
+        </div>
       </div>
       <div className="metrics-band-card">
         <div className="metrics-band-num" style={{ color: cobertura >= 50 ? 'var(--gap-cov)' : 'var(--gap-crit)' }}>
           {cobertura}%
         </div>
-        <div className="metrics-band-label">cobertura media</div>
+        <div className="metrics-band-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          cobertura media
+          <Tooltip text="Promedio de cobertura sobre los 5 tópicos (100% − score de brecha promedio). Mayor % = corpus más completo." />
+        </div>
       </div>
     </div>
   )

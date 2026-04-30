@@ -4,6 +4,7 @@ import {
   ResponsiveContainer, CartesianGrid, Legend,
 } from 'recharts'
 import { Layout } from '../components/Layout'
+import { Tooltip as InfoTooltip } from '../components/Tooltip'
 import { useEvolucionStats } from '../hooks/useEvolucionStats'
 import { Skeleton } from '../components/Skeleton'
 import type { SemanaStats } from '../types'
@@ -215,12 +216,13 @@ function StackedWeekChart({ semanas }: { semanas: SemanaStats[] }) {
 
 // ── AgendaDemandCard ──────────────────────────────────────────────────────────
 
-function AgendaDemandCard({ agKey, sem, baseline }: {
-  agKey: AgendaKey; sem: SemanaStats; baseline: { score: number }
+function AgendaDemandCard({ agKey, sem, baselineScore }: {
+  agKey: AgendaKey; sem: SemanaStats; baselineScore: number
 }) {
   const cfg = AGENDA_CFG[agKey]
   const ag = sem.por_agenda[agKey]
-  const baseScore = Math.round(baseline.score * 100)
+  const baseScore = Math.round(baselineScore * 100)
+  const noData = ag.nuevas === 0
 
   return (
     <div className="agenda-evol-card" style={{ borderLeftColor: cfg.bar }}>
@@ -228,7 +230,7 @@ function AgendaDemandCard({ agKey, sem, baseline }: {
         <div>
           <div className="agenda-evol-title" style={{ color: cfg.color }}>{cfg.label}</div>
           <div style={{ fontSize: 15, color: 'var(--ink-mid)', marginTop: 2 }}>
-            Score promedio brecha: <strong>{Math.round(ag.score_avg * 100)}%</strong>
+            Brecha promedio: <strong>{Math.round(ag.score_avg * 100)}%</strong>
           </div>
         </div>
         <div style={{ fontFamily: 'var(--mono)', fontSize: 15, color: 'var(--ink-light)' }}>
@@ -237,18 +239,32 @@ function AgendaDemandCard({ agKey, sem, baseline }: {
       </div>
       <div className="agenda-evol-bars">
         <div>
-          <div className="evol-bar-label">Cobertura inicial del corpus</div>
+          <div className="evol-bar-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            Brecha base del corpus
+            <InfoTooltip text="Nivel de brecha calculado a partir de las consultas de referencia sobre este tema, antes de recibir preguntas de la comunidad. Barra más larga = mayor brecha preexistente." />
+          </div>
           <div className="evol-bar-track">
             <div className="evol-bar-fill" style={{ width: `${baseScore}%`, background: 'var(--ink-mid)', opacity: 0.4 }} />
           </div>
-          <div className="evol-bar-pct">{baseScore}% brecha base</div>
+          <div className="evol-bar-pct">{baseScore}% de brecha sin preguntas</div>
         </div>
         <div>
-          <div className="evol-bar-label">Demanda observada ({sem.label})</div>
-          <div className="evol-bar-track">
-            <div className="evol-bar-fill" style={{ width: `${Math.round(ag.score_avg * 100)}%`, background: cfg.bar }} />
-          </div>
-          <div className="evol-bar-pct">{Math.round(ag.score_avg * 100)}% en preguntas</div>
+          {noData ? (
+            <div style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--ink-light)', paddingTop: 10 }}>
+              — Sin preguntas en este período —
+            </div>
+          ) : (
+            <>
+              <div className="evol-bar-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                Brecha en preguntas recibidas ({sem.label})
+                <InfoTooltip text="Promedio del score de brecha de las preguntas recibidas en esta agenda durante el período seleccionado. Un score alto indica que las preguntas buscan datos que el corpus aún no tiene." />
+              </div>
+              <div className="evol-bar-track">
+                <div className="evol-bar-fill" style={{ width: `${Math.round(ag.score_avg * 100)}%`, background: cfg.bar }} />
+              </div>
+              <div className="evol-bar-pct">{Math.round(ag.score_avg * 100)}% en preguntas</div>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -258,7 +274,7 @@ function AgendaDemandCard({ agKey, sem, baseline }: {
 // ── DatosQueremos ─────────────────────────────────────────────────────────────
 
 export function DatosQueremos() {
-  const { semanas, topTemas, baseline, isReady, error } = useEvolucionStats()
+  const { semanas, topTemas, baseline, baselinePerAgenda, isReady, error } = useEvolucionStats()
 
   const initialDesde = useMemo(() => {
     if (semanas.length === 0) return { year: new Date().getFullYear(), week: 1 }
@@ -356,7 +372,10 @@ export function DatosQueremos() {
 
               <div className="metricas-compare" style={{ gridTemplateColumns: '1fr', gap: '.75rem' }}>
                 <div>
-                  <div className="metricas-col-label">Corpus base</div>
+                  <div className="metricas-col-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    Corpus base
+                    <InfoTooltip text="Métricas calculadas sobre el corpus de datasets y normativas existente, sin considerar ninguna pregunta de la comunidad." />
+                  </div>
                   <MetricaCard eyebrow="Score brecha base" num={`${Math.round(baseline.score * 100)}%`} numColor="var(--ink)" sub="Antes de cualquier pregunta" />
                   <MetricaCard eyebrow="Tópicos críticos" num={baseline.criticas} numColor="var(--gap-crit)" sub="Sin cobertura" />
                 </div>
@@ -372,7 +391,10 @@ export function DatosQueremos() {
 
               {topTemas.length > 0 && (
                 <>
-                  <p className="mapa-section-title" style={{ marginTop: '1.5rem' }}>Temas más demandados</p>
+                  <p className="mapa-section-title" style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: 5 }}>
+                Temas más demandados
+                <InfoTooltip text="Subtemas más frecuentes en los datasets encontrados por las preguntas de la comunidad. Refleja qué tipos de datos se buscan con más insistencia." />
+              </p>
                   <div className="top-temas-list">
                     {topTemas.map((t, i) => (
                       <div key={t.subtema} className="top-tema-row">
@@ -396,7 +418,7 @@ export function DatosQueremos() {
               {selected && (
                 <div className="agenda-evol-list" style={{ marginTop: '2rem' }}>
                   {(['tecnologica', 'datos', 'genero'] as AgendaKey[]).map(ag => (
-                    <AgendaDemandCard key={ag} agKey={ag} sem={selected} baseline={baseline} />
+                    <AgendaDemandCard key={ag} agKey={ag} sem={selected} baselineScore={baselinePerAgenda[ag]} />
                   ))}
                 </div>
               )}

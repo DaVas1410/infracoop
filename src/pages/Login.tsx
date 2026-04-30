@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { supabase } from '../services/supabase'
 
 export function Login() {
   const { signIn } = useAuth()
@@ -14,8 +15,14 @@ export function Login() {
     e.preventDefault()
     setLoading(true); setError(null)
     const err = await signIn(email, password)
-    if (err) { setError(err); setLoading(false) }
-    else navigate('/ingresar')
+    if (err) { setError(err); setLoading(false); return }
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const { data: p } = await supabase.from('profiles').select('rol').eq('id', user.id).single()
+      navigate(p?.rol === 'admin' ? '/revisar' : '/ingresar')
+    } else {
+      navigate('/ingresar')
+    }
   }
 
   return (

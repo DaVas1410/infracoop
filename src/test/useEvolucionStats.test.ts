@@ -82,4 +82,13 @@ describe('useEvolucionStats', () => {
     await waitFor(() => expect(result.current.isReady).toBe(true))
     expect(result.current.error).toBeNull()
   })
+
+  it('baselinePerAgenda tiene las tres claves de agenda', async () => {
+    const { result } = renderHook(() => useEvolucionStats())
+    await waitFor(() => expect(result.current.isReady).toBe(true))
+    const bpa = result.current.baselinePerAgenda
+    expect(typeof bpa.tecnologica).toBe('number')
+    expect(typeof bpa.datos).toBe('number')
+    expect(typeof bpa.genero).toBe('number')
+  })
 })
