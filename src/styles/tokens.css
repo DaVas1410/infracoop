@@ -1,8 +1,8 @@
 :root {
-  /* ── Ink scale (purple-tinted neutrals) ── */
-  --ink:        #3F1C6A;
-  --ink-mid:    #4B2575;
-  --ink-light:  #8E6BB3;
+  /* ── Ink scale — dark neutrals, purple only in faint tones ── */
+  --ink:        #1A1916;
+  --ink-mid:    #3D3550;
+  --ink-light:  #8472A0;
   --ink-faint:  #E6DEF1;
 
   /* ── Surfaces ── */
