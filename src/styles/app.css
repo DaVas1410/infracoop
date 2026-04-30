@@ -36,7 +36,7 @@
 
 .site-logo-sub {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--ink-light);
@@ -61,7 +61,7 @@
   padding: 6px 13px;
   border-radius: 9999px;
   border: 1px solid var(--ink-faint);
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--sans);
   font-weight: 400;
   color: var(--ink);
@@ -76,7 +76,7 @@
 
 .nav-pill-num {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   opacity: 0.55;
 }
 .nav-pill.active .nav-pill-num { opacity: 0.7; }
@@ -86,7 +86,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-light);
   flex-shrink: 0;
 }
@@ -115,7 +115,7 @@
 }
 
 .hero-eyebrow {
-  font-size: 11px;
+  font-size: 13px;
   font-family: var(--mono);
   color: var(--accent);
   letter-spacing: 0.22em;
@@ -246,7 +246,7 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
   margin-top: 4px;
 }
@@ -276,7 +276,7 @@
 }
 
 .score-sintesis {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-mid);
   line-height: 1.55;
   border-top: 1px solid var(--ink-faint);
@@ -310,14 +310,14 @@
   color: var(--accent);
   padding: 2px 8px;
   border-radius: 20px;
-  font-size: 11px;
+  font-size: 12px;
   font-family: var(--mono);
 }
 
 .results-empty {
   padding: 1.5rem 1rem;
   color: var(--ink-light);
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--mono);
   text-align: center;
 }
@@ -343,7 +343,7 @@
   flex-wrap: wrap;
   gap: 4px;
   margin-bottom: 7px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-light);
   font-family: var(--mono);
 }
@@ -357,7 +357,7 @@
 }
 
 .hit-sim-label {
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--mono);
   color: var(--ink-light);
   flex-shrink: 0;
@@ -371,7 +371,7 @@
   flex-direction: column;
   gap: 5px;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
 }
 
@@ -390,7 +390,7 @@
 
 
 .hit-sim-pct {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-light);
   font-family: var(--mono);
   min-width: 32px;
@@ -429,7 +429,7 @@
   gap: 8px;
 }
 
-.char-count { font-size: 11px; color: var(--ink-light); }
+.char-count { font-size: 12px; color: var(--ink-light); }
 
 .search-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
@@ -437,7 +437,7 @@
   padding: 8px 16px;
   background: var(--accent-bg);
   color: var(--accent);
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--mono);
   border-top: 1px solid var(--ink-faint);
 }
@@ -446,12 +446,12 @@
   padding: 10px 14px;
   background: var(--warn-bg);
   color: var(--warn);
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--mono);
 }
 
 .index-loading-note {
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--mono);
   color: var(--ink-light);
   padding: 6px 0;
@@ -496,7 +496,7 @@
 
 .agenda-monitor-eyebrow {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   margin-bottom: 6px;
@@ -527,7 +527,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .agenda-topic-name {
@@ -556,7 +556,7 @@
 
 .agenda-topic-count {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-light);
   min-width: 20px;
   text-align: right;
@@ -564,7 +564,7 @@
 
 .mapa-section-title {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--accent);
@@ -605,7 +605,7 @@
 }
 
 .mapa-card-label {
-  font-size: 11px;
+  font-size: 12px;
   font-family: var(--mono);
   color: var(--ink-light);
   margin-bottom: 10px;
@@ -628,7 +628,7 @@
 .mapa-card-breakdown {
   display: flex;
   gap: 8px;
-  font-size: 11px;
+  font-size: 12px;
   font-family: var(--mono);
   color: var(--ink-light);
   flex-wrap: wrap;
@@ -646,7 +646,7 @@
 }
 
 .semana-tab {
-  font-size: 11px;
+  font-size: 12px;
   font-family: var(--mono);
   padding: 5px 12px;
   border-radius: 20px;
@@ -669,7 +669,7 @@
 
 .metricas-col-label {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--ink-light);
@@ -719,7 +719,7 @@
 
 .chart-title {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--ink-light);
@@ -770,7 +770,7 @@
 
 .chart-bar-label {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
   text-align: center;
   white-space: nowrap;
@@ -788,7 +788,7 @@
   align-items: center;
   gap: 5px;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-mid);
 }
 
@@ -834,7 +834,7 @@
 }
 
 .semana-badge {
-  font-size: 10px;
+  font-size: 12px;
   font-family: var(--mono);
   padding: 2px 8px;
   border-radius: 3px;
@@ -844,7 +844,7 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-mid);
   margin-bottom: 10px;
 }
@@ -926,12 +926,12 @@
   grid-template-columns: 20px 1fr 60px 20px;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .top-tema-rank {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
   text-align: right;
 }
@@ -960,7 +960,7 @@
 
 .top-tema-count {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-light);
   text-align: right;
 }
@@ -1064,7 +1064,7 @@
 
 .resultado-meta-label {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
   text-transform: uppercase;
   letter-spacing: .04em;
@@ -1081,7 +1081,7 @@
   align-items: center;
   gap: 5px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   padding: 5px 12px;
   border-radius: 9999px;
   border: 1px solid var(--ink-faint);
@@ -1162,7 +1162,7 @@
 
 .rango-selector-title {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--ink-light);
@@ -1177,7 +1177,7 @@
 
 .rango-row label {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-mid);
   margin-bottom: 2px;
   display: block;
@@ -1190,7 +1190,7 @@
 
 .rango-select {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 13px;
   padding: 5px 8px;
   border: 1px solid var(--ink-faint);
   border-radius: var(--r);
@@ -1307,7 +1307,7 @@
 
 .colectivo-filtros select {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   padding: 5px 10px;
   border: 1px solid var(--ink-faint);
   border-radius: 9999px;
@@ -1341,7 +1341,7 @@
 
 .chips-bar-label {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--ink-light);
@@ -1351,7 +1351,7 @@
 
 .chip {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   padding: 5px 12px;
   border-radius: 9999px;
   border: 1px solid var(--ink-faint);
@@ -1384,7 +1384,7 @@
 
 .diagnostico-back {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-light);
   text-decoration: none;
   display: inline-block;
@@ -1447,7 +1447,7 @@
 }
 
 .diagnostico-section-title {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -1476,7 +1476,7 @@
 
 .diagnostico-hit-meta {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-light);
 }
 
@@ -1504,7 +1504,7 @@
 
 .diagnostico-marco-fuente {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-light);
   letter-spacing: .02em;
 }
@@ -1526,7 +1526,7 @@
   padding-top: 1rem;
   border-top: 1px solid var(--ink-faint);
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-light);
   display: flex;
   justify-content: space-between;

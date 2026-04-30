@@ -45,6 +45,9 @@ export async function getNormativas(filters?: NormativaFilters): Promise<Normati
 export async function getPreguntas(desde?: string): Promise<Pregunta[]> {
   let query = supabase.from('preguntas').select('*').order('fecha', { ascending: false })
 
+  if (!useSynthetic) {
+    query = query.eq('es_sintetico', false)
+  }
   if (desde) {
     query = query.gte('fecha', desde)
   }
@@ -131,8 +134,9 @@ export async function aprobarFormulario(id: string): Promise<string> {
     .from('formularios_en_revision').select('*').eq('id', id).single()
   if (readErr || !data) throw new Error(readErr?.message ?? 'No encontrado')
 
-  const { status: _s, fecha_revision: _fr, ingresado_por: _ip, ...rest } = data as Record<string, unknown>
-  const payload = { ...rest, es_sintetico: false }
+  const { id: _id, status: _s, fecha_revision: _fr, ingresado_por: _ip, created_at: _ca, ...rest } = data as Record<string, unknown>
+  const newId = `DS-C${Date.now()}`
+  const payload = { id: newId, ...rest, es_sintetico: false }
 
   const { data: inserted, error: insErr } = await supabase
     .from('datasets').insert(payload).select('id').single()
@@ -153,7 +157,9 @@ export async function aprobarNormativa(id: string): Promise<string> {
     .from('normativas_en_revision').select('*').eq('id', id).single()
   if (readErr || !data) throw new Error(readErr?.message ?? 'No encontrado')
 
-  const { status: _s, fecha_revision: _fr, ingresado_por: _ip, ...payload } = data as Record<string, unknown>
+  const { id: _id, status: _s, fecha_revision: _fr, ingresado_por: _ip, created_at: _ca, ...rest } = data as Record<string, unknown>
+  const newId = `NM-C${Date.now()}`
+  const payload = { id: newId, ...rest }
 
   const { data: inserted, error: insErr } = await supabase
     .from('normativas').insert(payload).select('id').single()

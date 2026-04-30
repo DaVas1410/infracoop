@@ -43,6 +43,15 @@ function AgendaPill({ label }: { label: string }) {
   )
 }
 
+function safeHref(url: string): string | undefined {
+  try {
+    const u = new URL(url)
+    return u.protocol === 'https:' || u.protocol === 'http:' ? url : undefined
+  } catch {
+    return undefined
+  }
+}
+
 function RevisionCard({
   item,
   detalle,
@@ -175,14 +184,20 @@ function RevisionCard({
               <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-light)', marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 URL
               </div>
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ fontSize: 13, color: 'var(--accent)', wordBreak: 'break-all' }}
-              >
-                {url}
-              </a>
+              {safeHref(url) ? (
+                <a
+                  href={safeHref(url)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: 13, color: 'var(--accent)', wordBreak: 'break-all' }}
+                >
+                  {url}
+                </a>
+              ) : (
+                <span style={{ fontSize: 13, color: 'var(--warn)', fontFamily: 'var(--mono)' }}>
+                  URL inválida
+                </span>
+              )}
             </div>
           )}
           <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-light)' }}>

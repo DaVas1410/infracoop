@@ -27,14 +27,14 @@ export default function App() {
           <Route path="/datos" element={<DatosQueremos />} />
           <Route path="/login" element={<Login />} />
           <Route path="/ingresar" element={<IngresoForm />} />
-          <Route path="/revisar" element={<ProtectedRoute><Revisar /></ProtectedRoute>} />
+          <Route path="/revisar" element={<ProtectedRoute requiredRole="admin"><Revisar /></ProtectedRoute>} />
           <Route path="/diagnostico" element={<Diagnostico />} />
         </Routes>
         <footer style={{
           textAlign: 'center',
           padding: '2rem 0 1.5rem',
           fontFamily: 'var(--mono)',
-          fontSize: '10px',
+          fontSize: '12px',
           color: 'var(--ink-light)',
           letterSpacing: '0.08em',
         }}>

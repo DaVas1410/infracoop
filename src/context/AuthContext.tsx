@@ -52,7 +52,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function signIn(email: string, password: string): Promise<string | null> {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) return error.message
-    if (data.user) setUser(data.user)
+    if (data.user) {
+      setUser(data.user)
+      await loadPerfil(data.user)
+    }
     return null
   }
 
