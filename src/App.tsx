@@ -31,14 +31,31 @@ export default function App() {
           <Route path="/diagnostico" element={<Diagnostico />} />
         </Routes>
         <footer style={{
-          textAlign: 'center',
-          padding: '2rem 0 1.5rem',
+          borderTop: '1px solid var(--ink-faint)',
+          padding: '1.25rem 1.5rem',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '0.5rem',
           fontFamily: 'var(--mono)',
-          fontSize: '12px',
+          fontSize: '11px',
           color: 'var(--ink-light)',
-          letterSpacing: '0.08em',
+          maxWidth: 1000,
+          margin: '0 auto',
         }}>
-          Desarrollado por Diversa
+          <span>
+            Diseño Data Cooperativas Latina, Desarrollo e Implementación{' '}
+            <a
+              href="https://diversa.studio/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+            >
+              Diversa
+            </a>
+          </span>
+          <span>DataCooperativas Latinas. BY-NC-SA</span>
         </footer>
       </BrowserRouter>
       </EmbedderProvider>

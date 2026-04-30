@@ -9,6 +9,21 @@ interface LandingStats {
   error: string | null
 }
 
+async function fetchCounts(): Promise<{ ds: number; nm: number; pq: number }> {
+  const [
+    { count: ds, error: e1 },
+    { count: nm, error: e2 },
+    { count: pq, error: e3 },
+  ] = await Promise.all([
+    supabase.from('datasets').select('*', { count: 'exact', head: true }).eq('es_sintetico', false),
+    supabase.from('normativas').select('*', { count: 'exact', head: true }).eq('es_sintetico', false),
+    supabase.from('preguntas').select('*', { count: 'exact', head: true }).eq('es_sintetico', false),
+  ])
+  const firstError = e1 ?? e2 ?? e3
+  if (firstError) throw new Error((firstError as { message: string }).message)
+  return { ds: ds ?? 0, nm: nm ?? 0, pq: pq ?? 0 }
+}
+
 export function useLandingStats(): LandingStats {
   const [datasets,   setDatasets]   = useState(0)
   const [normativas, setNormativas] = useState(0)
@@ -17,32 +32,36 @@ export function useLandingStats(): LandingStats {
   const [error,      setError]      = useState<string | null>(null)
 
   useEffect(() => {
-    async function fetchCounts() {
+    let mounted = true
+
+    async function load() {
       try {
-        const [
-          { count: ds, error: e1 },
-          { count: nm, error: e2 },
-          { count: pq, error: e3 },
-        ] = await Promise.all([
-          supabase.from('datasets').select('*', { count: 'exact', head: true }),
-          supabase.from('normativas').select('*', { count: 'exact', head: true }),
-          supabase.from('preguntas').select('*', { count: 'exact', head: true }),
-        ])
-        const firstError = e1 ?? e2 ?? e3
-        if (firstError) {
-          setError((firstError as { message: string }).message)
-          return
-        }
-        setDatasets(ds ?? 0)
-        setNormativas(nm ?? 0)
-        setPreguntas(pq ?? 0)
+        const { ds, nm, pq } = await fetchCounts()
+        if (!mounted) return
+        setDatasets(ds)
+        setNormativas(nm)
+        setPreguntas(pq)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error cargando estadísticas')
+        if (mounted) setError(err instanceof Error ? err.message : 'Error cargando estadísticas')
       } finally {
-        setLoading(false)
+        if (mounted) setLoading(false)
       }
     }
-    fetchCounts()
+
+    load()
+
+    // Realtime: re-fetch when datasets, normativas, or preguntas change
+    const channel = supabase
+      .channel('landing-stats')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'datasets' }, () => { load() })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'normativas' }, () => { load() })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'preguntas' }, () => { load() })
+      .subscribe()
+
+    return () => {
+      mounted = false
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   return { datasets, normativas, preguntas, isLoading, error }

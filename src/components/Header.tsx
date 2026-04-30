@@ -2,10 +2,10 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const NAV_ITEMS = [
-  { to: '/',          label: '¿Qué es Infra.Coop?',  num: '04' },
-  { to: '/brechas',   label: 'Monitor de Brechas',    num: '01' },
-  { to: '/colectivo', label: 'Monitor Colectivo',     num: '02' },
-  { to: '/datos',     label: '¿Qué datos queremos?',  num: '03' },
+  { to: '/',          label: '¿Qué es Infra.Coop?',  num: '01' },
+  { to: '/brechas',   label: 'Monitor de Brechas',    num: '02' },
+  { to: '/colectivo', label: 'Monitor Colectivo',     num: '03' },
+  { to: '/datos',     label: '¿Qué datos queremos?',  num: '04' },
   { to: '/ingresar',  label: 'Ingresar datos',        num: '05' },
 ]
 

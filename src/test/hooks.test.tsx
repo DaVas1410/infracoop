@@ -19,9 +19,17 @@ vi.mock('../services/dataService', () => ({
   getPreguntas: vi.fn().mockResolvedValue([]),
 }))
 
+const mockChannel = {
+  on: vi.fn().mockReturnThis(),
+  subscribe: vi.fn().mockReturnThis(),
+  unsubscribe: vi.fn(),
+}
+
 vi.mock('../services/supabase', () => ({
   supabase: {
     from: vi.fn(),
+    channel: vi.fn(() => mockChannel),
+    removeChannel: vi.fn(),
   },
 }))
 
@@ -49,9 +57,13 @@ describe('useNormativas', () => {
 })
 
 describe('useLandingStats', () => {
-  function makeCountChain(count: number) {
+  function makeCountChain(count: number, error: { message: string } | null = null) {
+    const resolved = { count, error }
+    const chain = {
+      eq: vi.fn().mockResolvedValue(resolved),
+    }
     return {
-      select: vi.fn().mockResolvedValue({ count, error: null }),
+      select: vi.fn().mockReturnValue(chain),
     }
   }
 
@@ -84,7 +96,7 @@ describe('useLandingStats', () => {
   it('sets error when a Supabase query returns an error', async () => {
     ;(supabase.from as ReturnType<typeof vi.fn>).mockReset()
     ;(supabase.from as ReturnType<typeof vi.fn>)
-      .mockReturnValueOnce({ select: vi.fn().mockResolvedValue({ count: null, error: { message: 'permission denied' } }) })
+      .mockReturnValueOnce(makeCountChain(0, { message: 'permission denied' }))
       .mockReturnValueOnce(makeCountChain(0))
       .mockReturnValueOnce(makeCountChain(0))
     const { result } = renderHook(() => useLandingStats())
