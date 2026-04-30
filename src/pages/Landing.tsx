@@ -34,9 +34,19 @@ function FutureLayer({ title, children }: { title: string; children: React.React
   )
 }
 
-function StatsStrip({ datasets, normativas, preguntas, isLoading }: {
-  datasets: number; normativas: number; preguntas: number; isLoading: boolean
+function StatsStrip({ datasets, normativas, preguntas, isLoading, error }: {
+  datasets: number; normativas: number; preguntas: number; isLoading: boolean; error?: string | null
 }) {
+  if (error) {
+    return (
+      <div style={{ padding: '1.25rem 0', borderTop: '1px solid var(--ink-faint)', borderBottom: '1px solid var(--ink-faint)', marginBottom: '2rem' }}>
+        <p style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-light)' }}>
+          — estadísticas no disponibles —
+        </p>
+      </div>
+    )
+  }
+
   const items = [
     { num: datasets,   label: 'datasets en el corpus' },
     { num: normativas, label: 'marcos normativos' },
@@ -81,7 +91,7 @@ function StatsStrip({ datasets, normativas, preguntas, isLoading }: {
 }
 
 export function Landing() {
-  const { datasets, normativas, preguntas, isLoading } = useLandingStats()
+  const { datasets, normativas, preguntas, isLoading, error: statsError } = useLandingStats()
 
   return (
     <Layout>
@@ -106,6 +116,7 @@ export function Landing() {
           normativas={normativas}
           preguntas={preguntas}
           isLoading={isLoading}
+          error={statsError}
         />
 
         {/* Monitor de Brechas */}

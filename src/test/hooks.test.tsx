@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import type { Dataset } from '../types'
+import { supabase } from '../services/supabase'
+import { useLandingStats } from '../hooks/useLandingStats'
 
 const mockDatasets: Dataset[] = [
   { id: 'DS-001', titulo: 'ENDIREH 2021', fuente_organismo: 'INEGI',
@@ -46,9 +48,6 @@ describe('useNormativas', () => {
   })
 })
 
-import { supabase } from '../services/supabase'
-import { useLandingStats } from '../hooks/useLandingStats'
-
 describe('useLandingStats', () => {
   function makeCountChain(count: number) {
     return {
@@ -80,5 +79,18 @@ describe('useLandingStats', () => {
       .mockReturnValueOnce(makeCountChain(0))
     const { result } = renderHook(() => useLandingStats())
     expect(result.current.isLoading).toBe(true)
+  })
+
+  it('sets error when a Supabase query returns an error', async () => {
+    ;(supabase.from as ReturnType<typeof vi.fn>).mockReset()
+    ;(supabase.from as ReturnType<typeof vi.fn>)
+      .mockReturnValueOnce({ select: vi.fn().mockResolvedValue({ count: null, error: { message: 'permission denied' } }) })
+      .mockReturnValueOnce(makeCountChain(0))
+      .mockReturnValueOnce(makeCountChain(0))
+    const { result } = renderHook(() => useLandingStats())
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    expect(result.current.error).toBe('permission denied')
+    expect(result.current.datasets).toBe(0)
   })
 })

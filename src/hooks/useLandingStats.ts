@@ -20,14 +20,19 @@ export function useLandingStats(): LandingStats {
     async function fetchCounts() {
       try {
         const [
-          { count: ds },
-          { count: nm },
-          { count: pq },
+          { count: ds, error: e1 },
+          { count: nm, error: e2 },
+          { count: pq, error: e3 },
         ] = await Promise.all([
           supabase.from('datasets').select('*', { count: 'exact', head: true }),
           supabase.from('normativas').select('*', { count: 'exact', head: true }),
           supabase.from('preguntas').select('*', { count: 'exact', head: true }),
         ])
+        const firstError = e1 ?? e2 ?? e3
+        if (firstError) {
+          setError((firstError as { message: string }).message)
+          return
+        }
         setDatasets(ds ?? 0)
         setNormativas(nm ?? 0)
         setPreguntas(pq ?? 0)
