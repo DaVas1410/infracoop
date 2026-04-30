@@ -71,7 +71,7 @@
   cursor: pointer;
   transition: border-color .15s, background .15s, color .15s;
 }
-.nav-pill:hover { border-color: var(--accent); }
+.nav-pill:hover { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
 .nav-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 .nav-pill-num {
@@ -565,6 +565,7 @@
 .mapa-section-title {
   font-family: var(--mono);
   font-size: 13px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--accent);
@@ -657,7 +658,7 @@
   transition: all .15s;
 }
 
-.semana-tab:hover { border-color: var(--accent); color: var(--accent); }
+.semana-tab:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
 .semana-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 .metricas-compare {
@@ -1003,11 +1004,11 @@
   transition: border-color .15s, transform .15s;
 }
 
-.topic-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.topic-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 2px 8px rgba(122,79,163,.12); }
 
 .topic-card-label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--ink-mid);
   margin-bottom: 8px;
 }
@@ -1202,6 +1203,38 @@
 
 .rango-select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
 
+/* ── Mes selector ── */
+.mes-selector {
+  background: var(--surface);
+  border: 1px solid var(--ink-faint);
+  border-radius: var(--r);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.mes-selector-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  margin-bottom: .75rem;
+}
+
+.mes-select {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid var(--ink-faint);
+  border-radius: var(--r);
+  background: white;
+  color: var(--ink);
+  cursor: pointer;
+  width: 100%;
+}
+
+.mes-select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+
 /* ═══ Phase 6 — MonitorColectivo metrics band ═══ */
 
 .metrics-band {
@@ -1362,7 +1395,7 @@
   user-select: none;
 }
 
-.chip:hover { border-color: var(--ink); color: var(--ink); }
+.chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
 
 .chip.selected {
   background: var(--accent);

@@ -90,7 +90,7 @@ body::before {
   gap: 6px;
   letter-spacing: .01em;
 }
-.btn-primary:hover { background: var(--ink); }
+.btn-primary:hover { background: var(--accent-hover); }
 .btn-primary:active { transform: scale(.98); }
 .btn-primary:disabled { background: var(--ink-faint); cursor: not-allowed; color: var(--ink-light); }
 
