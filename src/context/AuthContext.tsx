@@ -8,13 +8,13 @@ interface AuthContextType {
   user: User | null
   perfil: Profile | null
   isLoading: boolean
-  signIn: (email: string, password: string) => Promise<string | null>
+  signIn: (email: string, password: string) => Promise<{ error: string | null; rol: string | null }>
   signOut: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null, perfil: null, isLoading: true,
-  signIn: async () => null,
+  signIn: async () => ({ error: null, rol: null }),
   signOut: async () => {},
 })
 
@@ -25,9 +25,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [perfil, setPerfil] = useState<Profile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  async function loadPerfil(u: User) {
+  async function loadPerfil(u: User): Promise<Profile | null> {
     const { data } = await supabase.from('profiles').select('*').eq('id', u.id).single()
-    setPerfil(data as Profile ?? null)
+    const p = data as Profile ?? null
+    setPerfil(p)
+    return p
   }
 
   useEffect(() => {
@@ -46,9 +48,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  async function signIn(email: string, password: string): Promise<string | null> {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return error?.message ?? null
+  async function signIn(email: string, password: string): Promise<{ error: string | null; rol: string | null }> {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) return { error: error.message, rol: null }
+    const p = data.user ? await loadPerfil(data.user) : null
+    return { error: null, rol: p?.rol ?? null }
   }
 
   async function signOut() {
