@@ -13,9 +13,9 @@ export function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true); setError(null)
-    const { error: err, rol } = await signIn(email, password)
+    const err = await signIn(email, password)
     if (err) { setError(err); setLoading(false); return }
-    navigate(rol === 'admin' ? '/revisar' : '/ingresar')
+    navigate('/revisar')
   }
 
   return (
