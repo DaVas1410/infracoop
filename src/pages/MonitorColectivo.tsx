@@ -45,18 +45,18 @@ function MetricsBand({ totalDatasets, totalNormativas, topics }: {
   const cobertura = calcCoberturaMedia(topics)
 
   return (
-    <div className="metrics-band">
+    <div className="metrics-band" style={{ justifyContent: 'center' }}>
       <div className="metrics-band-card">
-        <div className="metrics-band-num">{totalDatasets + totalNormativas}</div>
+        <div className="metrics-band-num" style={{ fontSize: '2.5rem' }}>{totalDatasets + totalNormativas}</div>
         <div className="metrics-band-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          total entradas
+          Total entradas
           <Tooltip text="Suma de datasets y normativas en el corpus, aplicando los filtros activos de agenda, país y calidad." />
         </div>
       </div>
       <div className="metrics-band-card">
         <div className="metrics-band-num">3</div>
         <div className="metrics-band-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          agendas activas
+          Agendas activas
           <Tooltip text="Tres agendas temáticas del proyecto: Tecnológica, de Datos y de Género." />
         </div>
       </div>
@@ -65,16 +65,16 @@ function MetricsBand({ totalDatasets, totalNormativas, topics }: {
           {criticas}
         </div>
         <div className="metrics-band-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          tópicos críticos
-          <Tooltip text="Tópicos con score de brecha ≥ 65%: el corpus tiene muy pocos datos relevantes para ese tema." />
+          Tópicos críticos
+          <Tooltip text="Tópicos con brecha ≥ 65%: el corpus tiene muy pocos datos relevantes para ese tema." />
         </div>
       </div>
       <div className="metrics-band-card">
-        <div className="metrics-band-num" style={{ color: cobertura >= 50 ? 'var(--gap-cov)' : 'var(--gap-crit)' }}>
+        <div className="metrics-band-num" style={{ fontSize: '2.5rem', color: cobertura >= 50 ? 'var(--gap-cov)' : 'var(--gap-crit)' }}>
           {cobertura}%
         </div>
         <div className="metrics-band-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          cobertura media
+          Cobertura media
           <Tooltip text="Promedio de cobertura sobre los 5 tópicos (100% − score de brecha promedio). Mayor % = corpus más completo." />
         </div>
       </div>
@@ -134,9 +134,9 @@ function AgendaCard({ a, semanas }: { a: AgendaStat; semanas: SemanaStats[] }) {
         <Tooltip text="Calidad de los metadatos: Completa = todos los campos requeridos presentes. Parcial = faltan algunos campos. Nula = sin metadatos." />
       </div>
       <div className="calidad-legend">
-        <span><span className="calidad-dot" style={{ background: 'var(--gap-cov)' }} />{a.calidad_dist.Completa} completos</span>
-        <span><span className="calidad-dot" style={{ background: 'var(--gap-part)' }} />{a.calidad_dist.Parcial} parciales</span>
-        <span><span className="calidad-dot" style={{ background: 'var(--ink-light)' }} />{a.calidad_dist.Nula} nulos</span>
+        <span>{a.calidad_dist.Completa} completos</span>
+        <span>{a.calidad_dist.Parcial} parciales</span>
+        <span>{a.calidad_dist.Nula} nulos</span>
       </div>
 
       {a.top_subtemas.length > 0 && (
@@ -158,15 +158,16 @@ function AgendaCard({ a, semanas }: { a: AgendaStat; semanas: SemanaStats[] }) {
 
 function TopicCard({ t }: { t: TopicStat }) {
   const colors = { critica: 'var(--gap-crit)', parcial: 'var(--gap-part)', cubierta: 'var(--gap-cov)' }
-  const labels = { critica: 'brecha crítica', parcial: 'brecha parcial', cubierta: 'bien cubierto' }
+  const labels = { critica: 'sin datos', parcial: 'dato insuficiente', cubierta: 'bien cubierto' }
   const color = colors[t.categoria]
+  const cobertura = 100 - Math.round(t.gap_score * 100)
 
   return (
     <div className="topic-card">
       <div className="topic-card-label">{t.label}</div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-        <div className="topic-score-big" style={{ color }}>{Math.round(t.gap_score * 100)}%</div>
-        <Tooltip text="Score de brecha: 0% = tópico bien cubierto en el corpus. 100% = brecha crítica, pocos o ningún dato disponible." />
+        <div className="topic-score-big" style={{ color }}>{cobertura}</div>
+        <Tooltip text="Score de cobertura: 100 = tópico completamente cubierto en el corpus. 0 = brecha crítica, sin datos disponibles." />
       </div>
       <div className="topic-score-sublabel" style={{ color }}>{labels[t.categoria]}</div>
       <div className="topic-meta">
@@ -245,7 +246,8 @@ export function MonitorColectivo() {
         <p className="mapa-section-title">Brechas por Agenda</p>
         <p className="section-description">
           Cada agenda agrupa los datasets según el marco temático al que pertenecen.
-          La barra de calidad indica qué porcentaje de los datasets tiene metadatos completos, parciales o nulos.
+          La barra de calidad indica qué porcentaje de datasets cumplen con requisitos
+          relativos a datos abiertos y principios de datos oficiales.
         </p>
         {isReady ? (
           <div className="monitor-grid">
@@ -257,8 +259,10 @@ export function MonitorColectivo() {
 
         <p className="mapa-section-title">Brechas por Tópico</p>
         <p className="section-description">
-          El score de brecha mide qué tan cubierto está cada tópico en el corpus — mayor % = menos cubierto.
-          0% = completamente cubierto · 100% = brecha crítica sin datos.
+          El score de brecha mide qué tan cubierto está cada tópico teniendo en cuenta
+          el estado de los datos y normativas vigentes.{' '}
+          <strong>Brecha crítica</strong> (sin datos).{' '}
+          <strong>Brecha parcial</strong> (dato existente pero insuficiente o escaso).
         </p>
         {isReady ? (
           <div className="mapa-grid">
