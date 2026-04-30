@@ -32,6 +32,8 @@ export function IngresoForm() {
   const [status, setStatus] = useState<FormStatus>('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const [errors, setErrors] = useState<FieldErrors>({})
+  const [emailContacto, setEmailContacto] = useState('')
+  const [aportadoPor, setAportadoPor] = useState('')
   const { status: embedderStatus, embed } = useEmbedder()
   const { perfil } = useAuth()
   const navigate = useNavigate()
@@ -56,6 +58,11 @@ export function IngresoForm() {
       if (normativaData.anio_adopcion != null && (normativaData.anio_adopcion < 1900 || normativaData.anio_adopcion > CURRENT_YEAR))
         errs.anio_adopcion = `Entre 1900 y ${CURRENT_YEAR}`
     }
+    if (!emailContacto.trim()) {
+      errs.emailContacto = 'El email de contacto es obligatorio'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailContacto.trim())) {
+      errs.emailContacto = 'Ingresa un email válido'
+    }
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -77,14 +84,23 @@ export function IngresoForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!validate()) return
+    const ingresadoPorCompuesto = aportadoPor.trim()
+      ? `${emailContacto.trim()} | ${aportadoPor.trim()}`
+      : emailContacto.trim()
     setStatus('loading')
     setErrorMsg('')
     try {
       let insertedId: string | null = null
       if (tipo === 'dataset') {
-        insertedId = await submitFormulario(datasetData, modo)
+        insertedId = await submitFormulario(
+          { ...datasetData, ingresado_por: ingresadoPorCompuesto },
+          modo
+        )
       } else {
-        insertedId = await submitNormativa(normativaData, modo)
+        insertedId = await submitNormativa(
+          { ...normativaData, ingresado_por: ingresadoPorCompuesto },
+          modo
+        )
       }
       setStatus('success')
 
@@ -109,6 +125,8 @@ export function IngresoForm() {
     setStatus('idle')
     setErrorMsg('')
     setErrors({})
+    setEmailContacto('')
+    setAportadoPor('')
   }
 
   const currentAgendas = tipo === 'dataset' ? datasetData.agendas : normativaData.agendas
@@ -120,12 +138,12 @@ export function IngresoForm() {
           <span>05 · Ingresar datos</span>
         </div>
         <h1 style={{ fontFamily: 'var(--serif)', fontSize: '2rem', marginBottom: '0.5rem' }}>
-          Someter al corpus
+          Sube tu aporte a Infra.Coop
         </h1>
-        <p style={{ color: 'var(--ink-mid)', fontSize: '14px', marginBottom: '2rem' }}>
-          {modo === 'revision'
-            ? 'Los envíos pasarán por revisión antes de publicarse.'
-            : 'Los envíos se publican directamente en el corpus.'}
+        <p style={{ color: 'var(--ink-mid)', fontSize: '14px', marginBottom: '2rem', lineHeight: 1.65 }}>
+          Puedes colaborar compartiendo un enlace a un dataset (datos abiertos, estadísticos u otros)
+          o una normativa perteneciente a la temática del proyecto.
+          Los envíos pasarán por una instancia de curaduría antes de ser parte de la Base de Datos.
         </p>
 
         {/* Type selector */}
@@ -164,16 +182,30 @@ export function IngresoForm() {
               <NormativaFields data={normativaData} onChange={setNormativaData} agendas={currentAgendas} onAgendasChange={(a, c) => handleAgendasChange(a, c, false)} errors={errors} clearError={clearError} />
             )}
 
-            {/* ingresado_por — shared */}
-            <Field label="Ingresado por">
+            {/* Campos de contacto y atribución — shared */}
+            <Field label="Información de contacto (Email)" required error={errors.emailContacto}>
               <input
-                type="text"
-                value={tipo === 'dataset' ? datasetData.ingresado_por : normativaData.ingresado_por}
-                onChange={e => tipo === 'dataset'
-                  ? setDatasetData(prev => ({ ...prev, ingresado_por: e.target.value }))
-                  : setNormativaData(prev => ({ ...prev, ingresado_por: e.target.value }))}
+                style={errors.emailContacto ? inputErrorStyle : inputStyle}
+                type="email"
+                placeholder="tu@email.com"
+                value={emailContacto}
+                onChange={e => { setEmailContacto(e.target.value); clearError('emailContacto') }}
               />
             </Field>
+
+            <Field label="Dataset aportado por (alias, organización o nombre — opcional)">
+              <input
+                style={inputStyle}
+                type="text"
+                placeholder="Ej. Mi Organización"
+                value={aportadoPor}
+                onChange={e => setAportadoPor(e.target.value)}
+              />
+            </Field>
+
+            <p style={{ fontSize: 12, color: 'var(--ink-light)', fontFamily: 'var(--mono)', marginTop: '-0.5rem' }}>
+              Todas las contribuciones serán debidamente reconocidas.
+            </p>
 
             {status === 'error' && (
               <p style={{ color: 'var(--gap-crit)', fontSize: '13px', fontFamily: 'var(--mono)' }}>
