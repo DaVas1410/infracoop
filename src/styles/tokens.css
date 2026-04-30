@@ -1,8 +1,8 @@
 :root {
   /* ── Ink scale (purple-tinted neutrals) ── */
-  --ink:        #1A0A2E;
-  --ink-mid:    #4A3A5E;
-  --ink-light:  #8472A0;
+  --ink:        #3F1C6A;
+  --ink-mid:    #4B2575;
+  --ink-light:  #8E6BB3;
   --ink-faint:  #E6DEF1;
 
   /* ── Surfaces ── */
@@ -11,8 +11,11 @@
   --surface:    #FFFFFF;
 
   /* ── Brand / accent ── */
-  --accent:     #6C3FA0;   /* plum */
-  --accent-bg:  #F5F0FF;   /* haze */
+  --accent:       #7A4FA3;
+  --accent-hover: #6A3E91;
+  --accent-deep:  #5B2E86;
+  --accent-muted: #A07CC2;
+  --accent-bg:    #F5F0FF;   /* haze */
 
   /* ── Gap severity ── */
   --gap-crit:   #C2185B;   /* rose  — brecha crítica  */
@@ -30,7 +33,7 @@
   --agenda-tec-bg:     #E6F5F5;
   --agenda-datos:      #2E5AAC;   /* datab */
   --agenda-datos-bg:   #EEF2FB;
-  --agenda-genero:     #6C3FA0;   /* plum  */
+  --agenda-genero:     #7A4FA3;   /* plum actualizado */
   --agenda-genero-bg:  #F5F0FF;
 
   /* ── Typography ── */
