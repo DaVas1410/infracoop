@@ -106,7 +106,16 @@ export function Landing() {
             ¿Qué es <em style={{ color: 'var(--accent)' }}>Infra.Coop</em>?
           </h1>
           <p style={{ fontSize: 16, lineHeight: 1.75, color: 'var(--ink)', maxWidth: 600 }}>
-            Infra.Coop es la dimensión tecnosocial de Data Cooperativas Latinas. Una infraestructura digital inclusiva basada en los conceptos y modelo de gobernanza de datos cooperativos.
+            Infra.Coop es la dimensión tecnosocial de{' '}
+            <a
+              href="https://datacooperativas.lat/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 600 }}
+            >
+              Data Cooperativas Latinas
+            </a>
+            . Una infraestructura digital inclusiva basada en los conceptos y modelo de gobernanza de datos cooperativos.
           </p>
         </div>
 
@@ -122,33 +131,39 @@ export function Landing() {
         {/* Monitor de Brechas */}
         <Section eyebrow="01 · Monitor de Brechas" title="La pregunta como evidencia">
           <p style={{ marginBottom: '1rem' }}>
-            El propósito es evidenciar el rol que juegan las preguntas —la fase de problema— al momento de iniciar un proceso de recolección de datos. Qué nos preguntemos, cómo y para quién incide en qué datos se definen recolectar.
+            El propósito es evidenciar el rol que juega la problematización situada, oportuna y real en el estado actual y futuro de los datos de género que queremos.
+          </p>
+          <p style={{ marginBottom: '1rem' }}>
+            La pregunta como elemento inicial de un proceso que podemos llamar el Ciclo de Datos es vital para cambiar el estado de situación de las brechas, pero también para demostrar cómo —al integrar el conocimiento territorial, los problemas situados e interseccionales— el criterio de calidad de un dato se torna otro. Uno más acorde con los datos que necesitamos para visibilizar lo que falta, fortalecer lo que ya es un derecho o incidir en el devenir de la agenda pública.
           </p>
           <p>
-            Con la PREGUNTA nos interesa enfatizar en la urgencia, pertinencia y oportunidad de los datos cooperativos —datos ciudadanos— para contar con los DATOS QUE QUEREMOS.
+            <strong>La(s) pregunta(s)</strong> como inquietud-acción disparadora enfatiza la urgencia, pertinencia y oportunidad de los datos cooperativos para contar con los <strong>datos que queremos</strong>.
           </p>
         </Section>
 
-        {/* Monitor Colectivo */}
-        <Section eyebrow="02 · Monitor Colectivo" title="El mapa común de brechas">
+        {/* ¿Qué datos tenemos? */}
+        <Section eyebrow="02 · Monitor Colectivo" title="¿Qué datos tenemos?">
           <p style={{ marginBottom: '1rem' }}>
-            Tu pregunta contribuye a crear la evidencia común del estado de los datos de género, contrastándola con dos bases de datos seleccionadas para Infra.Coop:
+            Al ingresar <strong>tu pregunta</strong> contribuyes a crear evidencia colectiva sobre el estado actual de la agenda común de datos de género, tecnología y de datos propiamente dichos.
+          </p>
+          <p style={{ marginBottom: '1rem' }}>
+            En esta instancia se contrasta el aporte colectivo con dos elementos de la Base de Datos de Infra.Coop:
           </p>
           <p style={{ marginBottom: '.5rem', paddingLeft: '1rem', borderLeft: '2px solid var(--ink-faint)' }}>
-            a) Datasets de género regionales
+            <strong>a)</strong> Por un lado sistematizamos datasets temáticos.
           </p>
           <p style={{ marginBottom: '1rem', paddingLeft: '1rem', borderLeft: '2px solid var(--ink-faint)' }}>
-            b) Marcos de normativas vigentes a nivel global, regional y nacional — normativas de datos, de tecnologías y de género.
+            <strong>b)</strong> Por otro lado curamos distintos marcos normativos vigentes a nivel nacional, regional e internacional inherentes a dicha agenda.
           </p>
           <p>
-            A medida que se sumen más preguntas, se irá visualizando la diferencia entre la brecha de datos existente versus la brecha real.
+            A medida que se suman preguntas, el monitor colectivo visualizará los cambios en el estado de situación de los datos disponibles identificando brechas de distinta naturaleza.
           </p>
         </Section>
 
         {/* Los datos que queremos */}
         <Section eyebrow="03 · ¿Qué datos queremos?" title="Evolución de la demanda colectiva">
           <p>
-            En este apartado el algoritmo cooperativo llega a su meta (al menos por ahora). La lupa está puesta en la evolución entre los datos que tenemos y los datos que queremos — seguida semana a semana por pregunta y por agenda.
+            En este apartado el algoritmo cooperativo llega a su meta (al menos por ahora). La lupa está puesta en la evolución entre los datos que tenemos y los datos que queremos — seguida mes a mes por pregunta y por agenda.
           </p>
         </Section>
 
@@ -177,7 +192,7 @@ export function Landing() {
         {/* Otras ideas */}
         <section style={{ borderTop: '1px solid var(--ink-faint)', paddingTop: '2rem', marginTop: '2rem' }}>
           <p style={{ fontFamily: 'var(--mono)', fontSize: 10, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--ink-light)', marginBottom: '1rem' }}>
-            Otras ideas — con tu ayuda
+            Otras ideas para Infra.Coop
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
             {[
@@ -191,6 +206,15 @@ export function Landing() {
               </p>
             ))}
           </div>
+          <p style={{ marginTop: '1.5rem', fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.7 }}>
+            ¿Te interesa aportar o sugerir otras ideas?{' '}
+            <a
+              href="mailto:datacooperativas@gmail.com"
+              style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+            >
+              datacooperativas@gmail.com
+            </a>
+          </p>
         </section>
 
       </div>
