@@ -1,0 +1,88 @@
+<h2>Opción B — ¿Qué tan específicos son los selectores?</h2>
+<p class="subtitle">Elegís "desde" y "hasta". La pregunta es: ¿en qué unidad de tiempo?</p>
+
+<div class="section">
+  <div class="options">
+
+    <div class="option" data-choice="b1" onclick="toggleSelect(this)">
+      <div class="letter">B1</div>
+      <div class="content">
+        <h3>Año + Trimestre</h3>
+        <p>Dos dropdowns encadenados: primero el año, luego el trimestre (Q1–Q4).</p>
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div>
+            <div style="font-size:10px;opacity:.5;margin-bottom:3px">DESDE</div>
+            <div style="display:flex;gap:4px">
+              <div style="border:1px solid #ccc;border-radius:6px;padding:5px 10px;font-size:12px">2025 ▾</div>
+              <div style="border:1px solid #ccc;border-radius:6px;padding:5px 10px;font-size:12px">Q1 ▾</div>
+            </div>
+          </div>
+          <span style="font-size:18px;opacity:.3;margin-top:14px">→</span>
+          <div>
+            <div style="font-size:10px;opacity:.5;margin-bottom:3px">HASTA</div>
+            <div style="display:flex;gap:4px">
+              <div style="border:1px solid #534AB7;border-radius:6px;padding:5px 10px;font-size:12px;color:#534AB7">2026 ▾</div>
+              <div style="border:1px solid #534AB7;border-radius:6px;padding:5px 10px;font-size:12px;color:#534AB7">Q2 ▾</div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:8px;font-size:11px;opacity:.6">Granularidad gruesa — buena para ver tendencias largas. 4 opciones por año = fácil de usar.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="b2" onclick="toggleSelect(this)">
+      <div class="letter">B2</div>
+      <div class="content">
+        <h3>Año + Mes</h3>
+        <p>Dos dropdowns: año + mes (Enero–Diciembre). El rango más natural para la mayoría.</p>
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div>
+            <div style="font-size:10px;opacity:.5;margin-bottom:3px">DESDE</div>
+            <div style="display:flex;gap:4px">
+              <div style="border:1px solid #ccc;border-radius:6px;padding:5px 10px;font-size:12px">2025 ▾</div>
+              <div style="border:1px solid #ccc;border-radius:6px;padding:5px 10px;font-size:12px">Enero ▾</div>
+            </div>
+          </div>
+          <span style="font-size:18px;opacity:.3;margin-top:14px">→</span>
+          <div>
+            <div style="font-size:10px;opacity:.5;margin-bottom:3px">HASTA</div>
+            <div style="display:flex;gap:4px">
+              <div style="border:1px solid #534AB7;border-radius:6px;padding:5px 10px;font-size:12px;color:#534AB7">2026 ▾</div>
+              <div style="border:1px solid #534AB7;border-radius:6px;padding:5px 10px;font-size:12px;color:#534AB7">Abril ▾</div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:8px;font-size:11px;opacity:.6">Balance ideal: específico sin ser críptico. Los datos agrupados por semana ISO se filtran por mes de inicio. Mi recomendación.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="b3" onclick="toggleSelect(this)">
+      <div class="letter">B3</div>
+      <div class="content">
+        <h3>Semana ISO (año + número de semana)</h3>
+        <p>Dropdown de año + número de semana (S01–S52). Máxima granularidad, consistente con los datos.</p>
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div>
+            <div style="font-size:10px;opacity:.5;margin-bottom:3px">DESDE</div>
+            <div style="display:flex;gap:4px">
+              <div style="border:1px solid #ccc;border-radius:6px;padding:5px 10px;font-size:12px">2025 ▾</div>
+              <div style="border:1px solid #ccc;border-radius:6px;padding:5px 10px;font-size:12px">S01 ▾</div>
+            </div>
+          </div>
+          <span style="font-size:18px;opacity:.3;margin-top:14px">→</span>
+          <div>
+            <div style="font-size:10px;opacity:.5;margin-bottom:3px">HASTA</div>
+            <div style="display:flex;gap:4px">
+              <div style="border:1px solid #534AB7;border-radius:6px;padding:5px 10px;font-size:12px;color:#534AB7">2026 ▾</div>
+              <div style="border:1px solid #534AB7;border-radius:6px;padding:5px 10px;font-size:12px;color:#534AB7">S17 ▾</div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:8px;font-size:11px;opacity:.6">Consistente con cómo están almacenados los datos. Pero "S17" no es intuitivo para usuarias no técnicas — considerarlo solo si el público es técnico.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:1rem">Mi recomendación: <strong>B2 (Año + Mes)</strong> — más legible, suficientemente específico.</p>
