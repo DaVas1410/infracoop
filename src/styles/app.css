@@ -478,20 +478,6 @@
 
 .agenda-monitor-card {
   position: relative;
-  overflow: hidden;
-}
-
-.agenda-monitor-card::after {
-  content: "";
-  position: absolute;
-  right: -20px;
-  top: -20px;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.06;
-  pointer-events: none;
 }
 
 .agenda-monitor-eyebrow {
@@ -803,14 +789,14 @@
 .agenda-evol-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .agenda-evol-card {
   background: var(--surface);
   border: 1px solid var(--ink-faint);
   border-radius: var(--r-lg);
-  padding: 1rem 1.25rem;
+  padding: 1.5rem 1.75rem;
   border-left-width: 3px;
 }
 
@@ -819,12 +805,12 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .agenda-evol-title {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .agenda-evol-badges {
@@ -835,9 +821,9 @@
 }
 
 .semana-badge {
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--mono);
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 3px;
 }
 
@@ -845,42 +831,42 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-mid);
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .agenda-evol-bars {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 12px;
 }
 
 .evol-bar-label {
-  font-size: 14px;
+  font-size: 13px;
   font-family: var(--mono);
   color: var(--ink-light);
-  margin-bottom: 3px;
+  margin-bottom: 6px;
 }
 
 .evol-bar-track {
-  height: 6px;
+  height: 8px;
   background: var(--ink-faint);
-  border-radius: 3px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .evol-bar-fill {
   height: 100%;
-  border-radius: 3px;
+  border-radius: 4px;
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .evol-bar-pct {
-  font-size: 14px;
+  font-size: 13px;
   font-family: var(--mono);
-  color: var(--ink-light);
-  margin-top: 2px;
+  color: var(--ink-mid);
+  margin-top: 5px;
 }
 
 /* ═══ Quality distribution bar ═══ */
