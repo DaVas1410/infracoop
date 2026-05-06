@@ -1,5 +1,7 @@
 # Claude Code
 CLAUDE.md
+.claude/
+.superpowers/
 
 # OS
 .DS_Store
@@ -27,4 +29,3 @@ __pycache__/
 *.pyc
 scripts/import/import_log.json
 scripts/seed/output/
-.superpowers/
