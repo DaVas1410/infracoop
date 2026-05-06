@@ -1,10 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import type { GapResult } from '../types'
+
+const SESSION_KEY = 'infracoop_brechas_session'
+
+function loadSession(): { query: string; resultado: GapResult | null; chips: string[] } {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY)
+    if (raw) return JSON.parse(raw)
+  } catch {}
+  return { query: '', resultado: null, chips: [] }
+}
+
+function saveSession(query: string, resultado: GapResult | null, chips: string[]) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ query, resultado, chips }))
+  } catch {}
+}
 import { BarChart, Bar, Cell } from 'recharts'
 import { useNavigate } from 'react-router-dom'
 import { useMotorBrechas } from '../hooks/useMotorBrechas'
 import { useSearchIndex } from '../context/SearchIndexContext'
 import { useEmbedder } from '../context/EmbedderContext'
-import type { GapResult, SearchHit } from '../types'
+import type { SearchHit } from '../types'
 import { Tooltip } from '../components/Tooltip'
 
 const CHIP_KEYWORDS: Record<string, string[]> = {
@@ -492,10 +509,15 @@ function ExampleQuestions({ onSelect }: { onSelect: (q: string) => void }) {
 
 export function MonitorBrechas() {
   const { isReady, error: indexError } = useSearchIndex()
-  const { resultado, isLoading, error: searchError, buscar, limpiar } = useMotorBrechas()
   const { status: embedderStatus, progress: embedderProgress, error: embedderError } = useEmbedder()
-  const [query, setQuery] = useState('')
-  const [selectedChips, setSelectedChips] = useState<string[]>([])
+  const saved = useMemo(() => loadSession(), [])
+  const { resultado, isLoading, error: searchError, buscar, limpiar } = useMotorBrechas(saved.resultado)
+  const [query, setQuery] = useState(saved.query)
+  const [selectedChips, setSelectedChips] = useState<string[]>(saved.chips)
+
+  useEffect(() => {
+    saveSession(query, resultado, selectedChips)
+  }, [query, resultado, selectedChips])
 
   function toggleChip(chip: string) {
     setSelectedChips(prev =>
@@ -514,6 +536,7 @@ export function MonitorBrechas() {
     limpiar()
     setQuery('')
     setSelectedChips([])
+    saveSession('', null, [])
   }
 
   if (embedderStatus === 'loading' || embedderStatus === 'error') {
